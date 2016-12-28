@@ -13,7 +13,31 @@ import java.util.regex.Pattern;
 
 /**
  * Represents a version number string that has been parsed into a canonical form and is comparable with other
- * parsed versions.
+ * parsed versions. A version is parsed into numeric components (e.g. 1.2.3) and a trailing portion (e.g. beta1).
+ * The class attempts to understand the significance of typical versioning schemes (e.g. rc1, m2) and compare versions
+ * accordingly. The following table shows various versions and how they are compared.
+ *
+ * <table summary="">
+ *     <tr><th align="left" style="padding-right: 15px">version1</th><th align="left">version2</th><th align="right">Return</th></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.3"</td><td align="right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3.4"</td><td>"1.2.3.4"</td><td align="right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.0"</td><td align="right">&gt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.0"</td><td>"1.2.3"</td><td align="right">&lt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.+"</td><td align="right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.+"</td><td>"1.2.+"</td><td align="right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2"</td><td>"1.2.0"</td><td align="right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2"</td><td>"1.2.3"</td><td align="right">&lt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2"</td><td align="right">&gt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1"</td><td>"2"</td><td align="right">&lt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3.RELEASE"</td><td>"1.2.3.BUILD-SNAPSHOT"</td><td align="right">&gt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2-3"</td><td>"1.2-4"</td><td align="right">&lt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.3-SNAPSHOT"</td><td align="right">&gt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3.RELEASE"</td><td>"1.2.3.RELEASE"</td><td align="right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3-beta-1"</td><td>"1.2.3"</td><td align="right">&lt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"0.98f"</td><td>"0.98a"</td><td align="right">&gt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">""</td><td>""</td><td align="right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1"</td><td>""</td><td align="right">&gt;0</td></tr>
+ * </table>
  */
 public final class Version implements Comparable<Version> {
 
@@ -56,6 +80,11 @@ public final class Version implements Comparable<Version> {
     private int trailingValue;
     private boolean released;
 
+    /**
+     * Constructs a version object based on the specified version number string.
+     *
+     * @param version  Version number string
+     */
     public Version(final String version) {
         if (version == null) {
             throw new IllegalArgumentException("version cannot be null");
@@ -70,18 +99,38 @@ public final class Version implements Comparable<Version> {
         parse();
     }
 
+    /**
+     * Obtains the original version number string.
+     *
+     * @return Original version number string.
+     */
     public String getVersion() {
         return this.version;
     }
 
+    /**
+     * Obtains the numeric components of the version number (e.g. 1, 2, 3 from the version 1.2.3-beta1).
+     *
+     * @return Numeric components of the version number.
+     */
     public List<Long> getComponents() {
         return Collections.unmodifiableList(this.components);
     }
 
+    /**
+     * Obtains the trailing portion of a version number (e.g. beta1 from the version 1.2.3-beta1).
+     *
+     * @return Trailing portion of the version number.
+     */
     public String getTrailing() {
         return this.trailing;
     }
 
+    /**
+     * Indicates whether the trailing portion of the version number is a recognized pattern (e.g. beta1).
+     *
+     * @return {@code true} if the trailing portion is a recognized pattern.
+     */
     boolean isTrailingRecognized() {
         return this.trailingRecognized;
     }
@@ -90,6 +139,12 @@ public final class Version implements Comparable<Version> {
         return this.trailingValue;
     }
 
+    /**
+     * Indicates whether the version represents a released artifact. That is a version not containing a pre-release
+     * pattern such as beta1.
+     *
+     * @return {@code true} if the version represents a released artifact.
+     */
     public boolean isReleased() {
         return this.released;
     }
