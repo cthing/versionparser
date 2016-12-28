@@ -1,0 +1,16 @@
+.settings
+.checkstyle
+.classpath
+.project
+.idea
+*.iml
+*.ipr
+*.iws
+.springBeans
+.extract
+.DS_Store
+bin
+build
+run
+.gradle
+generated-src
