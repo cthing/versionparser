@@ -54,10 +54,10 @@ public final class Version implements Comparable<Version> {
     private static final Pattern BETA_PATTERN = Pattern.compile("^beta[\\-.]?(\\d*)$");
 
     /** Release candidate pattern. */
-    private static final Pattern RC_PATTERN = Pattern.compile("^rc[\\-.]?(\\d*)$");
+    private static final Pattern RC_PATTERN = Pattern.compile("^(?:rc|cr)[\\-.]?(\\d*)$");
 
     /** Milestone pattern. */
-    private static final Pattern MILESTONE_PATTERN = Pattern.compile("^m[\\-.]?(\\d+)$");
+    private static final Pattern MILESTONE_PATTERN = Pattern.compile("^(?:m|milestone)[\\-.]?(\\d+)$");
 
     /** Alphabetic pattern. */
     private static final Pattern LETTER_PATTERN = Pattern.compile("^([a-z])$");
@@ -185,7 +185,7 @@ public final class Version implements Comparable<Version> {
 
         final String lowerTrailing = this.trailing.toLowerCase();
 
-        if ("release".equals(lowerTrailing) || "final".equals(lowerTrailing)) {
+        if ("release".equals(lowerTrailing) || "final".equals(lowerTrailing) || "ga".equals(lowerTrailing)) {
             this.trailingValue = RELEASE_BASE;
             return;
         }

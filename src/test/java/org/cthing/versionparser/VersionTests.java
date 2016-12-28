@@ -26,11 +26,14 @@ public class VersionTests {
         verifyParsing("1.2.3Beta2", "Beta2", false, true, -498, 3, 1, 2, 3);
         verifyParsing("1.2.3.RELEASE", "RELEASE", true, true, 0, 3, 1, 2, 3);
         verifyParsing("1.2.3-Final", "Final", true, true, 0, 3, 1, 2, 3);
+        verifyParsing("1.2.3-GA", "GA", true, true, 0, 3, 1, 2, 3);
         verifyParsing("1.2.3-alpha", "alpha", false, true, -2000, 3, 1, 2, 3);
         verifyParsing("1.2.3-alpha-1", "alpha-1", false, true, -1999, 3, 1, 2, 3);
         verifyParsing("1.2-rc", "rc", false, true, -100, 2, 1, 2);
         verifyParsing("1.2-rc1", "rc1", false, true, -99, 2, 1, 2);
+        verifyParsing("1.2-cr", "cr", false, true, -100, 2, 1, 2);
         verifyParsing("1.2-M2", "M2", false, true, -998, 2, 1, 2);
+        verifyParsing("1.2-Milestone3", "Milestone3", false, true, -997, 2, 1, 2);
         verifyParsing("0.98f", "f", true, true, 102, 2, 0, 98);
         verifyParsing("1.2-M", "M", true, true, 109, 2, 1, 2);
         verifyParsing("beta", "beta", false, true, -500, 0);
