@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+<suppressions>
+    <!-- Suppress Javadoc requirements for tests -->
+    <suppress checks="JavadocType" files="src/(test|integTest)/.+"/>
+    <suppress checks="JavadocMethod" files="src/(test|integTest)/.+"/>
+    <suppress checks="JavadocPackage" files="src/(test|integTest)/.+"/>
+
+    <!-- Constructors are not required in ests -->
+    <suppress checks="MissingCtor" files="src/(test|integTest)/.+"/>
+
+    <!-- Allow magic numbers in tests -->
+    <suppress checks="MagicNumber" files="src/(test|integTest)/.+"/>
+
+    <!-- Suppress method length check in tests -->
+    <suppress checks="MethodLength" files="src/(test|integTest)/.+"/>
+
+    <!-- Suppress checking resources -->
+    <suppress checks="." files="src/main/resources/.+"/>
+</suppressions>
