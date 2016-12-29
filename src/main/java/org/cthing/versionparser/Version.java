@@ -149,6 +149,18 @@ public final class Version implements Comparable<Version> {
         return this.released;
     }
 
+    /**
+     * Indicates whether the specified version represents a released artifact. This method is equivalent to
+     * constructing a version object and calling its {@link #isReleased()} method.
+     *
+     * @param version  Version to test
+     * @return {@code true} if the specified version represents a released artifact.
+     */
+    public static boolean isReleased(final String version) {
+        final Version v = new Version(version);
+        return v.isReleased();
+    }
+
     private void parse() {
         final String trimmedVersion = this.version.trim();
 
@@ -225,6 +237,21 @@ public final class Version implements Comparable<Version> {
             this.released = false;
         }
         return matches;
+    }
+
+    /**
+     * Compares two versions. This method is equivalent to constructing two version objects and calling the
+     * {@link #compareTo(Version)} method on one passing in the other.
+     *
+     * @param version1  Version to compare
+     * @param version2  Version to compare
+     * @return A value less than 0 if {@code version1} is older than {@code version2}, greater than zero if
+     *      {@code version1} is newer than {@code version2} and zero if they are equal.
+     */
+    public static int compareTo(final String version1, final String version2) {
+        final Version v1 = new Version(version1);
+        final Version v2 = new Version(version2);
+        return v1.compareTo(v2);
     }
 
     @Override

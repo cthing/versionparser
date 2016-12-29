@@ -106,12 +106,11 @@ public class VersionTests {
         assertThat(parsedVersion.isTrailingRecognized()).isEqualTo(trailingRecognized);
         assertThat(parsedVersion.getTrailingValue()).isEqualTo(trailingValue);
         assertThat(parsedVersion.isReleased()).isEqualTo(released);
+        assertThat(Version.isReleased(version)).isEqualTo(released);
     }
 
     private void verifyCompare(final String version1, final String version2, final int result) {
-        final Version v1 = new Version(version1);
-        final Version v2 = new Version(version2);
-        assertThat(v1.compareTo(v2)).isEqualTo(result);
+        assertThat(Version.compareTo(version1, version2)).isEqualTo(result);
     }
 
     private void verifyEquality(final String version1, final String version2, final boolean isEqual) {
