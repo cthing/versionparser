@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<checkstyle version="7.3">
+<checkstyle version="7.4">
 <file name="/home/baron/projects/versionparser/src/test/java/org/cthing/versionparser/VersionTests.java">
 </file>
 </checkstyle>

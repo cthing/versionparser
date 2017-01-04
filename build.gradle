@@ -22,7 +22,7 @@ description = 'Parses versions in a wide range of formats and provides a canonic
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    testCompile 'org.assertj:assertj-core:3.5.2'
+    testCompile 'org.assertj:assertj-core:3.6.1'
 }
 
 tasks.withType(JavaCompile) {
@@ -48,7 +48,7 @@ javadoc {
 }
 
 checkstyle {
-    toolVersion = '7.3'
+    toolVersion = '7.4'
     ignoreFailures = false
     configFile = project.file('dev/checkstyle/checkstyle.xml')
     configProperties['config_loc'] = project.file('dev/checkstyle')

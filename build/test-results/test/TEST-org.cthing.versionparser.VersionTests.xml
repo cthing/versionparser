@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.cthing.versionparser.VersionTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2016-12-29T01:17:59" hostname="meson.lan" time="0.07">
+<testsuite name="org.cthing.versionparser.VersionTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2017-01-04T04:20:32" hostname="meson.lan" time="0.069">
   <properties/>
-  <testcase name="testParsing" classname="org.cthing.versionparser.VersionTests" time="0.068"/>
+  <testcase name="testParsing" classname="org.cthing.versionparser.VersionTests" time="0.067"/>
   <testcase name="testCompare" classname="org.cthing.versionparser.VersionTests" time="0.002"/>
   <testcase name="testEquality" classname="org.cthing.versionparser.VersionTests" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
