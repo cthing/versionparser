@@ -59,6 +59,8 @@ dependencies {
 }
 
 tasks.withType(JavaCompile::class.java) { task ->
+    task.sourceCompatibility = "1.8"
+    task.targetCompatibility = "1.8"
     task.options.compilerArgs = listOf("-Xlint:all", "-Xlint:-options", "-Werror")
 }
 
