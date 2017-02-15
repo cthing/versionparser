@@ -49,7 +49,7 @@ apply {
 }
 
 val buildNumber = if (isOnCIServer()) { System.currentTimeMillis().toString() } else { "0" }
-version = "${properties["semanticVersion"]}.$buildNumber"
+version = "${properties["semanticVersion"]}-$buildNumber"
 group = "org.cthing"
 description = "Parses versions in a wide range of formats and provides a canonical, comparable version object."
 
