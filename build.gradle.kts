@@ -29,9 +29,10 @@ import kotlinx.dom.build.*
 // C Thing Software Gradle plugins and is in the org.cthing domain so it can be consumed as
 // a third party dependency.
 
-fun isOnCIServer(): Boolean {
-    return (System.getenv("BUILD_NUMBER") != null) && (System.getenv("EXECUTOR_NUMBER") != null)
-}
+fun isOnCIServer(): Boolean = System.getenv("CTHING_CI") != null
+
+fun isSnapshot(): Boolean = property("buildType") == "snapshot"
+
 
 buildscript {
     dependencies {
@@ -48,8 +49,9 @@ apply {
     plugin("signing")
 }
 
-val buildNumber = if (isOnCIServer()) { System.currentTimeMillis().toString() } else { "0" }
-version = "${properties["semanticVersion"]}-$buildNumber"
+val buildNumber = if (isOnCIServer()) System.currentTimeMillis().toString() else "0"
+val semver = property("semanticVersion")
+version = if (isSnapshot()) "$semver-$buildNumber" else semver
 group = "org.cthing"
 description = "Parses versions in a wide range of formats and provides a canonical, comparable version object."
 
@@ -221,7 +223,7 @@ configure<PublishingExtension> {
     }
 
     repositories.maven {
-        setUrl(project.properties["nexusReleasesUrl"])
+        setUrl(if (isSnapshot()) project.property("nexusSnapshotsUrl") else project.property("nexusCandidatesUrl"))
         credentials {
             username = project.properties["nexusUser"].toString()
             password = project.properties["nexusPassword"].toString()
