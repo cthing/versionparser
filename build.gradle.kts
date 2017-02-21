@@ -57,7 +57,7 @@ description = "Parses versions in a wide range of formats and provides a canonic
 
 dependencies {
     testCompile("junit:junit:4.12")
-    testCompile("org.assertj:assertj-core:3.6.1")
+    testCompile("org.assertj:assertj-core:3.6.2")
 }
 
 tasks.withType(JavaCompile::class.java) { task ->
@@ -83,7 +83,7 @@ tasks.withType(Javadoc::class.java) { task ->
 }
 
 configure<CheckstyleExtension> {
-    toolVersion = "7.4"
+    toolVersion = "7.5.1"
     isIgnoreFailures = false
     configFile = project.file("dev/checkstyle/checkstyle.xml")
     configProperties["config_loc"] = project.file("dev/checkstyle")
@@ -100,7 +100,7 @@ configure<FindBugsExtension> {
 }
 
 configure<JacocoPluginExtension> {
-    toolVersion = "0.7.8"
+    toolVersion = "0.7.9"
 }
 
 (tasks.getByName("jacocoTestReport") as JacocoReport).apply {
