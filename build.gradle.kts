@@ -18,7 +18,6 @@ import org.gradle.plugins.signing.SigningExtension
 import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -60,33 +59,33 @@ dependencies {
     testCompile("org.assertj:assertj-core:3.6.2")
 }
 
-tasks.withType(JavaCompile::class.java) { task ->
-    task.sourceCompatibility = "1.8"
-    task.targetCompatibility = "1.8"
-    task.options.compilerArgs = listOf("-Xlint:all", "-Xlint:-options", "-Werror")
+tasks.withType<JavaCompile> {
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
+    options.compilerArgs = listOf("-Xlint:all", "-Xlint:-options", "-Werror")
 }
 
-tasks.withType(Jar::class.java) { task ->
-    task.manifest.attributes(mapOf("Implementation-Title" to project.name,
-                                   "Implementation-Vendor" to "C Thing Software",
-                                   "Implementation-Version" to project.version))
+tasks.withType<Jar> {
+    manifest.attributes(mapOf("Implementation-Title" to project.name,
+                              "Implementation-Vendor" to "C Thing Software",
+                              "Implementation-Version" to project.version))
 }
 
-tasks.withType(Javadoc::class.java) { task ->
-    val opts = StandardJavadocDocletOptions()
-    opts.breakIterator(false)
-    opts.encoding("UTF-8")
-    opts.bottom("Copyright &copy; ${SimpleDateFormat("yyyy", Locale.ENGLISH).format(Date())} C Thing Software. All rights reserved.")
-    opts.memberLevel = JavadocMemberLevel.PUBLIC
-    opts.outputLevel = JavadocOutputLevel.QUIET
-    task.options = opts
+tasks.withType<Javadoc> {
+    with (options as StandardJavadocDocletOptions) {
+        breakIterator(false)
+        encoding("UTF-8")
+        bottom("Copyright &copy; ${SimpleDateFormat("yyyy", Locale.ENGLISH).format(Date())} C Thing Software. All rights reserved.")
+        memberLevel = JavadocMemberLevel.PUBLIC
+        outputLevel = JavadocOutputLevel.QUIET
+    }
 }
 
 configure<CheckstyleExtension> {
-    toolVersion = "7.5.1"
+    toolVersion = "7.6.1"
     isIgnoreFailures = false
     configFile = project.file("dev/checkstyle/checkstyle.xml")
-    configProperties["config_loc"] = project.file("dev/checkstyle")
+    configProperties.put("config_loc", project.file("dev/checkstyle"))
     isShowViolations = true
 }
 
@@ -96,14 +95,14 @@ configure<FindBugsExtension> {
     effort = "max"
     reportLevel = "medium"
     excludeFilter = project.file("dev/findbugs/suppressions.xml")
-    sourceSets = listOf(convention.getPlugin(JavaPluginConvention::class.java).sourceSets.getByName("main"))
+    sourceSets = listOf(convention.getPlugin<JavaPluginConvention>().sourceSets["main"])
 }
 
 configure<JacocoPluginExtension> {
     toolVersion = "0.7.9"
 }
 
-(tasks.getByName("jacocoTestReport") as JacocoReport).apply {
+(tasks["jacocoTestReport"] as JacocoReport).apply {
     dependsOn("test")
     with (reports) {
         xml.isEnabled = false
@@ -113,10 +112,10 @@ configure<JacocoPluginExtension> {
     }
 }
 
-tasks.getByName("test").extensions.getByType(JacocoTaskExtension::class.java).isAppend = false
+tasks["test"].extensions.getByType(JacocoTaskExtension::class.java).isAppend = false
 
 task<Jar>("sourceJar") {
-    from(project.convention.getPlugin(JavaPluginConvention::class.java).sourceSets.getByName("main").allJava)
+    from(project.convention.getPlugin<JavaPluginConvention>().sourceSets["main"].allJava)
     classifier = "sources"
 }
 
@@ -133,15 +132,13 @@ fun canSign(): Boolean {
 
 if (canSign()) {
     configure<SigningExtension> {
-        sign(tasks.getByName("jar"),
-             tasks.getByName("sourceJar"),
-             tasks.getByName("javadocJar"))
+        sign(tasks["jar"], tasks["sourceJar"], tasks["javadocJar"])
     }
 
     task<Sign>("signPom")
 
-    tasks.withType(AbstractPublishToMaven::class.java) { task ->
-        task.dependsOn("signJar", "signSourceJar", "signJavadocJar", "signPom")
+    tasks.withType<AbstractPublishToMaven> {
+        dependsOn("signJar", "signSourceJar", "signJavadocJar", "signPom")
     }
 
     extra["pomFile"] = File(buildDir, "${project.name}-$version.pom")
@@ -171,18 +168,18 @@ if (canSign()) {
 
 configure<PublishingExtension> {
     publications.create<MavenPublication>("mavenJava") {
-        from(components.getByName("java"))
+        from(components["java"])
 
-        artifact(project.tasks.getByName("sourceJar"))
-        artifact(project.tasks.getByName("javadocJar"))
+        artifact(project.tasks["sourceJar"])
+        artifact(project.tasks["javadocJar"])
 
         if (canSign()) {
             data class SignedArtifact(val files: Set<File>, val classifier: String?, val extension: String)
 
             val pomSigFile = project.extra["pomSigFile"] as File
-            listOf(SignedArtifact((tasks.getByName("signJar") as Sign).signatureFiles.files, null, "jar.asc"),
-                   SignedArtifact((tasks.getByName("signSourceJar") as Sign).signatureFiles.files, "sources", "jar.asc"),
-                   SignedArtifact((tasks.getByName("signJavadocJar") as Sign).signatureFiles.files, "javadoc", "jar.asc"),
+            listOf(SignedArtifact((tasks["signJar"] as Sign).signatureFiles.files, null, "jar.asc"),
+                   SignedArtifact((tasks["signSourceJar"] as Sign).signatureFiles.files, "sources", "jar.asc"),
+                   SignedArtifact((tasks["signJavadocJar"] as Sign).signatureFiles.files, "javadoc", "jar.asc"),
                    SignedArtifact(setOf(pomSigFile), null, "pom.asc")).forEach { (files, clazzifier, ext) ->
                 files.forEach { file ->
                     artifact(file) {

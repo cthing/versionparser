@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.cthing.versionparser.VersionTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2017-03-04T07:39:48" hostname="meson.lan" time="0.073">
-  <properties/>
-  <testcase name="testParsing" classname="org.cthing.versionparser.VersionTests" time="0.071"/>
-  <testcase name="testCompare" classname="org.cthing.versionparser.VersionTests" time="0.001"/>
-  <testcase name="testEquality" classname="org.cthing.versionparser.VersionTests" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

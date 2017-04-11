@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: versionparser
-Implementation-Version: 1.0.0-0
-Implementation-Vendor: C Thing Software
-
