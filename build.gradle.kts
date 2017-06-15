@@ -85,7 +85,7 @@ configure<CheckstyleExtension> {
     toolVersion = "7.8.1"
     isIgnoreFailures = false
     configFile = project.file("dev/checkstyle/checkstyle.xml")
-    configProperties.put("config_loc", project.file("dev/checkstyle"))
+    configDir = project.file("dev/checkstyle")
     isShowViolations = true
 }
 
@@ -108,7 +108,7 @@ configure<JacocoPluginExtension> {
         xml.isEnabled = false
         csv.isEnabled = false
         html.isEnabled = true
-        html.setDestination(File(buildDir, "reports/jacoco"))
+        html.destination = File(buildDir, "reports/jacoco")
     }
 }
 
