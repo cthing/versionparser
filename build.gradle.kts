@@ -39,13 +39,13 @@ buildscript {
     }
 }
 
-apply {
-    plugin("java")
-    plugin("checkstyle")
-    plugin("findbugs")
-    plugin("jacoco")
-    plugin("maven-publish")
-    plugin("signing")
+plugins {
+    id("java")
+    id("checkstyle")
+    id("findbugs")
+    id("jacoco")
+    id("maven-publish")
+    id("signing")
 }
 
 val buildNumber = if (isOnCIServer()) System.currentTimeMillis().toString() else "0"
