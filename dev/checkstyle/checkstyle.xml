@@ -395,6 +395,9 @@
         <!-- Allow suppression of Checkstyle issues using CHECKSTYLE:OFF and CHECKSTYLE:ON comments -->
         <module name="SuppressionCommentFilter"/>
 
+        <!-- Allow suppression of Checkstyle issues using trailing SUPPRESS CHECKSTYLE comment -->
+        <module name="SuppressWithNearbyCommentFilter"/>
+     
         <!-- Suppress complaints about @property Javadoc tag -->
         <module name="SuppressWithNearbyCommentFilter">
             <property name="commentFormat" value="@property"/>
