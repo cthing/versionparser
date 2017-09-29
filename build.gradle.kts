@@ -44,8 +44,8 @@ plugins {
 }
 
 val buildNumber = if (isOnCIServer()) System.currentTimeMillis().toString() else "0"
-val semver = property("semanticVersion")
-version = if (isSnapshot()) "$semver-$buildNumber" else semver
+val semver = this.property("semanticVersion")
+version = if (isSnapshot()) "$semver-$buildNumber" else semver!!
 group = "org.cthing"
 description = "Parses versions in a wide range of formats and provides a canonical, comparable version object."
 
@@ -142,13 +142,13 @@ if (canSign()) {
 
     class PomSigner : RuleSource() {
         @Mutate
-        fun genPomRule(@Path("tasks.generatePomFileForMavenJavaPublication") genPomTask: GenerateMavenPom): Unit {
+        fun genPomRule(@Path("tasks.generatePomFileForMavenJavaPublication") genPomTask: GenerateMavenPom) {
             genPomTask.setDestination(genPomTask.project.extra["pomFile"])
         }
 
         @Mutate
         fun signPomRule(@Path("tasks.signPom") signPomTask: Sign,
-                        @Path("tasks.generatePomFileForMavenJavaPublication") genPomTask: GenerateMavenPom): Unit {
+                        @Path("tasks.generatePomFileForMavenJavaPublication") genPomTask: GenerateMavenPom) {
             val pomFile = signPomTask.project.extra["pomFile"] as File
             val pomSigFile = signPomTask.project.extra["pomSigFile"] as File
             signPomTask.dependsOn(genPomTask)
@@ -189,7 +189,7 @@ publishing {
             val rootElem = asElement()
 
             rootElem.addElement("name") { appendText(project.name) }
-            rootElem.addElement("description") { appendText(project.description) }
+            rootElem.addElement("description") { appendText(project.description!!) }
             rootElem.addElement("url") { appendText("https://bitbucket.org/cthing/versionparser") }
             rootElem.addElement("licenses") {
                 addElement("license") {
