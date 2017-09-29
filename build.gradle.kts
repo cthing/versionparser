@@ -77,7 +77,7 @@ tasks.withType<Javadoc> {
 }
 
 checkstyle {
-    toolVersion = "8.1"
+    toolVersion = "8.2"
     isIgnoreFailures = false
     configFile = project.file("dev/checkstyle/checkstyle.xml")
     configDir = project.file("dev/checkstyle")

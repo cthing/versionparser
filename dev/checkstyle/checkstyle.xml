@@ -154,9 +154,6 @@
         <!-- Disallow falling through "case" statements containing code -->
         <module name="FallThrough"/>
 
-        <!-- Support file wide filters -->
-        <module name="FileContentsHolder"/>
-
         <!-- Class with only private constructors must be declared "final" -->
         <module name="FinalClass"/>
 
@@ -397,7 +394,7 @@
 
         <!-- Allow suppression of Checkstyle issues using trailing SUPPRESS CHECKSTYLE comment -->
         <module name="SuppressWithNearbyCommentFilter"/>
-     
+
         <!-- Suppress complaints about @property Javadoc tag -->
         <module name="SuppressWithNearbyCommentFilter">
             <property name="commentFormat" value="@property"/>
