@@ -38,7 +38,6 @@ buildscript {
 plugins {
     id("java")
     id("checkstyle")
-    id("findbugs")
     id("jacoco")
     id("maven-publish")
     id("signing")
@@ -225,11 +224,14 @@ publishing {
        }
     }
 
-    repositories.maven {
-        setUrl(if (isSnapshot()) project.property("nexusSnapshotsUrl") else project.property("nexusCandidatesUrl"))
-        credentials {
-            username = project.properties["nexusUser"].toString()
-            password = project.properties["nexusPassword"].toString()
+    val repoUrl = if (isSnapshot()) project.property("nexusSnapshotsUrl") else project.property("nexusCandidatesUrl")
+    if (repoUrl != null) {
+        repositories.maven {
+            setUrl(repoUrl)
+            credentials {
+                username = project.properties["nexusUser"].toString()
+                password = project.properties["nexusPassword"].toString()
+            }
         }
     }
 }
