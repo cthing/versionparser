@@ -12,6 +12,9 @@
         <Bug pattern="CD_CIRCULAR_DEPENDENCY"/>
     </Match>
     <Match>
+        <Bug pattern="MOM_MISLEADING_OVERLOAD_MODEL"/>
+    </Match>
+    <Match>
         <Class name="~.*Test(\$.+)?"/>
     </Match>
 </FindBugsFilter>

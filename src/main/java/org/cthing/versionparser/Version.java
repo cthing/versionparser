@@ -202,7 +202,7 @@ public final class Version implements Comparable<Version> {
             return;
         }
 
-        if (lowerTrailing.equals("snapshot")) {
+        if ("snapshot".equals(lowerTrailing)) {
             this.trailingValue = SNAPSHOT;
             this.released = false;
             return;
