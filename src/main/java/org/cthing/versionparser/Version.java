@@ -153,12 +153,11 @@ public final class Version implements Comparable<Version> {
      * Indicates whether the specified version represents a released artifact. This method is equivalent to
      * constructing a version object and calling its {@link #isReleased()} method.
      *
-     * @param version  Version to test
+     * @param ver  Version to test
      * @return {@code true} if the specified version represents a released artifact.
      */
-    public static boolean isReleased(final String version) {
-        final Version v = new Version(version);
-        return v.isReleased();
+    public static boolean isReleased(final String ver) {
+        return new Version(ver).isReleased();
     }
 
     private void parse() {
@@ -255,6 +254,7 @@ public final class Version implements Comparable<Version> {
     }
 
     @Override
+    @SuppressWarnings("ObjectEquality")
     public int compareTo(final Version other) {
         if (this == other) {
             return 0;
@@ -288,13 +288,7 @@ public final class Version implements Comparable<Version> {
         }
 
         if (this.trailingRecognized) {
-            if (this.trailingValue < other.trailingValue) {
-                return -1;
-            }
-            if (this.trailingValue > other.trailingValue) {
-                return 1;
-            }
-            return 0;
+            return Integer.compare(this.trailingValue, other.trailingValue);
         }
 
         final int result = this.trailing.compareTo(other.trailing);
@@ -303,20 +297,14 @@ public final class Version implements Comparable<Version> {
 
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
+        return (this == obj) || (obj != null) && (getClass() == obj.getClass()) && (compareTo((Version)obj) == 0);
 
-        return compareTo((Version)obj) == 0;
     }
 
     @Override
     public int hashCode() {
         int result = 0;
-        for (Long component : this.components) {
+        for (final Long component : this.components) {
             if (component != 0) {
                 result = 31 * result + component.hashCode();
             }

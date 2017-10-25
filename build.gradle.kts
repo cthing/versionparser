@@ -32,6 +32,7 @@ fun isSnapshot(): Boolean = property("buildType") == "snapshot"
 buildscript {
     dependencies {
         classpath("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
+        classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.1")
     }
 }
 
@@ -44,6 +45,10 @@ plugins {
     id("com.github.spotbugs").version("1.4")
 }
 
+apply {
+    plugin("org.junit.platform.gradle.plugin")
+}
+
 val buildNumber = if (isOnCIServer()) System.currentTimeMillis().toString() else "0"
 val semver = this.property("semanticVersion")
 version = if (isSnapshot()) "$semver-$buildNumber" else semver!!
@@ -51,7 +56,10 @@ group = "org.cthing"
 description = "Parses versions in a wide range of formats and provides a canonical, comparable version object."
 
 dependencies {
-    testCompile("junit:junit:4.12")
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.1")
+    testCompile("org.junit.jupiter:junit-jupiter-params:5.0.1")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.1")
+    testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
     testCompile("org.assertj:assertj-core:3.8.0")
 
     spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.0.5.sb")

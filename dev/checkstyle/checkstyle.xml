@@ -209,6 +209,7 @@
         <module name="ImportOrder">
             <property name="option" value="bottom"/>
             <property name="groups" value="java,javax,org,net,ch,com,junit,junitx"/>
+            <property name="separated" value="true"/>
         </module>
 
         <!-- Disallow assignment in subexpressions (e.g. String s = Integer.toString(i = 2) -->
