@@ -42,7 +42,7 @@ plugins {
     id("jacoco")
     id("maven-publish")
     id("signing")
-    id("com.github.spotbugs").version("1.4")
+    id("com.github.spotbugs").version("1.6.0")
 }
 
 apply {
@@ -88,7 +88,7 @@ tasks.withType<Javadoc> {
 }
 
 checkstyle {
-    toolVersion = "8.2"
+    toolVersion = "8.4"
     isIgnoreFailures = false
     configFile = project.file("dev/checkstyle/checkstyle.xml")
     configDir = project.file("dev/checkstyle")
@@ -96,7 +96,7 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion = "3.1.0-RC6"
+    toolVersion = "3.1.0"
     isIgnoreFailures = false
     effort = "max"
     reportLevel = "medium"
