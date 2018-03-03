@@ -32,7 +32,6 @@ fun isSnapshot(): Boolean = property("buildType") == "snapshot"
 buildscript {
     dependencies {
         classpath("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
-        classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.3")
     }
 }
 
@@ -42,11 +41,7 @@ plugins {
     id("jacoco")
     id("maven-publish")
     id("signing")
-    id("com.github.spotbugs").version("1.6.0")
-}
-
-apply {
-    plugin("org.junit.platform.gradle.plugin")
+    id("com.github.spotbugs").version("1.6.1")
 }
 
 val buildNumber = if (isOnCIServer()) System.currentTimeMillis().toString() else "0"
@@ -56,11 +51,11 @@ group = "org.cthing"
 description = "Parses versions in a wide range of formats and provides a canonical, comparable version object."
 
 dependencies {
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.3")
-    testCompile("org.junit.jupiter:junit-jupiter-params:5.0.3")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.3")
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.1.0")
+    testCompile("org.junit.jupiter:junit-jupiter-params:5.1.0")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.1.0")
     testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
-    testCompile("org.assertj:assertj-core:3.9.0")
+    testCompile("org.assertj:assertj-core:3.9.1")
 
     spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.2.0.sb")
 }
@@ -88,7 +83,7 @@ tasks.withType<Javadoc> {
 }
 
 checkstyle {
-    toolVersion = "8.7"
+    toolVersion = "8.8"
     isIgnoreFailures = false
     configFile = project.file("dev/checkstyle/checkstyle.xml")
     configDir = project.file("dev/checkstyle")
@@ -96,7 +91,7 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion = "3.1.1"
+    toolVersion = "3.1.2"
     isIgnoreFailures = false
     effort = "max"
     reportLevel = "medium"
@@ -125,7 +120,11 @@ jacoco {
     }
 }
 
-tasks["test"].extensions.getByType(JacocoTaskExtension::class.java).isAppend = false
+(tasks["test"] as Test).apply {
+    useJUnitPlatform()
+
+    extensions.getByType(JacocoTaskExtension::class.java).isAppend = false
+}
 
 val sourceJar by tasks.creating(Jar::class) {
     from(project.convention.getPlugin<JavaPluginConvention>().sourceSets["main"].allJava)
@@ -143,6 +142,28 @@ fun canSign(): Boolean {
             && project.hasProperty("signing.secretKeyRingFile")
 }
 
+
+class PomSigner : RuleSource() {
+    @Mutate
+    fun genPomRule(@Path("tasks.generatePomFileForMavenJavaPublication") genPomTask: GenerateMavenPom) {
+        genPomTask.setDestination(genPomTask.project.extra["pomFile"])
+    }
+
+    @Mutate
+    fun signPomRule(@Path("tasks.signPom") signPomTask: Sign,
+                    @Path("tasks.generatePomFileForMavenJavaPublication") genPomTask: GenerateMavenPom) {
+        val pomFile = signPomTask.project.extra["pomFile"] as File
+        val pomSigFile = signPomTask.project.extra["pomSigFile"] as File
+        signPomTask.dependsOn(genPomTask)
+        signPomTask.inputs.file(pomFile)
+        signPomTask.outputs.file(pomSigFile)
+        signPomTask.sign(pomFile)
+    }
+}
+
+data class SignedArtifact(val files: Set<File>, val classifier: String?, val extension: String)
+
+
 if (canSign()) {
     signing {
         sign(tasks["jar"], sourceJar, javadocJar)
@@ -157,25 +178,6 @@ if (canSign()) {
     extra["pomFile"] = File(buildDir, "${project.name}-$version.pom")
     extra["pomSigFile"] = File(buildDir, "${project.name}-$version.pom.asc")
 
-
-    class PomSigner : RuleSource() {
-        @Mutate
-        fun genPomRule(@Path("tasks.generatePomFileForMavenJavaPublication") genPomTask: GenerateMavenPom) {
-            genPomTask.setDestination(genPomTask.project.extra["pomFile"])
-        }
-
-        @Mutate
-        fun signPomRule(@Path("tasks.signPom") signPomTask: Sign,
-                        @Path("tasks.generatePomFileForMavenJavaPublication") genPomTask: GenerateMavenPom) {
-            val pomFile = signPomTask.project.extra["pomFile"] as File
-            val pomSigFile = signPomTask.project.extra["pomSigFile"] as File
-            signPomTask.dependsOn(genPomTask)
-            signPomTask.inputs.file(pomFile)
-            signPomTask.outputs.file(pomSigFile)
-            signPomTask.sign(pomFile)
-        }
-    }
-
     pluginManager.apply(PomSigner::class.java)
 }
 
@@ -187,8 +189,6 @@ publishing {
         artifact(javadocJar)
 
         if (canSign()) {
-            data class SignedArtifact(val files: Set<File>, val classifier: String?, val extension: String)
-
             val pomSigFile = project.extra["pomSigFile"] as File
             listOf(SignedArtifact((tasks["signJar"] as Sign).signatureFiles.files, null, "jar.asc"),
                    SignedArtifact((tasks["signSourceJar"] as Sign).signatureFiles.files, "sources", "jar.asc"),
