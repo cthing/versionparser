@@ -17,13 +17,13 @@ plugins {
 }
 
 val isCIServer = System.getenv("CTHING_CI") != null
-val isSnapshot = property("buildType") == "snapshot"
+val isSnapshot = property("org.cthing.build.type") == "snapshot"
 
 val buildNumber = if (isCIServer) System.currentTimeMillis().toString() else "0"
-val semver = this.property("semanticVersion")
+val semver = property("org.cthing.version")
 version = if (isSnapshot) "$semver-$buildNumber" else semver!!
-group = "org.cthing"
-description = "Parses versions in a wide range of formats and provides a canonical, comparable version object."
+group = property("org.cthing.group") as String
+description = property("org.cthing.description") as String
 
 dependencies {
     testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")
@@ -43,7 +43,7 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<Jar> {
     manifest.attributes(mapOf("Implementation-Title" to project.name,
-                              "Implementation-Vendor" to "C Thing Software",
+                              "Implementation-Vendor" to project.property("org.cthing.organization.name"),
                               "Implementation-Version" to project.version))
 }
 
@@ -51,7 +51,7 @@ tasks.withType<Javadoc> {
     with (options as StandardJavadocDocletOptions) {
         breakIterator(false)
         encoding("UTF-8")
-        bottom("Copyright &copy; ${SimpleDateFormat("yyyy", Locale.ENGLISH).format(Date())} C Thing Software. All rights reserved.")
+        bottom("Copyright &copy; ${SimpleDateFormat("yyyy", Locale.ENGLISH).format(Date())} ${project.property("org.cthing.organization.name")}. All rights reserved.")
         memberLevel = JavadocMemberLevel.PUBLIC
         outputLevel = JavadocOutputLevel.QUIET
     }
@@ -121,45 +121,43 @@ publishing {
         pom {
             name.set(project.name)
             description.set(project.description)
-            url.set("https://bitbucket.org/cthing/versionparser")
+            url.set("https://bitbucket.org/cthing/${project.name}")
             licenses {
                 license {
-                    name.set("Apache License, Version 2.0")
-                    url.set("http://www.apache.org/licenses/LICENSE-2")
+                    name.set(property("org.cthing.license.name") as String)
+                    url.set(property("org.cthing.license.url") as String)
                 }
             }
             developers {
                 developer {
-                    id.set("baron")
-                    name.set("Baron Roberts")
-                    email.set("baron@cthing.com")
-                    organization.set("C Thing Software")
-                    organizationUrl.set("http://www.cthing.com")
+                    id.set(property("org.cthing.developer.id") as String)
+                    name.set(property("org.cthing.developer.name") as String)
+                    email.set("${property("org.cthing.developer.id")}@cthing.com")
+                    organization.set(property("org.cthing.organization.name") as String)
+                    organizationUrl.set(property("org.cthing.organization.name") as String)
                 }
             }
             scm {
-                connection.set("scm:git:git://bitbucket.org/cthing/versionparser.git")
-                developerConnection.set("scm:git:ssh://bitbucket.org:cthing/versionparser")
-                url.set("https://bitbucket.org/cthing/versionparser/src")
+                connection.set("scm:git:git://bitbucket.org/cthing/${project.name}.git")
+                developerConnection.set("scm:git:ssh://bitbucket.org:cthing/${project.name}")
+                url.set("https://bitbucket.org/cthing/${project.name}/src")
             }
         }
     }
 
-    val repoUrl = if (isSnapshot) project.property("nexusSnapshotsUrl") else project.property("nexusCandidatesUrl")
+    val repoUrl = if (isSnapshot) property("nexusSnapshotsUrl") else property("nexusCandidatesUrl")
     if (repoUrl != null) {
         repositories.maven {
             setUrl(repoUrl)
             credentials {
-                username = project.properties["nexusUser"].toString()
-                password = project.properties["nexusPassword"].toString()
+                username = property("nexusUser") as String
+                password = property("nexusPassword") as String
             }
         }
     }
 }
 
-if (project.hasProperty("signing.keyId")
-        && project.hasProperty("signing.password")
-        && project.hasProperty("signing.secretKeyRingFile")) {
+if (hasProperty("signing.keyId") && hasProperty("signing.password") && hasProperty("signing.secretKeyRingFile")) {
     signing {
         sign(publishing.publications["mavenJava"])
     }
