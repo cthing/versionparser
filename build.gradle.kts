@@ -71,7 +71,7 @@ spotbugs {
     effort = "max"
     reportLevel = "medium"
     excludeFilter = project.file("dev/spotbugs/suppressions.xml")
-    sourceSets = listOf(convention.getPlugin<JavaPluginConvention>().sourceSets["main"])
+    sourceSets = listOf(java.sourceSets["main"])
 }
 
 tasks.withType<SpotBugsTask> {
