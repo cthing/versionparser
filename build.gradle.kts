@@ -17,12 +17,12 @@ plugins {
 }
 
 val isCIServer = System.getenv("CTHING_CI") != null
-val isSnapshot = property("org.cthing.build.type") == "snapshot"
+val isSnapshot = property("cthing.build.type") == "snapshot"
 val buildNumber = if (isCIServer) System.currentTimeMillis().toString() else "0"
-val semver = property("org.cthing.version")
+val semver = property("cthing.version")
 version = if (isSnapshot) "$semver-$buildNumber" else semver!!
-group = property("org.cthing.group") as String
-description = property("org.cthing.description") as String
+group = property("cthing.group") as String
+description = property("cthing.description") as String
 
 dependencies {
     testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")
@@ -64,7 +64,7 @@ tasks {
 
     withType<Jar> {
         manifest.attributes(mapOf("Implementation-Title" to project.name,
-                                  "Implementation-Vendor" to project.property("org.cthing.organization.name"),
+                                  "Implementation-Vendor" to project.property("cthing.organization.name"),
                                   "Implementation-Version" to project.version))
     }
 
@@ -72,7 +72,7 @@ tasks {
         with(options as StandardJavadocDocletOptions) {
             breakIterator(false)
             encoding("UTF-8")
-            bottom("Copyright &copy; ${SimpleDateFormat("yyyy", Locale.ENGLISH).format(Date())} ${project.property("org.cthing.organization.name")}. All rights reserved.")
+            bottom("Copyright &copy; ${SimpleDateFormat("yyyy", Locale.ENGLISH).format(Date())} ${project.property("cthing.organization.name")}. All rights reserved.")
             memberLevel = JavadocMemberLevel.PUBLIC
             outputLevel = JavadocOutputLevel.QUIET
         }
@@ -128,17 +128,17 @@ publishing {
                 url.set("https://bitbucket.org/cthing/${project.name}")
                 licenses {
                     license {
-                        name.set(property("org.cthing.license.name") as String)
-                        url.set(property("org.cthing.license.url") as String)
+                        name.set(property("cthing.license.name") as String)
+                        url.set(property("cthing.license.url") as String)
                     }
                 }
                 developers {
                     developer {
-                        id.set(property("org.cthing.developer.id") as String)
-                        name.set(property("org.cthing.developer.name") as String)
-                        email.set("${property("org.cthing.developer.id")}@cthing.com")
-                        organization.set(property("org.cthing.organization.name") as String)
-                        organizationUrl.set(property("org.cthing.organization.name") as String)
+                        id.set(property("cthing.developer.id") as String)
+                        name.set(property("cthing.developer.name") as String)
+                        email.set("${property("cthing.developer.id")}@cthing.com")
+                        organization.set(property("cthing.organization.name") as String)
+                        organizationUrl.set(property("cthing.organization.name") as String)
                     }
                 }
                 scm {
