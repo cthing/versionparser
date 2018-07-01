@@ -156,7 +156,7 @@ publishing {
             maven {
                 setUrl(repoUrl)
                 credentials {
-                    username = property("cthing.nexus.uUser") as String
+                    username = property("cthing.nexus.user") as String
                     password = property("cthing.nexus.password") as String
                 }
             }
