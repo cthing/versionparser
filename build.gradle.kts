@@ -150,14 +150,14 @@ publishing {
         }
     }
 
-    val repoUrl = if (isSnapshot) property("nexusSnapshotsUrl") else property("nexusCandidatesUrl")
+    val repoUrl = if (isSnapshot) property("cthing.nexus.snapshotsUrl") else property("cthing.nexus.candidatesUrl")
     if (repoUrl != null) {
         repositories {
             maven {
                 setUrl(repoUrl)
                 credentials {
-                    username = property("nexusUser") as String
-                    password = property("nexusPassword") as String
+                    username = property("cthing.nexus.uUser") as String
+                    password = property("cthing.nexus.password") as String
                 }
             }
         }
