@@ -102,10 +102,7 @@
         <module name="ArrayTypeStyle"/>
 
         <!-- Disallow "*" imports except for certain testing packages -->
-        <module name="AvoidStarImport">
-            <property name="excludes" value="org.junit.Assert,org.testng.Assert,org.hamcrest.MatcherAssert,org.hamcrest.Matchers,org.hamcrest.CoreMatchers,com.marvinformatics.kiss.matchers.file.FileMatchers,org.mockito.Mockito,org.assertj.core.api.Assertions"/>
-            <property name="allowStaticMemberImports" value="true"/>
-        </module>
+        <module name="AvoidStarImport"/>
 
         <!-- No more than 10 "&&", "||", "&", "|" and "^" operators in an expression -->
         <module name="BooleanExpressionComplexity">
