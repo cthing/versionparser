@@ -101,7 +101,7 @@
         <!-- Enforce Java-style array declarations (e.g. String[] args) -->
         <module name="ArrayTypeStyle"/>
 
-        <!-- Disallow "*" imports except for certain testing packages -->
+        <!-- Disallow "*" imports -->
         <module name="AvoidStarImport"/>
 
         <!-- No more than 10 "&&", "||", "&", "|" and "^" operators in an expression -->
