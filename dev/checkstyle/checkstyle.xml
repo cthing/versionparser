@@ -30,24 +30,6 @@
         <property name="header" value="^/\*$\n^ \* Copyright [\d]{4}((,[\s]*[\d]{4})*|(-[\d]{4})?) C Thing Software$\n^ \* All rights reserved.$\n^ \*/$"/>
     </module>
 
-    <!-- Ensure @return has a description -->
-    <module name="RegexpSingleline">
-        <property name="format" value="\*[\s]*@return[\s]*$"/>
-        <property name="message" value="Missing description for @return"/>
-    </module>
-
-    <!-- Ensure @param and @throws has a description -->
-    <module name="RegexpSingleline">
-        <property name="format" value="\*[\s]*@(throws|param)[\s]+[\S]+[\s]*$"/>
-        <property name="message" value="Missing description for @param or @throws"/>
-    </module>
-
-    <!-- Ensure @param and @throws has a parameter or exception -->
-    <module name="RegexpSingleline">
-        <property name="format" value="\*[\s]*@(param|throws)[\s]*$"/>
-        <property name="message" value="Missing parameter or exception name"/>
-    </module>
-
     <!-- Flag IDE generated comments -->
     <module name="RegexpSingleline">
         <property name="format" value="\/\/[\s]*TODO[\s]*Auto-generated"/>
@@ -95,11 +77,17 @@
         <!-- No "{}" for single value annotations, no empty parenthesis, no trailing commas -->
         <module name="AnnotationUseStyle"/>
 
+        <!-- Annotations must be on a separate line -->
+        <module name="AnnotationLocation"/>
+
         <!-- Require trailing comma on multi-line array initialization -->
         <module name="ArrayTrailingComma"/>
 
         <!-- Enforce Java-style array declarations (e.g. String[] args) -->
         <module name="ArrayTypeStyle"/>
+
+        <!-- Enfore Javadoc tag order -->
+        <module name="AtclauseOrder"/>
 
         <!-- Disallow "*" imports -->
         <module name="AvoidStarImport"/>
@@ -108,6 +96,14 @@
         <module name="BooleanExpressionComplexity">
             <property name="max" value="10"/>
         </module>
+
+        <!-- Catch clause parameter name must be "ex" -->
+        <module name="CatchParameterName">
+            <property name="format" value="^(ex|ignore)$"/>
+        </module>
+
+        <!-- Ensure comments are properly aligned relative to their surrounding code -->
+        <module name="CommentsIndentation"/>
 
         <!-- All static final members must be all uppercase and underscores -->
         <module name="ConstantName"/>
@@ -224,13 +220,22 @@
             <property name="allowMissingPropertyJavadoc" value="true"/>
         </module>
 
+        <!-- Require blank lines between Javadoc paragraphs and use HTML "p" tag -->
+        <module name="JavadocParagraph"/>
+
         <!-- Check for empty Javadoc, missing "." at end of first sentence, bad HTML, etc. -->
         <module name="JavadocStyle">
             <property name="checkEmptyJavadoc" value="true"/>
         </module>
 
+        <!-- Javadoc tag description continuation must be indented -->
+        <module name="JavadocTagContinuationIndentation"/>
+
         <!-- Javadoc comments required for all class and interface definitions -->
         <module name="JavadocType"/>
+
+        <!-- Enforce lambda parameter naming convention -->
+        <module name="LambdaParameterName"/>
 
         <!-- The "{" goes on the end of the line (e.g. "if (exists) {") -->
         <module name="LeftCurly">
@@ -313,6 +318,9 @@
 
         <!-- No finalize() methods -->
         <module name="NoFinalizer"/>
+
+        <!-- Ensure Javadoc tags have a description -->
+        <module name="NonEmptyAtclauseDescription"/>
 
         <!-- No whitespace after "~", pre dec, ".", pre inc, "!", unary "-", unary "+", (type) -->
         <module name="NoWhitespaceAfter">
