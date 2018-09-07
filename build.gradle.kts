@@ -8,12 +8,12 @@ import java.util.Locale
 // a third party dependency.
 
 plugins {
-    id("java")
+    id("java-library")
     id("checkstyle")
     id("jacoco")
     id("maven-publish")
     id("signing")
-    id("com.github.spotbugs").version("1.6.2")
+    id("com.github.spotbugs").version("1.6.3")
 }
 
 val isCIServer = System.getenv("CTHING_CI") != null
@@ -25,17 +25,17 @@ group = property("cthing.group") as String
 description = property("cthing.description") as String
 
 dependencies {
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")
-    testCompile("org.junit.jupiter:junit-jupiter-params:5.2.0")
-    testCompile("org.assertj:assertj-core:3.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.0")
+    testImplementation("org.assertj:assertj-core:3.11.1")
     testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.0")
 
-    spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.2.sb")
+    spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb")
 }
 
 checkstyle {
-    toolVersion = "8.11"
+    toolVersion = "8.12"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDir = file("dev/checkstyle")
@@ -43,16 +43,16 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion = "3.1.5"
+    toolVersion = "3.1.6"
     isIgnoreFailures = false
     effort = "max"
     reportLevel = "medium"
     excludeFilter = file("dev/spotbugs/suppressions.xml")
-    sourceSets = listOf(java.sourceSets["main"])
+    sourceSets = listOf(project.sourceSets["main"])
 }
 
 jacoco {
-    toolVersion = "0.8.1"
+    toolVersion = "0.8.2"
 }
 
 tasks {
@@ -105,7 +105,7 @@ tasks {
 }
 
 val sourceJar by tasks.creating(Jar::class) {
-    from(java.sourceSets["main"].allSource)
+    from(project.sourceSets["main"].allSource)
     classifier = "sources"
 }
 
@@ -116,7 +116,7 @@ val javadocJar by tasks.creating(Jar::class) {
 
 publishing {
     (publications) {
-        "mavenJava"(MavenPublication::class) {
+        create("mavenJava", MavenPublication::class.java) {
             from(components["java"])
 
             artifact(sourceJar)
