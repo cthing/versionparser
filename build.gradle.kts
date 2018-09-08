@@ -8,13 +8,13 @@ import java.util.Locale
 // a third party dependency.
 
 plugins {
-    id("java-library")
-    id("checkstyle")
-    id("jacoco")
-    id("maven-publish")
-    id("signing")
-    id("org.gradle.kotlin.kotlin-dsl").version("1.0-rc-3")
-    id("com.github.spotbugs").version("1.6.3")
+    `kotlin-dsl`
+    `java-library`
+    checkstyle
+    jacoco
+    `maven-publish`
+    signing
+    id("com.github.spotbugs") version "1.6.3"
 }
 
 val isCIServer = System.getenv("CTHING_CI") != null
