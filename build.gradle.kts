@@ -8,7 +8,6 @@ import java.util.Locale
 // a third party dependency.
 
 plugins {
-    `kotlin-dsl`
     `java-library`
     checkstyle
     jacoco
@@ -117,7 +116,7 @@ val javadocJar by tasks.creating(Jar::class) {
 
 publishing {
     publications {
-        create("mavenJava", MavenPublication::class) {
+        create("mavenJava", MavenPublication::class.java) {
             from(components["java"])
 
             artifact(sourceJar)
