@@ -13,7 +13,7 @@ plugins {
     jacoco
     `maven-publish`
     signing
-    id("com.github.spotbugs") version "1.6.3"
+    id("com.github.spotbugs") version "1.6.5"
 }
 
 val isCIServer = System.getenv("CTHING_CI") != null
@@ -25,17 +25,17 @@ group = property("cthing.group") as String
 description = property("cthing.description") as String
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.2")
     testImplementation("org.assertj:assertj-core:3.11.1")
     testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.2")
 
     spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb")
 }
 
 checkstyle {
-    toolVersion = "8.12"
+    toolVersion = "8.14"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDir = file("dev/checkstyle")
@@ -43,7 +43,7 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion = "3.1.7"
+    toolVersion = "3.1.9"
     isIgnoreFailures = false
     effort = "max"
     reportLevel = "medium"
@@ -97,10 +97,6 @@ tasks {
 
     withType<Test> {
         useJUnitPlatform()
-
-        configure<JacocoTaskExtension> {
-            isAppend = false
-        }
     }
 }
 
