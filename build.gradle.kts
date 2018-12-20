@@ -57,9 +57,7 @@ jacoco {
 
 tasks {
     withType<JavaCompile> {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
-        options.compilerArgs = listOf("-Xlint:all", "-Xlint:-options", "-Werror")
+        options.compilerArgs.addAll(listOf("--release", "8", "-Xlint:all", "-Xlint:-options", "-Werror"))
     }
 
     withType<Jar> {
