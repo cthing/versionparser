@@ -25,6 +25,8 @@ group = property("cthing.group") as String
 description = property("cthing.description") as String
 
 dependencies {
+    api("com.google.code.findbugs:jsr305:3.0.2")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.2")
     testImplementation("org.assertj:assertj-core:3.11.1")

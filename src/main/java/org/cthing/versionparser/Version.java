@@ -7,8 +7,12 @@ package org.cthing.versionparser;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 
 /**
@@ -39,6 +43,7 @@ import java.util.regex.Pattern;
  *     <tr><td style="padding-right: 15px">"1"</td><td>""</td><td align="right">&gt;0</td></tr>
  * </table>
  */
+@ParametersAreNonnullByDefault
 public final class Version implements Comparable<Version> {
 
     /** Captures the leading numeric components of a version number string. */
@@ -86,9 +91,7 @@ public final class Version implements Comparable<Version> {
      * @param version  Version number string
      */
     public Version(final String version) {
-        if (version == null) {
-            throw new IllegalArgumentException("version cannot be null");
-        }
+        Objects.requireNonNull(version, "version cannot be null");
 
         this.version = version;
         this.components = new ArrayList<>();
@@ -104,6 +107,7 @@ public final class Version implements Comparable<Version> {
      *
      * @return Original version number string.
      */
+    @Nonnull
     public String getVersion() {
         return this.version;
     }
@@ -113,6 +117,7 @@ public final class Version implements Comparable<Version> {
      *
      * @return Numeric components of the version number.
      */
+    @Nonnull
     public List<Long> getComponents() {
         return Collections.unmodifiableList(this.components);
     }
@@ -122,6 +127,7 @@ public final class Version implements Comparable<Version> {
      *
      * @return Trailing portion of the version number.
      */
+    @Nonnull
     public String getTrailing() {
         return this.trailing;
     }

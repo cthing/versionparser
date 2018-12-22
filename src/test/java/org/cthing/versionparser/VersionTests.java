@@ -34,6 +34,7 @@ public class VersionTests {
 
     private static Stream<Arguments> versionParsingProvider() {
         return Stream.of(
+                Arguments.of("", "", true, true, 0, new Long[0]),
                 Arguments.of("1", "", true, true, 0, new Long[]{ 1L }),
                 Arguments.of("1.20", "", true, true, 0, new Long[]{ 1L, 20L }),
                 Arguments.of("1.20.32", "", true, true, 0, new Long[]{ 1L, 20L, 32L }),
