@@ -13,7 +13,7 @@ plugins {
     jacoco
     `maven-publish`
     signing
-    id("com.github.spotbugs") version "1.6.5"
+    id("com.github.spotbugs") version "1.6.9"
 }
 
 val isCIServer = System.getenv("CTHING_CI") != null
@@ -37,7 +37,7 @@ dependencies {
 }
 
 checkstyle {
-    toolVersion = "8.14"
+    toolVersion = "8.16"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDir = file("dev/checkstyle")
@@ -45,7 +45,7 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion = "3.1.9"
+    toolVersion = "3.1.10"
     isIgnoreFailures = false
     effort = "max"
     reportLevel = "medium"
