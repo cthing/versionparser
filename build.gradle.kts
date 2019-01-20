@@ -58,17 +58,17 @@ jacoco {
 }
 
 tasks {
-    withType<JavaCompile> {
+    withType<JavaCompile>().configureEach {
         options.compilerArgs.addAll(listOf("--release", "8", "-Xlint:all", "-Xlint:-options", "-Werror"))
     }
 
-    withType<Jar> {
+    withType<Jar>().configureEach {
         manifest.attributes(mapOf("Implementation-Title" to project.name,
                                   "Implementation-Vendor" to project.property("cthing.organization.name"),
                                   "Implementation-Version" to project.version))
     }
 
-    withType<Javadoc> {
+    withType<Javadoc>().configureEach {
         with(options as StandardJavadocDocletOptions) {
             breakIterator(false)
             encoding("UTF-8")
@@ -78,14 +78,14 @@ tasks {
         }
     }
 
-    withType<SpotBugsTask> {
+    withType<SpotBugsTask>().configureEach {
         with(reports) {
             xml.isEnabled = false
             html.isEnabled = true
         }
     }
 
-    withType<JacocoReport> {
+    withType<JacocoReport>().configureEach {
         dependsOn("test")
         with(reports) {
             xml.isEnabled = false
@@ -95,19 +95,19 @@ tasks {
         }
     }
 
-    withType<Test> {
+    withType<Test>().configureEach {
         useJUnitPlatform()
     }
 }
 
-val sourceJar by tasks.creating(Jar::class) {
+val sourceJar by tasks.registering(Jar::class) {
     from(project.sourceSets["main"].allSource)
-    classifier = "sources"
+    archiveClassifier.set("sources")
 }
 
-val javadocJar by tasks.creating(Jar::class) {
+val javadocJar by tasks.registering(Jar::class) {
     from("javadoc")
-    classifier = "javadoc"
+    archiveClassifier.set("javadoc")
 }
 
 publishing {
@@ -115,8 +115,8 @@ publishing {
         create("mavenJava", MavenPublication::class.java) {
             from(components["java"])
 
-            artifact(sourceJar)
-            artifact(javadocJar)
+            artifact(sourceJar.get())
+            artifact(javadocJar.get())
 
             pom {
                 name.set(project.name)
