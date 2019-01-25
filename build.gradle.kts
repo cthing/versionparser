@@ -112,7 +112,7 @@ val javadocJar by tasks.registering(Jar::class) {
 
 publishing {
     publications {
-        create("mavenJava", MavenPublication::class.java) {
+        create("mavenJava", MavenPublication::class) {
             from(components["java"])
 
             artifact(sourceJar.get())
