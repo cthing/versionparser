@@ -27,17 +27,17 @@ description = property("cthing.description") as String
 dependencies {
     api("com.google.code.findbugs:jsr305:3.0.2")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.0")
     testImplementation("org.assertj:assertj-core:3.11.1")
     testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.0")
 
     spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb")
 }
 
 checkstyle {
-    toolVersion = "8.16"
+    toolVersion = "8.17"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDir = file("dev/checkstyle")
@@ -45,7 +45,7 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion = "3.1.10"
+    toolVersion = "3.1.11"
     isIgnoreFailures = false
     effort = "max"
     reportLevel = "medium"
@@ -54,7 +54,7 @@ spotbugs {
 }
 
 jacoco {
-    toolVersion = "0.8.2"
+    toolVersion = "0.8.3"
 }
 
 tasks {
