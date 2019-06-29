@@ -33,11 +33,11 @@ dependencies {
     testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
 
-    spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.4.6")
 }
 
 checkstyle {
-    toolVersion = "8.19"
+    toolVersion = "8.22"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDir = file("dev/checkstyle")
@@ -54,7 +54,7 @@ spotbugs {
 }
 
 jacoco {
-    toolVersion = "0.8.3"
+    toolVersion = "0.8.4"
 }
 
 tasks {
