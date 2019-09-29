@@ -16,16 +16,16 @@
 
     <property name="severity" value="error"/>
 
-    <!-- Lines cannot be longer than 200 characters -->
-    <module name="LineLength">
-        <property name="max" value="200"/>
-    </module>
-
     <!-- Do not allow tab characters in source code -->
     <module name="FileTabCharacter"/>
 
     <!-- Require a package-info.java file for each package containing classes -->
     <module name="JavadocPackage"/>
+
+    <!-- Lines cannot be longer than 200 characters -->
+    <module name="LineLength">
+        <property name="max" value="200"/>
+    </module>
 
     <!-- File must end with a newline -->
     <module name="NewlineAtEndOfFile"/>
