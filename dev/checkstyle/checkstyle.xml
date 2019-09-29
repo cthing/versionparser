@@ -16,6 +16,11 @@
 
     <property name="severity" value="error"/>
 
+    <!-- Lines cannot be longer than 200 characters -->
+    <module name="LineLength">
+        <property name="max" value="200"/>
+    </module>
+
     <!-- Do not allow tab characters in source code -->
     <module name="FileTabCharacter"/>
 
@@ -240,11 +245,6 @@
         <!-- The "{" goes on the end of the line (e.g. "if (exists) {") -->
         <module name="LeftCurly">
             <property name="option" value="eol"/>
-        </module>
-
-        <!-- Lines cannot be longer than 200 characters -->
-        <module name="LineLength">
-            <property name="max" value="200"/>
         </module>
 
         <!-- Local final variables must be camel case starting with a lowercase letter -->
