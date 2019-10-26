@@ -222,6 +222,10 @@
         <module name="JavadocMethod">
             <property name="scope" value="package"/>
             <property name="tokens" value="METHOD_DEF"/>
+        </module>
+        <module name="MissingJavadocMethod">
+            <property name="scope" value="package"/>
+            <property name="tokens" value="METHOD_DEF"/>
             <property name="allowMissingPropertyJavadoc" value="true"/>
         </module>
 
@@ -238,6 +242,7 @@
 
         <!-- Javadoc comments required for all class and interface definitions -->
         <module name="JavadocType"/>
+        <module name="MissingJavadocType"/>
 
         <!-- Enforce lambda parameter naming convention -->
         <module name="LambdaParameterName"/>
