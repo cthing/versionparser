@@ -98,6 +98,10 @@ tasks {
     withType<Test>().configureEach {
         useJUnitPlatform()
     }
+
+    withType<GenerateModuleMetadata> {
+        enabled = false
+    }
 }
 
 val sourceJar by tasks.registering(Jar::class) {
