@@ -59,7 +59,7 @@ jacoco {
 
 tasks {
     withType<JavaCompile>().configureEach {
-        options.compilerArgs.addAll(listOf("--release", "8", "-Xlint:all", "-Xlint:-options", "-Werror"))
+        options.compilerArgs.addAll(listOf("--release", "11", "-Xlint:all", "-Xlint:-options", "-Werror"))
     }
 
     withType<Jar>().configureEach {

@@ -223,7 +223,7 @@ public final class Version implements Comparable<Version> {
         final Matcher matcher = LETTER_PATTERN.matcher(lowerTrailing);
         if (matcher.matches()) {
             this.trailingValue = RELEASE_BASE;
-            this.trailingValue += (int)matcher.group(1).charAt(0);
+            this.trailingValue += matcher.group(1).charAt(0);
             return;
         }
 
