@@ -29,7 +29,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.5.2")
-    testImplementation("org.assertj:assertj-core:3.13.2")
+    testImplementation("org.assertj:assertj-core:3.14.0")
     testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
 
@@ -37,7 +37,7 @@ dependencies {
 }
 
 checkstyle {
-    toolVersion = "8.26"
+    toolVersion = "8.28"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDirectory.set(file("dev/checkstyle"))
