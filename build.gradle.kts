@@ -125,7 +125,7 @@ publishing {
             pom {
                 name.set(project.name)
                 description.set(project.description)
-                url.set("https://bitbucket.org/cthing/${project.name}")
+                url.set("https://github.com/baron1405/${project.name}")
                 licenses {
                     license {
                         name.set(property("cthing.license.name") as String)
@@ -142,9 +142,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://bitbucket.org/cthing/${project.name}.git")
-                    developerConnection.set("scm:git:ssh://bitbucket.org:cthing/${project.name}")
-                    url.set("https://bitbucket.org/cthing/${project.name}/src")
+                    connection.set("scm:git:git://github.com/baron1405/${project.name}.git")
+                    developerConnection.set("scm:git:ssh://github.com:baron1405/${project.name}")
+                    url.set("https://github.com/baron1405/${project.name}/src")
                 }
             }
         }
