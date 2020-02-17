@@ -27,17 +27,17 @@ description = property("cthing.description") as String
 dependencies {
     api("com.google.code.findbugs:jsr305:3.0.2")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.5.2")
-    testImplementation("org.assertj:assertj-core:3.14.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.0")
+    testImplementation("org.assertj:assertj-core:3.15.0")
     testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
 
     spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.4.7")
 }
 
 checkstyle {
-    toolVersion = "8.28"
+    toolVersion = "8.29"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDirectory.set(file("dev/checkstyle"))
