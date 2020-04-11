@@ -1,4 +1,5 @@
-import com.github.spotbugs.SpotBugsTask
+import com.github.spotbugs.snom.Effort
+import com.github.spotbugs.snom.Confidence
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -13,7 +14,7 @@ plugins {
     jacoco
     `maven-publish`
     signing
-    id("com.github.spotbugs") version "2.0.0"
+    id("com.github.spotbugs") version "4.0.5"
 }
 
 val isCIServer = System.getenv("CTHING_CI") != null
@@ -45,12 +46,11 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion = "3.1.12"
-    isIgnoreFailures = false
-    effort = "max"
-    reportLevel = "medium"
-    excludeFilter = file("dev/spotbugs/suppressions.xml")
-    sourceSets = listOf(project.sourceSets["main"])
+    toolVersion.set("4.0.1")
+    ignoreFailures.set(false)
+    effort.set(Effort.MAX)
+    reportLevel.set(Confidence.MEDIUM)
+    excludeFilter.set(file("dev/spotbugs/suppressions.xml"))
 }
 
 jacoco {
@@ -78,11 +78,12 @@ tasks {
         }
     }
 
-    withType<SpotBugsTask>().configureEach {
-        with(reports) {
-            xml.isEnabled = false
-            html.isEnabled = true
-        }
+    spotbugsMain {
+        reports.create("html").isEnabled = true
+    }
+
+    spotbugsTest {
+        isEnabled = false
     }
 
     withType<JacocoReport>().configureEach {
