@@ -14,7 +14,7 @@ plugins {
     jacoco
     `maven-publish`
     signing
-    id("com.github.spotbugs") version "4.3.0"
+    id("com.github.spotbugs") version "4.5.0"
 }
 
 val isCIServer = System.getenv("CTHING_CI") != null
@@ -30,7 +30,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.2")
-    testImplementation("org.assertj:assertj-core:3.16.1")
+    testImplementation("org.assertj:assertj-core:3.17.1")
     testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
 
@@ -38,7 +38,7 @@ dependencies {
 }
 
 checkstyle {
-    toolVersion = "8.33"
+    toolVersion = "8.36"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDirectory.set(file("dev/checkstyle"))
@@ -46,7 +46,7 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion.set("4.0.3")
+    toolVersion.set("4.1.2")
     ignoreFailures.set(false)
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.MEDIUM)
@@ -59,7 +59,8 @@ jacoco {
 
 tasks {
     withType<JavaCompile>().configureEach {
-        options.compilerArgs.addAll(listOf("--release", "11", "-Xlint:all", "-Xlint:-options", "-Werror"))
+        options.release.set(11)
+        options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:-options", "-Werror"))
     }
 
     withType<Jar>().configureEach {
