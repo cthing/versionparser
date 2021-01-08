@@ -38,7 +38,7 @@ dependencies {
 }
 
 checkstyle {
-    toolVersion = "8.37"
+    toolVersion = "8.39"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDirectory.set(file("dev/checkstyle"))
@@ -46,7 +46,7 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion.set("4.1.4")
+    toolVersion.set("4.2.0")
     ignoreFailures.set(false)
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.MEDIUM)
