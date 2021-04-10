@@ -14,7 +14,7 @@ plugins {
     jacoco
     `maven-publish`
     signing
-    id("com.github.spotbugs") version "4.6.0"
+    id("com.github.spotbugs") version "4.7.0"
 }
 
 val isCIServer = System.getenv("CTHING_CI") != null
@@ -28,17 +28,17 @@ description = property("cthing.description") as String
 dependencies {
     api("com.google.code.findbugs:jsr305:3.0.2")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
-    testImplementation("org.assertj:assertj-core:3.18.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
+    testImplementation("org.assertj:assertj-core:3.19.0")
     testCompileOnly("org.apiguardian:apiguardian-api:1.0.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 
     spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.4.7")
 }
 
 checkstyle {
-    toolVersion = "8.39"
+    toolVersion = "8.41.1"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDirectory.set(file("dev/checkstyle"))
@@ -46,7 +46,7 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion.set("4.2.0")
+    toolVersion.set("4.2.2")
     ignoreFailures.set(false)
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.MEDIUM)
