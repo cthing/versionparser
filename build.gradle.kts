@@ -38,7 +38,7 @@ dependencies {
 }
 
 checkstyle {
-    toolVersion = "8.41.1"
+    toolVersion = "8.43"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDirectory.set(file("dev/checkstyle"))
