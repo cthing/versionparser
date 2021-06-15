@@ -98,10 +98,10 @@ tasks {
     withType<JacocoReport>().configureEach {
         dependsOn("test")
         with(reports) {
-            xml.isEnabled = false
-            csv.isEnabled = false
-            html.isEnabled = true
-            html.destination = File(buildDir, "reports/jacoco")
+            xml.required.set(false)
+            csv.required.set(false)
+            html.required.set(true)
+            html.outputLocation.set(File(buildDir, "reports/jacoco"))
         }
     }
 
