@@ -14,7 +14,7 @@ plugins {
     jacoco
     `maven-publish`
     signing
-    id("com.github.spotbugs") version "4.7.1"
+    id("com.github.spotbugs") version "4.7.2"
     id("com.github.ben-manes.versions") version "0.39.0"
 }
 
@@ -31,15 +31,15 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.2")
-    testImplementation("org.assertj:assertj-core:3.19.0")
-    testCompileOnly("org.apiguardian:apiguardian-api:1.1.1")
+    testImplementation("org.assertj:assertj-core:3.20.2")
+    testCompileOnly("org.apiguardian:apiguardian-api:1.1.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
 
     spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.4.7")
 }
 
 checkstyle {
-    toolVersion = "8.43"
+    toolVersion = "8.45"
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDirectory.set(file("dev/checkstyle"))
@@ -47,7 +47,7 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion.set("4.2.3")
+    toolVersion.set("4.3.0")
     ignoreFailures.set(false)
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.MEDIUM)
