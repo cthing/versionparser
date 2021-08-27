@@ -588,6 +588,7 @@ ij_xml_text_wrap = normal
 ij_xml_use_custom_settings = false
 
 [{*.ats,*.ts}]
+quote_type = single
 ij_continuation_indent_size = 4
 ij_visual_guides = none
 ij_typescript_align_imports = false
@@ -1295,6 +1296,8 @@ ij_html_space_inside_empty_tag = false
 ij_html_text_wrap = normal
 
 [{*.markdown,*.md}]
+max_line_length = off
+trim_trailing_whitespace = false
 ij_visual_guides = none
 ij_markdown_force_one_space_after_blockquote_symbol = true
 ij_markdown_force_one_space_after_header_symbol = true
