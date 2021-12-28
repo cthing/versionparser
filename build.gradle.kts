@@ -4,18 +4,19 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// This project is consumed by infrastructure bootstrap code. Therefore it does not use any
-// C Thing Software Gradle plugins and is in the org.cthing domain so it can be consumed as
+// This project is consumed by infrastructure bootstrap code. Therefore, it does not use any
+// C Thing Software Gradle plugins and is in the org.cthing domain, so it can be consumed as
 // a third party dependency.
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     `java-library`
     checkstyle
     jacoco
     `maven-publish`
     signing
-    id("com.github.spotbugs") version "5.0.3"
-    id("com.github.ben-manes.versions") version "0.39.0"
+    alias(libs.plugins.spotbugs)
+    alias(libs.plugins.versions)
 }
 
 val isCIServer = System.getenv("CTHING_CI") != null
@@ -27,19 +28,19 @@ group = property("cthing.group") as String
 description = property("cthing.description") as String
 
 dependencies {
-    api("com.google.code.findbugs:jsr305:3.0.2")
+    api(libs.jsr305)
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
-    testImplementation("org.assertj:assertj-core:3.21.0")
-    testCompileOnly("org.apiguardian:apiguardian-api:1.1.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation(libs.junitApi)
+    testImplementation(libs.junitParams)
+    testImplementation(libs.assertJ)
+    testCompileOnly(libs.apiGuardian)
+    testRuntimeOnly(libs.junitEngine)
 
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.4.7")
+    spotbugsPlugins(libs.spotbugsContrib)
 }
 
 checkstyle {
-    toolVersion = "9.2"
+    toolVersion = libs.versions.checkstyle.get()
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
     configDirectory.set(file("dev/checkstyle"))
@@ -47,7 +48,7 @@ checkstyle {
 }
 
 spotbugs {
-    toolVersion.set("4.5.2")
+    toolVersion.set(libs.versions.spotbugs)
     ignoreFailures.set(false)
     effort.set(Effort.MAX)
     reportLevel.set(Confidence.MEDIUM)
@@ -55,7 +56,7 @@ spotbugs {
 }
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = libs.versions.jacoco.get()
 }
 
 fun isNonStable(version: String): Boolean {

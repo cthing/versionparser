@@ -1,0 +1,18 @@
+[versions]
+checkstyle = "9.2.1"
+jacoco = "0.8.7"
+junit = "5.8.2"
+spotbugs = "4.5.2"
+
+[plugins]
+spotbugs = { id = "com.github.spotbugs", version = "5.0.3" }
+versions = { id = "com.github.ben-manes.versions", version = "0.39.0" }
+
+[libraries]
+apiGuardian = "org.apiguardian:apiguardian-api:1.1.2"
+assertJ = "org.assertj:assertj-core:3.21.0"
+jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
+junitApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junitEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junitParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
+spotbugsContrib = "com.mebigfatguy.sb-contrib:sb-contrib:7.4.7"
