@@ -67,18 +67,18 @@ fun isNonStable(version: String): Boolean {
 }
 
 tasks {
-    withType<JavaCompile>().configureEach {
+    withType<JavaCompile> {
         options.release.set(11)
         options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:-options", "-Werror"))
     }
 
-    withType<Jar>().configureEach {
+    withType<Jar> {
         manifest.attributes(mapOf("Implementation-Title" to project.name,
                                   "Implementation-Vendor" to project.property("cthing.organization.name"),
                                   "Implementation-Version" to project.version))
     }
 
-    withType<Javadoc>().configureEach {
+    withType<Javadoc> {
         with(options as StandardJavadocDocletOptions) {
             breakIterator(false)
             encoding("UTF-8")
@@ -96,7 +96,7 @@ tasks {
         isEnabled = false
     }
 
-    withType<JacocoReport>().configureEach {
+    withType<JacocoReport> {
         dependsOn("test")
         with(reports) {
             xml.required.set(false)
@@ -106,7 +106,7 @@ tasks {
         }
     }
 
-    withType<Test>().configureEach {
+    withType<Test> {
         useJUnitPlatform()
     }
 
