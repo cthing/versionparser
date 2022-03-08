@@ -8,6 +8,10 @@ import java.util.Locale
 // C Thing Software Gradle plugins and is in the org.cthing domain, so it can be consumed as
 // a third party dependency.
 
+repositories {
+    mavenCentral()
+}
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     `java-library`
