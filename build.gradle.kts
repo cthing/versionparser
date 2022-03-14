@@ -4,10 +4,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// This project is consumed by infrastructure bootstrap code. Therefore, it does not use any
-// C Thing Software Gradle plugins and is in the org.cthing domain, so it can be consumed as
-// a third party dependency.
-
 repositories {
     mavenCentral()
 }
@@ -32,8 +28,6 @@ group = property("cthing.group") as String
 description = property("cthing.description") as String
 
 dependencies {
-    api(libs.jsr305)
-
     testImplementation(libs.junitApi)
     testImplementation(libs.junitParams)
     testImplementation(libs.assertJ)
@@ -83,10 +77,12 @@ tasks {
     }
 
     withType<Javadoc> {
+        val year = SimpleDateFormat("yyyy", Locale.ENGLISH).format(Date())
+        val organization = project.property("cthing.organization.name")
         with(options as StandardJavadocDocletOptions) {
             breakIterator(false)
             encoding("UTF-8")
-            bottom("Copyright &copy; ${SimpleDateFormat("yyyy", Locale.ENGLISH).format(Date())} ${project.property("cthing.organization.name")}. All rights reserved.")
+            bottom("Copyright &copy; $year $organization")
             memberLevel = JavadocMemberLevel.PUBLIC
             outputLevel = JavadocOutputLevel.QUIET
         }
@@ -171,6 +167,10 @@ publishing {
                     connection.set("scm:git:git://github.com/cthing/${project.name}.git")
                     developerConnection.set("scm:git:ssh://github.com:cthing/${project.name}")
                     url.set("https://github.com/cthing/${project.name}/src")
+                }
+                issueManagement {
+                    system.set("GitHub")
+                    url.set("https://github.com/cthing/${project.name}/issues")
                 }
             }
         }

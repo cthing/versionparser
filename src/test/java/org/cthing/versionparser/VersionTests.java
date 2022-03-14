@@ -1,6 +1,17 @@
 /*
- * Copyright 2016 C Thing Software
- * All rights reserved.
+ * Copyright 2022 C Thing Software
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.cthing.versionparser;
 
@@ -60,7 +71,8 @@ public class VersionTests {
                 Arguments.of("1.2-M", "M", true, true, 109, new Long[]{ 1L, 2L }),
                 Arguments.of("beta", "beta", false, true, -500, new Long[]{}),
                 Arguments.of("1.2.3Foo", "Foo", true, false, 0, new Long[]{ 1L, 2L, 3L }),
-                Arguments.of("1.2.3-4.5.6-Foo", "Foo", true, false, 0, new Long[]{ 1L, 2L, 3L, 4L, 5L, 6L })
+                Arguments.of("1.2.3-4.5.6-Foo", "Foo", true, false, 0, new Long[]{ 1L, 2L, 3L, 4L, 5L, 6L }),
+                Arguments.of("1.2.3-1552171596805", "", true, true, 0, new Long[]{ 1L, 2L, 3L, 1552171596805L })
         );
     }
 
@@ -74,34 +86,36 @@ public class VersionTests {
     private static Stream<Arguments> versionComparisonProvider() {
         //@formatter:off
         return Stream.of(
-                Arguments.of("1",             "1",             0),
-                Arguments.of("1.2",           "1.2",           0),
-                Arguments.of("1.2.3",         "1.2.3",         0),
-                Arguments.of("  1.2.3",       "1.2.3  ",       0),
-                Arguments.of("1.2.3.4",       "1.2.3.4",       0),
-                Arguments.of("1.2.3.4-beta1", "1.2.3.4-beta1", 0),
-                Arguments.of("1.2.+",         "1.2.3",         0),
-                Arguments.of("1.2.+",         "1.2.+",         0),
-                Arguments.of("1",             "1.0",           0),
-                Arguments.of("1.2.3-Beta1",   "1.2.3BETA1",    0),
-                Arguments.of("1.2.3",         "1.2.3.RELEASE", 0),
-                Arguments.of("1",             "2",            -1),
-                Arguments.of("2",             "1",             1),
-                Arguments.of("1.1",           "1.2",          -1),
-                Arguments.of("1.2",           "1.1",           1),
-                Arguments.of("1",             "1.2",          -1),
-                Arguments.of("1.2",           "1",             1),
-                Arguments.of("1.1",           "1.1-alpha1",    1),
-                Arguments.of("1.1",           "1.1-beta1",     1),
-                Arguments.of("1.1",           "1.1-rc1",       1),
-                Arguments.of("1.1",           "1.1-m1",        1),
-                Arguments.of("1.1",           "1.1-SNAPSHOT",  1),
-                Arguments.of("1.1-alpha2",    "1.1-alpha1",    1),
-                Arguments.of("1.1-beta1",     "1.1-alpha1",    1),
-                Arguments.of("1.1-rc1",       "1.1-beta1",     1),
-                Arguments.of("1.1-rc1",       "1.1-m1",        1),
-                Arguments.of("0.98g",         "0.98b",         1),
-                Arguments.of("1.1-FOO",       "1.1-BOO",       1)
+                Arguments.of("1",                   "1",                    0),
+                Arguments.of("1.2",                 "1.2",                  0),
+                Arguments.of("1.2.3",               "1.2.3",                0),
+                Arguments.of("  1.2.3",             "1.2.3  ",              0),
+                Arguments.of("1.2.3.4",             "1.2.3.4",              0),
+                Arguments.of("1.2.3.4-beta1",       "1.2.3.4-beta1",        0),
+                Arguments.of("1.2.+",               "1.2.3",                0),
+                Arguments.of("1.2.+",               "1.2.+",                0),
+                Arguments.of("1",                   "1.0",                  0),
+                Arguments.of("1.2.3-Beta1",         "1.2.3BETA1",           0),
+                Arguments.of("1.2.3",               "1.2.3.RELEASE",        0),
+                Arguments.of("1",                   "2",                   -1),
+                Arguments.of("2",                   "1",                    1),
+                Arguments.of("1.1",                 "1.2",                 -1),
+                Arguments.of("1.2",                 "1.1",                  1),
+                Arguments.of("1",                   "1.2",                 -1),
+                Arguments.of("1.2",                 "1",                    1),
+                Arguments.of("1.1",                 "1.1-alpha1",           1),
+                Arguments.of("1.1",                 "1.1-beta1",            1),
+                Arguments.of("1.1",                 "1.1-rc1",              1),
+                Arguments.of("1.1",                 "1.1-m1",               1),
+                Arguments.of("1.1",                 "1.1-SNAPSHOT",         1),
+                Arguments.of("1.1-alpha2",          "1.1-alpha1",           1),
+                Arguments.of("1.1-beta1",           "1.1-alpha1",           1),
+                Arguments.of("1.1-rc1",             "1.1-beta1",            1),
+                Arguments.of("1.1-rc1",             "1.1-m1",               1),
+                Arguments.of("0.98g",               "0.98b",                1),
+                Arguments.of("1.1-FOO",             "1.1-BOO",              1),
+                Arguments.of("1.2.3-1652171596805", "1.2.3-1552171596805",  1),
+                Arguments.of("2022.1",              "2022.1.1",            -1)
         );
         //@formatter:on
     }

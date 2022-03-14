@@ -32,7 +32,8 @@
 
     <!-- File must start with the C Thing copyright header -->
     <module name="RegexpHeader">
-        <property name="header" value="^/\*$\n^ \* Copyright [\d]{4}((,[\s]*[\d]{4})*|(-[\d]{4})?) C Thing Software$\n^ \* All rights reserved.$\n^ \*/$"/>
+        <property name="headerFile" value="${config_loc}/header.txt"/>
+        <property name="multiLines" value="3"/>
     </module>
 
     <!-- Flag IDE generated comments -->

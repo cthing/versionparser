@@ -1,6 +1,17 @@
 /*
- * Copyright 2016 C Thing Software
- * All rights reserved.
+ * Copyright 2022 C Thing Software
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.cthing.versionparser;
 
@@ -10,9 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 
 /**
@@ -43,7 +51,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *     <tr><td style="padding-right: 15px">"1"</td><td>""</td><td align="right">&gt;0</td></tr>
  * </table>
  */
-@ParametersAreNonnullByDefault
 public final class Version implements Comparable<Version> {
 
     /** Captures the leading numeric components of a version number string. */
@@ -105,9 +112,8 @@ public final class Version implements Comparable<Version> {
     /**
      * Obtains the original version number string.
      *
-     * @return Original version number string.
+     * @return Original version number string. Never returns {@code null}.
      */
-    @Nonnull
     public String getVersion() {
         return this.version;
     }
@@ -115,9 +121,8 @@ public final class Version implements Comparable<Version> {
     /**
      * Obtains the numeric components of the version number (e.g. 1, 2, 3 from the version 1.2.3-beta1).
      *
-     * @return Numeric components of the version number.
+     * @return Numeric components of the version number. An empty list is returned if there are no components.
      */
-    @Nonnull
     public List<Long> getComponents() {
         return Collections.unmodifiableList(this.components);
     }
@@ -125,9 +130,9 @@ public final class Version implements Comparable<Version> {
     /**
      * Obtains the trailing portion of a version number (e.g. beta1 from the version 1.2.3-beta1).
      *
-     * @return Trailing portion of the version number.
+     * @return Trailing portion of the version number. An empty string is returned if there is no trailing
+     *      portion of the version string.
      */
-    @Nonnull
     public String getTrailing() {
         return this.trailing;
     }
