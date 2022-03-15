@@ -29,26 +29,27 @@ import java.util.regex.Pattern;
  * The class attempts to understand the significance of typical versioning schemes (e.g. rc1, m2) and compare versions
  * accordingly. The following table shows various versions and how they are compared.
  *
- * <table summary="">
- *     <tr><th align="left" style="padding-right: 15px">version1</th><th align="left">version2</th><th align="right">Return</th></tr>
- *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.3"</td><td align="right">0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2.3.4"</td><td>"1.2.3.4"</td><td align="right">0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.0"</td><td align="right">&gt;0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2.0"</td><td>"1.2.3"</td><td align="right">&lt;0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.+"</td><td align="right">0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2.+"</td><td>"1.2.+"</td><td align="right">0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2"</td><td>"1.2.0"</td><td align="right">0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2"</td><td>"1.2.3"</td><td align="right">&lt;0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2"</td><td align="right">&gt;0</td></tr>
- *     <tr><td style="padding-right: 15px">"1"</td><td>"2"</td><td align="right">&lt;0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2.3.RELEASE"</td><td>"1.2.3.BUILD-SNAPSHOT"</td><td align="right">&gt;0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2-3"</td><td>"1.2-4"</td><td align="right">&lt;0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.3-SNAPSHOT"</td><td align="right">&gt;0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2.3.RELEASE"</td><td>"1.2.3.RELEASE"</td><td align="right">0</td></tr>
- *     <tr><td style="padding-right: 15px">"1.2.3-beta-1"</td><td>"1.2.3"</td><td align="right">&lt;0</td></tr>
- *     <tr><td style="padding-right: 15px">"0.98f"</td><td>"0.98a"</td><td align="right">&gt;0</td></tr>
- *     <tr><td style="padding-right: 15px">""</td><td>""</td><td align="right">0</td></tr>
- *     <tr><td style="padding-right: 15px">"1"</td><td>""</td><td align="right">&gt;0</td></tr>
+ * <table>
+ *     <caption>Version Comparisons</caption>
+ *     <tr><th style="padding-right: 15px">version1</th><th>version2</th><th style="text-align: right">Return</th></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.3"</td><td style="text-align: right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3.4"</td><td>"1.2.3.4"</td><td style="text-align: right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.0"</td><td style="text-align: right">&gt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.0"</td><td>"1.2.3"</td><td style="text-align: right">&lt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.+"</td><td style="text-align: right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.+"</td><td>"1.2.+"</td><td style="text-align: right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2"</td><td>"1.2.0"</td><td style="text-align: right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2"</td><td>"1.2.3"</td><td style="text-align: right">&lt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2"</td><td style="text-align: right">&gt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1"</td><td>"2"</td><td style="text-align: right">&lt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3.RELEASE"</td><td>"1.2.3.BUILD-SNAPSHOT"</td><td style="text-align: right">&gt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2-3"</td><td>"1.2-4"</td><td style="text-align: right">&lt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3"</td><td>"1.2.3-SNAPSHOT"</td><td style="text-align: right">&gt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3.RELEASE"</td><td>"1.2.3.RELEASE"</td><td style="text-align: right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1.2.3-beta-1"</td><td>"1.2.3"</td><td style="text-align: right">&lt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">"0.98f"</td><td>"0.98a"</td><td style="text-align: right">&gt;0</td></tr>
+ *     <tr><td style="padding-right: 15px">""</td><td>""</td><td style="text-align: right">0</td></tr>
+ *     <tr><td style="padding-right: 15px">"1"</td><td>""</td><td style="text-align: right">&gt;0</td></tr>
  * </table>
  */
 public final class Version implements Comparable<Version> {
