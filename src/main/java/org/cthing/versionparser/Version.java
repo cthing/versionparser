@@ -257,12 +257,25 @@ public final class Version implements Comparable<Version> {
      * @param version1  Version to compare
      * @param version2  Version to compare
      * @return A value less than 0 if {@code version1} is older than {@code version2}, greater than zero if
-     *      {@code version1} is newer than {@code version2} and zero if they are equal.
+     *      {@code version1} is newer than {@code version2} or zero if they are equal.
      */
     public static int compareTo(final String version1, final String version2) {
         final Version v1 = new Version(version1);
         final Version v2 = new Version(version2);
         return v1.compareTo(v2);
+    }
+
+    /**
+     * Compares this version against the specified version. This method is equivalent to constructing two version
+     * objects and calling the {@link #compareTo(Version)} method on one passing in the other.
+     *
+     * @param other  Version to compared against
+     * @return A value less than 0 if this is older than {@code other}, greater than zero if this is newer than
+     *      {@code other}, or zero if they are equal.
+     */
+    public int compareTo(final String other) {
+        final Version v = new Version(other);
+        return compareTo(v);
     }
 
     @Override

@@ -346,7 +346,7 @@
         <!-- Package level annotations must be in the package-info.java file -->
         <module name="PackageAnnotation"/>
 
-        <!-- Every class needs a package declaration and it must match the directory hierarchy -->
+        <!-- Every class needs a package declaration, and it must match the directory hierarchy -->
         <module name="PackageDeclaration"/>
 
         <!-- Package names are camel case starting with a lowercase letter with "." separators -->

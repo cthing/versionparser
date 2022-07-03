@@ -80,6 +80,10 @@ public class VersionTests {
     @MethodSource("versionComparisonProvider")
     @DisplayName("Version comparison")
     void testComparison(final String version1, final String version2, final int result) {
+        final Version v1 = new Version(version1);
+        final Version v2 = new Version(version2);
+        assertThat(v1.compareTo(v2)).isEqualTo(result);
+        assertThat(v1.compareTo(version2)).isEqualTo(result);
         assertThat(Version.compareTo(version1, version2)).isEqualTo(result);
     }
 
