@@ -58,7 +58,7 @@ public final class Version implements Comparable<Version> {
     private static final Pattern NUMERIC_PATTERN = Pattern.compile("^(\\d+)(?:[.\\-](\\d+))?(?:[.\\-](\\d+))?(?:[.\\-](\\d+))?(?:[.\\-](\\d+))?(?:[.\\-](\\d+|\\+))?");
 
     /** Captures the trailing non-numeric portion of a version number string, if any. */
-    private static final Pattern TRAILING_PATTERN = Pattern.compile("^[\\d]+(?:[.\\-](?:\\d+|\\+))*[\\-.]?(.*?)$");
+    private static final Pattern TRAILING_PATTERN = Pattern.compile("^\\d+(?:[.\\-](?:\\d+|\\+))*[\\-.]?(.*?)$");
 
     /** Alpha pattern. */
     private static final Pattern ALPHA_PATTERN = Pattern.compile("^alpha[\\-.]?(\\d*)$");

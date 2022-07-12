@@ -66,7 +66,7 @@ fun isNonStable(version: String): Boolean {
 
 tasks {
     withType<JavaCompile> {
-        options.release.set(11)
+        options.release.set(17)
         options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:-options", "-Werror"))
     }
 

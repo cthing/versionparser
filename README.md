@@ -12,7 +12,8 @@ assertThat(Version.compareTo(version1, version1)).isEqualTo(0);
 ```
 
 ### Building
-The libray is compiled for Java 11.
+The libray is compiled for Java 17. Set the `JAVA_HOME` environment variable or the `org.gradle.java.home` property
+to point to a JDK 17 installation.
 
 Gradle is used to build the library:
 ```
