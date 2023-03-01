@@ -1,16 +1,16 @@
 [versions]
-checkstyle = "10.3.2"
+checkstyle = "10.8.0"
 jacoco = "0.8.8"
-junit = "5.9.0"
-spotbugs = "4.7.1"
+junit = "5.9.2"
+spotbugs = "4.7.3"
 
 [plugins]
-spotbugs = { id = "com.github.spotbugs", version = "5.0.9" }
-versions = { id = "com.github.ben-manes.versions", version = "0.42.0" }
+spotbugs = { id = "com.github.spotbugs", version = "5.0.13" }
+versions = { id = "com.github.ben-manes.versions", version = "0.46.0" }
 
 [libraries]
 apiGuardian = "org.apiguardian:apiguardian-api:1.1.2"
-assertJ = "org.assertj:assertj-core:3.23.1"
+assertJ = "org.assertj:assertj-core:3.24.2"
 junitApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junitEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 junitParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
