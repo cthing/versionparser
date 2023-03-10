@@ -29,7 +29,7 @@ description = property("cthing.description") as String
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(project.property("cthing.java.version").toString().toInt()))
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
     }
 }
 
@@ -72,7 +72,7 @@ fun isNonStable(version: String): Boolean {
 
 tasks {
     withType<JavaCompile> {
-        options.release.set(project.property("cthing.java.version").toString().toInt())
+        options.release.set(libs.versions.java.get().toInt())
         options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:-options", "-Werror"))
     }
 
