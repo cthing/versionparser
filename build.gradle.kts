@@ -19,13 +19,14 @@ plugins {
     alias(libs.plugins.versions)
 }
 
+val baseVersion = "2.0.0"
+val isSnapshot = true
+
 val isCIServer = System.getenv("CTHING_CI") != null
-val isSnapshot = property("cthing.build.type") == "snapshot"
 val buildNumber = if (isCIServer) System.currentTimeMillis().toString() else "0"
-val semver = property("cthing.version")
-version = if (isSnapshot) "$semver-$buildNumber" else semver!!
-group = property("cthing.group") as String
-description = property("cthing.description") as String
+version = if (isSnapshot) "$baseVersion-$buildNumber" else baseVersion
+group = "org.cthing"
+description = "Parses version numbers in a wide range of formats and provides a canonical, comparable version object."
 
 java {
     toolchain {
@@ -78,17 +79,16 @@ tasks {
 
     withType<Jar> {
         manifest.attributes(mapOf("Implementation-Title" to project.name,
-                                  "Implementation-Vendor" to project.property("cthing.organization.name"),
+                                  "Implementation-Vendor" to "C Thing Software",
                                   "Implementation-Version" to project.version))
     }
 
     withType<Javadoc> {
         val year = SimpleDateFormat("yyyy", Locale.ENGLISH).format(Date())
-        val organization = project.property("cthing.organization.name")
         with(options as StandardJavadocDocletOptions) {
             breakIterator(false)
             encoding("UTF-8")
-            bottom("Copyright &copy; $year $organization")
+            bottom("Copyright &copy; $year C Thing Software")
             memberLevel = JavadocMemberLevel.PUBLIC
             outputLevel = JavadocOutputLevel.QUIET
         }
@@ -156,17 +156,17 @@ publishing {
                 url.set("https://github.com/cthing/${project.name}")
                 licenses {
                     license {
-                        name.set(property("cthing.license.name") as String)
-                        url.set(property("cthing.license.url") as String)
+                        name.set("Apache License, Version 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0")
                     }
                 }
                 developers {
                     developer {
-                        id.set(property("cthing.developer.id") as String)
-                        name.set(property("cthing.developer.name") as String)
-                        email.set("${property("cthing.developer.id")}@cthing.com")
-                        organization.set(property("cthing.organization.name") as String)
-                        organizationUrl.set(property("cthing.organization.name") as String)
+                        id.set("baron")
+                        name.set("Baron Roberts")
+                        email.set("baron@cthing.com")
+                        organization.set("C Thing Software")
+                        organizationUrl.set("https://www.cthing.com")
                     }
                 }
                 scm {
