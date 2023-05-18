@@ -8,7 +8,6 @@ repositories {
     mavenCentral()
 }
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     `java-library`
     checkstyle
