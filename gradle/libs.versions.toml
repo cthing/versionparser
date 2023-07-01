@@ -1,13 +1,13 @@
 [versions]
 java = "17"
-checkstyle = "10.11.0"
+checkstyle = "10.12.1"
 jacoco = "0.8.10"
 junit = "5.9.3"
 spotbugs = "4.7.3"
 
 [plugins]
 spotbugs = { id = "com.github.spotbugs", version = "5.0.14" }
-versions = { id = "com.github.ben-manes.versions", version = "0.46.0" }
+versions = { id = "com.github.ben-manes.versions", version = "0.47.0" }
 
 [libraries]
 apiGuardian = "org.apiguardian:apiguardian-api:1.1.2"

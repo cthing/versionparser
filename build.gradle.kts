@@ -29,7 +29,7 @@ description = "Parses version numbers in a wide range of formats and provides a 
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+        languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
     }
 }
 
@@ -47,16 +47,16 @@ checkstyle {
     toolVersion = libs.versions.checkstyle.get()
     isIgnoreFailures = false
     configFile = file("dev/checkstyle/checkstyle.xml")
-    configDirectory.set(file("dev/checkstyle"))
+    configDirectory = file("dev/checkstyle")
     isShowViolations = true
 }
 
 spotbugs {
-    toolVersion.set(libs.versions.spotbugs)
-    ignoreFailures.set(false)
-    effort.set(Effort.MAX)
-    reportLevel.set(Confidence.MEDIUM)
-    excludeFilter.set(file("dev/spotbugs/suppressions.xml"))
+    toolVersion = libs.versions.spotbugs
+    ignoreFailures = false
+    effort = Effort.MAX
+    reportLevel = Confidence.MEDIUM
+    excludeFilter = file("dev/spotbugs/suppressions.xml")
 }
 
 jacoco {
@@ -72,7 +72,7 @@ fun isNonStable(version: String): Boolean {
 
 tasks {
     withType<JavaCompile> {
-        options.release.set(libs.versions.java.get().toInt())
+        options.release = libs.versions.java.get().toInt()
         options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:-options", "-Werror"))
     }
 
@@ -94,7 +94,7 @@ tasks {
     }
 
     spotbugsMain {
-        reports.create("html").required.set(true)
+        reports.create("html").required = true
     }
 
     spotbugsTest {
@@ -104,10 +104,10 @@ tasks {
     withType<JacocoReport> {
         dependsOn("test")
         with(reports) {
-            xml.required.set(false)
-            csv.required.set(false)
-            html.required.set(true)
-            html.outputLocation.set(File(buildDir, "reports/jacoco"))
+            xml.required = false
+            csv.required = false
+            html.required = true
+            html.outputLocation = File(buildDir, "reports/jacoco")
         }
     }
 
@@ -133,12 +133,12 @@ tasks {
 
 val sourceJar by tasks.registering(Jar::class) {
     from(project.sourceSets["main"].allSource)
-    archiveClassifier.set("sources")
+    archiveClassifier = "sources"
 }
 
 val javadocJar by tasks.registering(Jar::class) {
     from("javadoc")
-    archiveClassifier.set("javadoc")
+    archiveClassifier = "javadoc"
 }
 
 publishing {
@@ -150,32 +150,32 @@ publishing {
             artifact(javadocJar.get())
 
             pom {
-                name.set(project.name)
-                description.set(project.description)
-                url.set("https://github.com/cthing/${project.name}")
+                name = project.name
+                description = project.description
+                url = "https://github.com/cthing/${project.name}"
                 licenses {
                     license {
-                        name.set("Apache License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0")
+                        name = "Apache License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0"
                     }
                 }
                 developers {
                     developer {
-                        id.set("baron")
-                        name.set("Baron Roberts")
-                        email.set("baron@cthing.com")
-                        organization.set("C Thing Software")
-                        organizationUrl.set("https://www.cthing.com")
+                        id = "baron"
+                        name = "Baron Roberts"
+                        email = "baron@cthing.com"
+                        organization = "C Thing Software"
+                        organizationUrl = "https://www.cthing.com"
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/cthing/${project.name}.git")
-                    developerConnection.set("scm:git:ssh://github.com:cthing/${project.name}")
-                    url.set("https://github.com/cthing/${project.name}/src")
+                    connection = "scm:git:git://github.com/cthing/${project.name}.git"
+                    developerConnection = "scm:git:ssh://github.com:cthing/${project.name}"
+                    url = "https://github.com/cthing/${project.name}/src"
                 }
                 issueManagement {
-                    system.set("GitHub")
-                    url.set("https://github.com/cthing/${project.name}/issues")
+                    system = "GitHub"
+                    url = "https://github.com/cthing/${project.name}/issues"
                 }
             }
         }
