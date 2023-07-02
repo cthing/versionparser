@@ -38,7 +38,9 @@ dependencies {
     testImplementation(libs.junitParams)
     testImplementation(libs.assertJ)
     testCompileOnly(libs.apiGuardian)
+
     testRuntimeOnly(libs.junitEngine)
+    testRuntimeOnly(libs.junitLauncher)
 
     spotbugsPlugins(libs.spotbugsContrib)
 }
