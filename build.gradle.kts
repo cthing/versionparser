@@ -109,7 +109,7 @@ tasks {
             xml.required = false
             csv.required = false
             html.required = true
-            html.outputLocation = File(buildDir, "reports/jacoco")
+            html.outputLocation = layout.buildDirectory.dir("reports/jacoco")
         }
     }
 
@@ -125,7 +125,7 @@ tasks {
         revision = "release"
         gradleReleaseChannel = "current"
         outputFormatter = "plain,xml,html"
-        outputDir = File(project.buildDir, "reports/dependencyUpdates").absolutePath
+        outputDir = layout.buildDirectory.dir("reports/dependencyUpdates").get().asFile.absolutePath
 
         rejectVersionIf {
             isNonStable(candidate.version)
