@@ -8,11 +8,8 @@
     <suppress checks="JavadocMethod" files="src/(test|integTest)/.+"/>
     <suppress checks="JavadocPackage" files="src/(test|integTest)/.+"/>
 
-    <!-- Constructors are not required in ests -->
+    <!-- Constructors are not required in tests -->
     <suppress checks="MissingCtor" files="src/(test|integTest)/.+"/>
-
-    <!-- Allow magic numbers in tests -->
-    <suppress checks="MagicNumber" files="src/(test|integTest)/.+"/>
 
     <!-- Suppress method length check in tests -->
     <suppress checks="MethodLength" files="src/(test|integTest)/.+"/>

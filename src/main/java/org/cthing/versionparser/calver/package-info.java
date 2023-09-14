@@ -15,10 +15,9 @@
  */
 
 /**
- * Representations of version numbers and dependency version constraints. See the README.md file for information
- * on using this library.
+ * Version handling according to the <a href="https://calver.org">Calendar Versioning</a> specification.
  */
 @PackageNonnullByDefault
-package org.cthing.versionparser;
+package org.cthing.versionparser.calver;
 
 import org.cthing.versionparser.annotations.PackageNonnullByDefault;

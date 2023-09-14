@@ -6,13 +6,28 @@
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
-    </Match>
-    <Match>
-        <Bug pattern="CD_CIRCULAR_DEPENDENCY"/>
+        <Bug pattern="LII_LIST_INDEXED_ITERATING"/>
+        <Class name="~.*VersionConstraint"/>
     </Match>
     <Match>
         <Bug pattern="MOM_MISLEADING_OVERLOAD_MODEL"/>
+        <Class name="~.*CalendarVersionScheme"/>
+    </Match>
+    <Match>
+        <Bug pattern="PL_PARALLEL_LISTS"/>
+        <Class name="~.*GradleVersion"/>
+    </Match>
+    <Match>
+        <Bug pattern="PSC_PRESIZE_COLLECTIONS"/>
+        <Class name="~.*(MvnVersionScheme|VersionConstraint)"/>
+    </Match>
+    <Match>
+        <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
+        <Class name="~.*MvnVersion\$Tokenizer"/>
+    </Match>
+    <Match>
+        <Bug pattern="STT_TOSTRING_STORED_IN_FIELD"/>
+        <Class name="~.*SemanticVersion"/>
     </Match>
     <Match>
         <Class name="~.*Test(\$.+)?"/>

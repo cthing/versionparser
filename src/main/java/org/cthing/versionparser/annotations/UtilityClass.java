@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-/**
- * Representations of version numbers and dependency version constraints. See the README.md file for information
- * on using this library.
- */
-@PackageNonnullByDefault
-package org.cthing.versionparser;
+package org.cthing.versionparser.annotations;
 
-import org.cthing.versionparser.annotations.PackageNonnullByDefault;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+
+/**
+ * Annotation for the private constructor of a utility class. Can be used by IntelliJ to eliminate the constructor
+ * from test coverage analysis.
+ */
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.CONSTRUCTOR)
+@Documented
+public @interface UtilityClass {
+}

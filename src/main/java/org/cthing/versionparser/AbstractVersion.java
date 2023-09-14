@@ -14,11 +14,31 @@
  * limitations under the License.
  */
 
-/**
- * Representations of version numbers and dependency version constraints. See the README.md file for information
- * on using this library.
- */
-@PackageNonnullByDefault
 package org.cthing.versionparser;
 
-import org.cthing.versionparser.annotations.PackageNonnullByDefault;
+/**
+ * Base class for version implementations.
+ */
+public abstract class AbstractVersion implements Version {
+
+    protected final String originalVersion;
+
+    /**
+     * Base constructor.
+     *
+     * @param originalVersion Originally specified version
+     */
+    protected AbstractVersion(final String originalVersion) {
+        this.originalVersion = originalVersion;
+    }
+
+    @Override
+    public String getOriginalVersion() {
+        return this.originalVersion;
+    }
+
+    @Override
+    public String toString() {
+        return this.originalVersion;
+    }
+}

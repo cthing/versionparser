@@ -4,8 +4,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
 plugins {
@@ -18,14 +20,14 @@ plugins {
     alias(libs.plugins.versions)
 }
 
-val baseVersion = "2.0.0"
+val baseVersion = "3.0.0"
 val isSnapshot = true
 
 val isCIServer = System.getenv("CTHING_CI") != null
 val buildNumber = if (isCIServer) System.currentTimeMillis().toString() else "0"
 version = if (isSnapshot) "$baseVersion-$buildNumber" else baseVersion
 group = "org.cthing"
-description = "Parses version numbers in a wide range of formats and provides a canonical, comparable version object."
+description = "Parses version numbers, ranges and constraints in a variety of formats."
 
 java {
     toolchain {
@@ -34,10 +36,12 @@ java {
 }
 
 dependencies {
+    implementation(libs.jsr305)
+
     testImplementation(libs.junitApi)
     testImplementation(libs.junitParams)
     testImplementation(libs.assertJ)
-    testCompileOnly(libs.apiGuardian)
+    testImplementation(libs.mockito)
 
     testRuntimeOnly(libs.junitEngine)
     testRuntimeOnly(libs.junitLauncher)

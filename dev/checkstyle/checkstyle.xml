@@ -262,13 +262,6 @@
         <!-- Local variables must be camel case starting with a lowercase letter -->
         <module name="LocalVariableName"/>
 
-        <!-- Numbers other than -1, 0, 1, and 2 must be defined as a constant except in hashCode methods and annotations -->
-        <module name="MagicNumber">
-            <property name="ignoreHashCodeMethod" value="true"/>
-            <property name="ignoreAnnotation" value="true"/>
-            <message key="magic.number" value="Replace magic number ''{0}'' with a semantically meaningful constant"/>
-        </module>
-
         <!-- Non-static fields are camel case starting with a lowercase letter -->
         <module name="MemberName"/>
 

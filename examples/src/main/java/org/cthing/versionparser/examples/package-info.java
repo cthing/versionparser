@@ -15,10 +15,6 @@
  */
 
 /**
- * Representations of version numbers and dependency version constraints. See the README.md file for information
- * on using this library.
+ * Programs demonstrating the use of the versionparser library.
  */
-@PackageNonnullByDefault
-package org.cthing.versionparser;
-
-import org.cthing.versionparser.annotations.PackageNonnullByDefault;
+package org.cthing.versionparser.examples;

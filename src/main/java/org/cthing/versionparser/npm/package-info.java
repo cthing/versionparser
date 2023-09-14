@@ -15,10 +15,9 @@
  */
 
 /**
- * Representations of version numbers and dependency version constraints. See the README.md file for information
- * on using this library.
+ * <a href="https://www.npmjs.com">NPM</a> version handling.
  */
 @PackageNonnullByDefault
-package org.cthing.versionparser;
+package org.cthing.versionparser.npm;
 
 import org.cthing.versionparser.annotations.PackageNonnullByDefault;

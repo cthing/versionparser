@@ -15,10 +15,9 @@
  */
 
 /**
- * Representations of version numbers and dependency version constraints. See the README.md file for information
- * on using this library.
+ * Version handling according to the <a href="https://semver.org/">Semantic Versioning 2.0</a> specification.
  */
 @PackageNonnullByDefault
-package org.cthing.versionparser;
+package org.cthing.versionparser.semver;
 
 import org.cthing.versionparser.annotations.PackageNonnullByDefault;
