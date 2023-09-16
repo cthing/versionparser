@@ -32,6 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Parsing versions of various formats using the `Version` class.
 
-[3.0.0]: https://github.com/cthing/versionparser/compare/2.0.0...HEAD
+[3.0.0]: https://github.com/cthing/versionparser/releases/tag/3.0.0
 [2.0.0]: https://github.com/cthing/versionparser/releases/tag/2.0.0
 [1.0.0]: https://github.com/cthing/versionparser/releases/tag/1.0.0
