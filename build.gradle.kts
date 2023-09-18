@@ -187,7 +187,7 @@ publishing {
         }
     }
 
-    val repoUrl = if (isSnapshot) property("cthing.nexus.snapshotsUrl") else property("cthing.nexus.candidatesUrl")
+    val repoUrl = if (isSnapshot) findProperty("cthing.nexus.snapshotsUrl") else findProperty("cthing.nexus.candidatesUrl")
     if (repoUrl != null) {
         repositories {
             maven {
