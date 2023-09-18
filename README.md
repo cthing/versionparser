@@ -1,8 +1,11 @@
 # ![C Thing Software](https://www.cthing.com/branding/CThingSoftware-57x60.png "C Thing Software") versionparser
-This project provides a Java library for parsing and working with versions and version constraints. Versions and
-constraints can be expressed in a number of common formats. The parsed versions can be queried for their components
-and are ordered. Operations on parsed constraints include testing whether a given version satisfies the constraint
-and set operations such as intersection and union.
+
+[![CI](https://github.com/cthing/versionparser/actions/workflows/ci.yml/badge.svg)](https://github.com/cthing/versionparser/actions/workflows/ci.yml)
+
+A Java library for parsing and working with versions and version constraints. Versions and  constraints can be
+expressed in a number of common formats. The parsed versions can be queried for their components and are ordered.
+Operations on parsed constraints include testing whether a given version satisfies the constraint and set operations
+such as intersection and union.
 
 The following version and version constraint schemes are supported:
 
