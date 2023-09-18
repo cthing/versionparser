@@ -3,6 +3,12 @@ plugins {
     checkstyle
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
+    }
+}
+
 dependencies {
     implementation(rootProject)
     implementation(libs.assertJ)
