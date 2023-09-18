@@ -143,7 +143,7 @@ val sourceJar by tasks.registering(Jar::class) {
 }
 
 val javadocJar by tasks.registering(Jar::class) {
-    from("javadoc")
+    from(tasks.getByName("javadoc"))
     archiveClassifier = "javadoc"
 }
 
@@ -152,8 +152,8 @@ publishing {
         register("jar", MavenPublication::class) {
             from(components["java"])
 
-            artifact(sourceJar.get())
-            artifact(javadocJar.get())
+            artifact(sourceJar)
+            artifact(javadocJar)
 
             pom {
                 name = project.name
