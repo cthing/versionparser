@@ -1,6 +1,7 @@
 # ![C Thing Software](https://www.cthing.com/branding/CThingSoftware-57x60.png "C Thing Software") versionparser
 
 [![CI](https://github.com/cthing/versionparser/actions/workflows/ci.yml/badge.svg)](https://github.com/cthing/versionparser/actions/workflows/ci.yml)
+[![javadoc](https://javadoc.io/badge2/org.cthing/versionparser/javadoc.svg)](https://javadoc.io/doc/org.cthing/versionparser)
 
 A Java library for parsing and working with versions and version constraints. Versions and  constraints can be
 expressed in a number of common formats. The parsed versions can be queried for their components and are ordered.
@@ -16,7 +17,20 @@ The following version and version constraint schemes are supported:
 * [Calendar Versioning](https://calver.org/)
 
 ### Usage
-See the [examples folder](examples) for complete working code demonstrating the usage of this library.
+See the [examples folder](examples) for complete working code demonstrating the usage of this library. The
+library is available from [Maven Central](https://repo.maven.apache.org/maven2/org/cthing/versionparser/) using the
+following Maven dependency:
+```xml
+<dependency>
+  <groupId>org.cthing</groupId>
+  <artifactId>versionparser</artifactId>
+  <version>3.0.0</version>
+</dependency>
+```
+or the following Gradle dependency:
+```kotlin
+implementation("org.cthing:versionparser:3.0.0")
+```
 
 #### Maven Versioning
 Support is provided for parsing Maven versions and dependency version constraints.
