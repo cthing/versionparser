@@ -26,11 +26,14 @@ import javax.annotation.meta.TypeQualifierDefault;
 
 
 /**
+ * For internal use only.
+ * <p>
  * Declares that fields, method return types, method parameters, and type parameters within the annotated package
  * are not {@code null} by default. Items that can be null should be annotated with either
  * {@link javax.annotation.CheckForNull} or {@link javax.annotation.Nullable}. This annotation differs from
  * {@link javax.annotation.ParametersAreNonnullByDefault} which only marks method parameters as not {@code null}
  * by default.
+ * </p>
  */
 @Documented
 @Nonnull

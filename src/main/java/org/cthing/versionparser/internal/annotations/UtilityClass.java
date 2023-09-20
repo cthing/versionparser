@@ -24,8 +24,11 @@ import java.lang.annotation.Target;
 
 
 /**
+ * For internal use only.
+ * <p>
  * Annotation for the private constructor of a utility class. Can be used by IntelliJ to eliminate the constructor
  * from test coverage analysis.
+ * </p>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.CONSTRUCTOR)

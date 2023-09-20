@@ -15,6 +15,9 @@
  */
 
 /**
+ * For internal use only.
+ * <p>
  * Annotations for nullability.
+ * </p>
  */
 package org.cthing.versionparser.internal.annotations;
