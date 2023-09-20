@@ -20,4 +20,4 @@
 @PackageNonnullByDefault
 package org.cthing.versionparser.calver;
 
-import org.cthing.versionparser.annotations.PackageNonnullByDefault;
+import org.cthing.versionparser.internal.annotations.PackageNonnullByDefault;

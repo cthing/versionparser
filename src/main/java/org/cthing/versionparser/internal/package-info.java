@@ -15,6 +15,7 @@
  */
 
 /**
- * Annotations for nullability.
+ * Classes for internal use by the library. Consumers of the library should not use any class in this
+ * package.
  */
-package org.cthing.versionparser.annotations;
+package org.cthing.versionparser.internal;

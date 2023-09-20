@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-### Added
+## [4.0.0] - 2023-09-20
 
-- CHANGELOG.md file
+### Changed
+
+- Annotations moved to the `org.cthing.versionparser.internal` package since they should not be
+  considered part of the public API.
 
 ## [3.0.0] - 2023-09-18
 
@@ -39,5 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Parsing versions of various formats using the `Version` class.
 
-[unreleased]: https://github.com/cthing/versionparser/compare/3.0.0...HEAD
+[unreleased]: https://github.com/cthing/versionparser/compare/4.0.0...HEAD
+[4.0.0]: https://github.com/cthing/versionparser/releases/tag/4.0.0
 [3.0.0]: https://github.com/cthing/versionparser/releases/tag/3.0.0

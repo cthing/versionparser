@@ -21,4 +21,4 @@
 @PackageNonnullByDefault
 package org.cthing.versionparser;
 
-import org.cthing.versionparser.annotations.PackageNonnullByDefault;
+import org.cthing.versionparser.internal.annotations.PackageNonnullByDefault;

@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
-import org.cthing.versionparser.annotations.UtilityClass;
+import org.cthing.versionparser.internal.annotations.UtilityClass;
 import org.cthing.versionparser.semver.SemanticVersion;
 
 import static org.cthing.versionparser.npm.ConstraintComponent.Operator.EQ;

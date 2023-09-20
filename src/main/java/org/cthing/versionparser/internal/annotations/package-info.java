@@ -15,9 +15,6 @@
  */
 
 /**
- * Version handling according to the <a href="https://semver.org/">Semantic Versioning 2.0</a> specification.
+ * Annotations for nullability.
  */
-@PackageNonnullByDefault
-package org.cthing.versionparser.semver;
-
-import org.cthing.versionparser.internal.annotations.PackageNonnullByDefault;
+package org.cthing.versionparser.internal.annotations;

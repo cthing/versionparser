@@ -43,7 +43,7 @@ import java.util.stream.IntStream;
 
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
-import org.cthing.versionparser.annotations.UtilityClass;
+import org.cthing.versionparser.internal.annotations.UtilityClass;
 
 
 /**
