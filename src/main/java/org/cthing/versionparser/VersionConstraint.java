@@ -28,9 +28,12 @@ import javax.annotation.Nullable;
 
 /**
  * Represents zero (empty constraint) or more version ranges. A version range is a contiguous set of versions
- * (e.g. version 1.0 inclusive through version 2.0 exclusive). The notation for version constraints is specific
- * to a version scheme (e.g. Maven). Please refer to the Javadoc for the specific version scheme classes for
- * information about the notation and the method to call to create an instance of this class.
+ * (e.g. version 1.0 inclusive through version 2.0 exclusive). Constraints can be weak or strong (the default).
+ * A weak constraint is one that can be ignored by a dependency resolution algorithm if necessary (e.g. Maven
+ * undecorated versions). Typically, an instance of this class is created by using a versioning scheme class
+ * to parse a version constraint string. The notation for version constraints is specific to a version scheme
+ * (e.g. Maven). Please refer to the Javadoc for the specific version scheme classes for information about the
+ * notation and the method to call to create an instance of this class.
  */
 public class VersionConstraint {
 
@@ -41,6 +44,7 @@ public class VersionConstraint {
     public static final VersionConstraint EMPTY = new VersionConstraint(List.of());
 
     private final List<VersionRange> ranges;
+    private final boolean weak;
 
     /**
      * Constructs a constraint that allows any version (i.e. {@code null} minimum and maximum versions and
@@ -51,13 +55,41 @@ public class VersionConstraint {
     }
 
     /**
-     * Constructs a version constraint consisting of a single version (i.e. the minimum version equals the maximum
-     * version inclusive at both ends).
+     * Constructs a strong version constraint consisting of a single version (i.e. the minimum version equals the
+     * maximum version inclusive at both ends).
      *
      * @param version Single version comprising the range
      */
     public VersionConstraint(final Version version) {
-        this(version, version, true, true);
+        this(version, version, true, true, false);
+    }
+
+    /**
+     * Constructs a version constraint consisting of a single version (i.e. the minimum version equals the maximum
+     * version inclusive at both ends).
+     *
+     * @param version Single version comprising the range
+     * @param weak {@code true} if this constraint can be ignored by dependency resolution algorithms
+     */
+    public VersionConstraint(final Version version, final boolean weak) {
+        this(version, version, true, true, weak);
+    }
+
+    /**
+     * Constructs a strong version range from the specified minimum and maximum versions.
+     *
+     * @param minVersion Version defining the lower bound of the range. Specify {@code null} if there is no lower
+     *      bound.
+     * @param maxVersion Version defining the upper bound of the range Specify {@code null} if there is no upper
+     *      bound.
+     * @param minIncluded {@code true} if the minimum version is included in the range. If the minimum version is
+     *      {@code null}, this parameter must be set to {@code false}.
+     * @param maxIncluded {@code true} if the maximum version is included in the range. If the maximum version is
+     *      {@code null}, this parameter must be set to {@code false}.
+     */
+    public VersionConstraint(@Nullable final Version minVersion, @Nullable final Version maxVersion,
+                             final boolean minIncluded, final boolean maxIncluded) {
+        this(minVersion, maxVersion, minIncluded, maxIncluded, false);
     }
 
     /**
@@ -71,19 +103,32 @@ public class VersionConstraint {
      *      {@code null}, this parameter must be set to {@code false}.
      * @param maxIncluded {@code true} if the maximum version is included in the range. If the maximum version is
      *      {@code null}, this parameter must be set to {@code false}.
+     * @param weak {@code true} if this constraint can be ignored by dependency resolution algorithms
      */
     public VersionConstraint(@Nullable final Version minVersion, @Nullable final Version maxVersion,
-                             final boolean minIncluded, final boolean maxIncluded) {
+                             final boolean minIncluded, final boolean maxIncluded, final boolean weak) {
         this.ranges = List.of(new VersionRange(minVersion, maxVersion, minIncluded, maxIncluded));
+        this.weak = weak;
+    }
+
+    /**
+     * Constructs a strong constraint consisting of the union of version ranges.
+     *
+     * @param ranges Version ranges that comprise this union
+     */
+    public VersionConstraint(final List<VersionRange> ranges) {
+        this(ranges, false);
     }
 
     /**
      * Constructs a constraint consisting of the union of version ranges.
      *
      * @param ranges Version ranges that comprise this union
+     * @param weak {@code true} if this constraint can be ignored by dependency resolution algorithms
      */
-    public VersionConstraint(final List<VersionRange> ranges) {
+    public VersionConstraint(final List<VersionRange> ranges, final boolean weak) {
         this.ranges = ranges.isEmpty() ? List.of() : new TreeSet<>(ranges).stream().toList();
+        this.weak = weak;
     }
 
     /**
@@ -112,6 +157,17 @@ public class VersionConstraint {
      */
     public boolean isAny() {
         return this.ranges.stream().anyMatch(VersionRange::isAny);
+    }
+
+    /**
+     * Indicates whether this constraint can be ignored by a dependency resolution algorithm. For example, Maven
+     * treats an undecorated dependency version constraint (e.g. {@code 1.0.0}) as "soft" (i.e. weak), meaning that
+     * during dependency mediation, the version can be replaced by a different version if necessary.
+     *
+     * @return {@code true} if this is a weak constraint.
+     */
+    public boolean isWeak() {
+        return this.weak;
     }
 
     /**
@@ -396,12 +452,14 @@ public class VersionConstraint {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        return Objects.equals(this.ranges, ((VersionConstraint)obj).ranges);
+
+        final VersionConstraint that = (VersionConstraint)obj;
+        return this.weak == that.weak && Objects.equals(this.ranges, that.ranges);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.ranges);
+        return Objects.hash(this.ranges, this.weak);
     }
 
     @Override

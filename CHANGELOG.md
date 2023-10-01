@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+- Added a `weak` property to a `VersionConstraint` to support Maven's concept of a `soft` constraint (i.e. an
+  undecorated dependency verson).
+
 ## [4.0.0] - 2023-09-20
 
 ### Changed

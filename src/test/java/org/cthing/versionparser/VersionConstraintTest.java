@@ -39,6 +39,7 @@ public class VersionConstraintTest {
     public void testAny() throws VersionParsingException {
         assertThat(ANY.isEmpty()).isFalse();
         assertThat(ANY.isAny()).isTrue();
+        assertThat(ANY.isWeak()).isFalse();
         assertThat(ANY.isSingleVersion()).isFalse();
         assertThat(ANY.allows(MvnVersionScheme.parseVersion("1.0.0"))).isTrue();
         assertThat(ANY.allowsAll(constraint("[1.0.0,2.0.0)"))).isTrue();
@@ -56,6 +57,7 @@ public class VersionConstraintTest {
 
         assertThat(EMPTY.isEmpty()).isTrue();
         assertThat(EMPTY.isAny()).isFalse();
+        assertThat(EMPTY.isWeak()).isFalse();
         assertThat(EMPTY.isSingleVersion()).isFalse();
         assertThat(EMPTY.allows(MvnVersionScheme.parseVersion("1.0.0"))).isFalse();
         assertThat(EMPTY.allowsAll(constraint)).isTrue();
@@ -69,9 +71,18 @@ public class VersionConstraintTest {
     @Test
     public void testConstructionSingleVersion() {
         final Version version = version("1.2.3");
-        final VersionConstraint constraint = new VersionConstraint(version);
+
+        VersionConstraint constraint = new VersionConstraint(version);
         assertThat(constraint.isEmpty()).isFalse();
         assertThat(constraint.isAny()).isFalse();
+        assertThat(constraint.isWeak()).isFalse();
+        assertThat(constraint.isSingleVersion()).isTrue();
+        assertThat(constraint).hasToString("[1.2.3]");
+
+        constraint = new VersionConstraint(version, true);
+        assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isAny()).isFalse();
+        assertThat(constraint.isWeak()).isTrue();
         assertThat(constraint.isSingleVersion()).isTrue();
         assertThat(constraint).hasToString("[1.2.3]");
     }
@@ -83,6 +94,7 @@ public class VersionConstraintTest {
         VersionConstraint constraint = new VersionConstraint(version1, version2, true, false);
         assertThat(constraint.isEmpty()).isFalse();
         assertThat(constraint.isAny()).isFalse();
+        assertThat(constraint.isWeak()).isFalse();
         assertThat(constraint.isSingleVersion()).isFalse();
         assertThat(constraint).hasToString("[1.2.3,3.0)");
 
@@ -90,6 +102,14 @@ public class VersionConstraintTest {
         constraint = new VersionConstraint(version3, version3, false, false);
         assertThat(constraint.isEmpty()).isFalse();
         assertThat(constraint.isAny()).isFalse();
+        assertThat(constraint.isWeak()).isFalse();
+        assertThat(constraint.isSingleVersion()).isFalse();
+        assertThat(constraint).hasToString("(1.2.3,1.2.3)");
+
+        constraint = new VersionConstraint(version3, version3, false, false, true);
+        assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isAny()).isFalse();
+        assertThat(constraint.isWeak()).isTrue();
         assertThat(constraint.isSingleVersion()).isFalse();
         assertThat(constraint).hasToString("(1.2.3,1.2.3)");
     }
@@ -103,12 +123,21 @@ public class VersionConstraintTest {
         VersionConstraint constraint = new VersionConstraint(List.of(range2, range1));
         assertThat(constraint.isEmpty()).isFalse();
         assertThat(constraint.isAny()).isFalse();
+        assertThat(constraint.isWeak()).isFalse();
+        assertThat(constraint.isSingleVersion()).isFalse();
+        assertThat(constraint).hasToString("[1.5,2.0),(3.0,5.0)");
+
+        constraint = new VersionConstraint(List.of(range2, range1), true);
+        assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isAny()).isFalse();
+        assertThat(constraint.isWeak()).isTrue();
         assertThat(constraint.isSingleVersion()).isFalse();
         assertThat(constraint).hasToString("[1.5,2.0),(3.0,5.0)");
 
         constraint = new VersionConstraint(List.of(range3));
         assertThat(constraint.isEmpty()).isFalse();
         assertThat(constraint.isAny()).isFalse();
+        assertThat(constraint.isWeak()).isFalse();
         assertThat(constraint.isSingleVersion()).isTrue();
         assertThat(constraint).hasToString("[3.0]");
     }
@@ -420,6 +449,33 @@ public class VersionConstraintTest {
 
         assertThat(EMPTY.difference(EMPTY)).isEmpty();
         assertThat(EMPTY.difference(constraint("[1.2,2.0)"))).isEmpty();
+    }
+
+    @Test
+    public void testEquality() {
+        final VersionConstraint constraint1 = new VersionConstraint(version("1.2.3"));
+        final VersionConstraint constraint2 = new VersionConstraint(version("1.2.3"), false);
+        final VersionConstraint constraint3 = new VersionConstraint(version("1.2.3"), true);
+        assertThat(constraint1).isEqualTo(constraint2);
+        assertThat(constraint1).hasSameHashCodeAs(constraint2);
+        assertThat(constraint1).isNotEqualTo(constraint3);
+        assertThat(constraint1).doesNotHaveSameHashCodeAs(constraint3);
+
+        final VersionConstraint constraint4 = new VersionConstraint(version("1.0.0"), version("2.0.0"), true, false);
+        final VersionConstraint constraint5 = new VersionConstraint(version("1.0.0"), version("2.0.0"),
+                                                                    true, false, false);
+        final VersionConstraint constraint6 = new VersionConstraint(version("1.0.0"), version("2.0.0"),
+                                                                    true, true, true);
+        final VersionConstraint constraint7 = new VersionConstraint(version("1.0.0"), version("2.0.0"), true, true);
+        final VersionConstraint constraint8 = new VersionConstraint(version("1.0.0"), version("3.0.0"), true, false);
+        assertThat(constraint4).isEqualTo(constraint5);
+        assertThat(constraint4).hasSameHashCodeAs(constraint5);
+        assertThat(constraint4).isNotEqualTo(constraint6);
+        assertThat(constraint4).doesNotHaveSameHashCodeAs(constraint6);
+        assertThat(constraint4).isNotEqualTo(constraint7);
+        assertThat(constraint4).doesNotHaveSameHashCodeAs(constraint7);
+        assertThat(constraint4).isNotEqualTo(constraint8);
+        assertThat(constraint4).doesNotHaveSameHashCodeAs(constraint8);
     }
 
 

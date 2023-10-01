@@ -57,6 +57,7 @@ public class GradleVersionSchemeTest {
                                            @Nullable final String versionRep) throws VersionParsingException {
         final VersionConstraint constraint = GradleVersionScheme.parseConstraint(version);
         assertThat(constraint).hasToString(rangeRep);
+        assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
         assertThat(versionRange.getMinVersion()).hasToString(versionRep);
         assertThat(versionRange.getMaxVersion()).isNull();
@@ -93,6 +94,7 @@ public class GradleVersionSchemeTest {
                                          final boolean maxIncluded) throws VersionParsingException {
         final VersionConstraint constraint = GradleVersionScheme.parseConstraint(range);
         assertThat(constraint).hasToString(rangeRep);
+        assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
         if (minRep == null) {
             assertThat(versionRange.getMinVersion()).isNull();

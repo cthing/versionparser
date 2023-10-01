@@ -112,9 +112,13 @@ public final class MvnVersionScheme {
                                                       + constraintBuffer);
         }
 
+        // Maven considers this a so called "soft" constraint, which is a weak constraint in this library. A weak
+        // constraint can be replaced with a different version by a dependency resolution algorithm. The version
+        // range corresponding to an undecorated version is not well-defined (e.g. is it a fully open range). This
+        // library considers an undecorated version as a range with an inclusive lower bound and open upper bound.
         if (ranges.isEmpty()) {
             final Version version = parseVersion(constraint);
-            return new VersionConstraint(version, null, true, false);
+            return new VersionConstraint(version, null, true, false, true);
         }
 
         return new VersionConstraint(ranges);

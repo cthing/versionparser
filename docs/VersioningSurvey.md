@@ -126,20 +126,30 @@ number into components.
 ### Constraints
 Maven provides dependency version range notation.
 
-| Constraint      | Equivalent          | Definition                          | Description                                             |
-|-----------------|---------------------|-------------------------------------|---------------------------------------------------------|
-| `(,1.0]`        | `(,1.0]`            | x &#x2264; 1.0                      | Less than or equal to                                   |
-| `1.0`           | `[1.0,)`            | x &#x2265; 1.0                      | Greater than or equal to                                |
-| `[1.0]`         | `[1.0]`             | x = 1.0                             | Exactly equal to                                        |
-| `[1.2,1.3]`     | `[1.2,1.3]`         | 1.2 &#x2264; x &#x2264; 1.3         | Inclusive range                                         |
-| `(1.2,1.5)`     | `(1.2,1.5)`         | 1.2 < x < 1.5                       | Exclusive range                                         |
-| `[1.0,2.0)`     | `[1.0,2.0)`         | 1.0 &#x2264; x < 2.0                | Inclusive lower bound, exclusive upper bound            |
-| `[1.5,)`        | `[1.5,)`            | x &#x2265; 1.5                      | Greater than or equal to                                |
-| `(,1.0],[1.2,)` | `(,1.0],[1.2,)`     | x &#x2264; 1.0 or x &#x2265; 1.2    | Disjoint range. Multiple sets are separated by a comma. |
-| `(,1.1),(1.1,)` | `(,1.1),(1.1,)`     | x < 1.1 or x > 1.1                  | Exclusion range                                         |
-| `1.2.min`       | `[1.2.min]`         | x = 1.2.min                         | Minimum version in the 1.2 line                         |
-| `1.2.max`       | `[1.2.max]`         | x = 1.2.max                         | Maximum version in the 1.2 line                         |
-| `1.2.*`         | `[1.2.min,1.2.max]` | 1.2.min &#x2264; x &#x2265; 1.2.max | Minimum to maximum in the 1.2 line                      |
+| Constraint         | Equivalent          | Definition                          | Description                                             |
+|--------------------|---------------------|-------------------------------------|---------------------------------------------------------|
+| `(,1.0]`           | `(,1.0]`            | x &#x2264; 1.0                      | Less than or equal to                                   |
+| `1.0` <sup>1</sup> | `[1.0,)`            | x &#x2265; 1.0                      | Greater than or equal to<sup>1</sup>                    |
+| `[1.0]`            | `[1.0]`             | x = 1.0                             | Exactly equal to                                        |
+| `[1.2,1.3]`        | `[1.2,1.3]`         | 1.2 &#x2264; x &#x2264; 1.3         | Inclusive range                                         |
+| `(1.2,1.5)`        | `(1.2,1.5)`         | 1.2 < x < 1.5                       | Exclusive range                                         |
+| `[1.0,2.0)`        | `[1.0,2.0)`         | 1.0 &#x2264; x < 2.0                | Inclusive lower bound, exclusive upper bound            |
+| `[1.5,)`           | `[1.5,)`            | x &#x2265; 1.5                      | Greater than or equal to                                |
+| `(,1.0],[1.2,)`    | `(,1.0],[1.2,)`     | x &#x2264; 1.0 or x &#x2265; 1.2    | Disjoint range. Multiple sets are separated by a comma. |
+| `(,1.1),(1.1,)`    | `(,1.1),(1.1,)`     | x < 1.1 or x > 1.1                  | Exclusion range                                         |
+| `1.2.min`          | `[1.2.min]`         | x = 1.2.min                         | Minimum version in the 1.2 line                         |
+| `1.2.max`          | `[1.2.max]`         | x = 1.2.max                         | Maximum version in the 1.2 line                         |
+| `1.2.*`            | `[1.2.min,1.2.max]` | 1.2.min &#x2264; x &#x2265; 1.2.max | Minimum to maximum in the 1.2 line                      |
+
+<sup>1</sup>Maven designates an undecorated version constraint as `soft` and decorated constraints as `hard`. A `soft` constraint can be
+replaced by a completely different version of the same artifact found elsewhere in the dependency graph. A `hard` constraint mandates
+a specific version or version range and overrides `soft` constraints. If there are no versions of a dependency that satisfy all the hard
+constraints for that artifact, the build fails. Given the definition of `soft` constraints, the equivalent version range could be considered
+completely open (i.e. `(,)`). However, this library has chosen to use a more practical lower bound range (i.e. `[x,)`). This is in keeping
+with the [same decision](https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html) made by the Maven Enforcer plugin when interpreting
+required Maven and Java version ranges. It is also in agreement with the description provided for an undecorated version in
+[Section 7.3 Version Range References](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855)
+in the [Oracle&reg; Fusion Middleware Developing Applications Using Continuous Integration](https://docs.oracle.com/middleware/1212/core/MAVEN/toc.htm).
 
 ### Precedence
 The ordering of versions in Maven is determined by the
@@ -194,11 +204,16 @@ number into components.
 
 ### Constraints
 Gradle [is similar to the Maven](https://docs.gradle.org/current/userguide/single_versions.html) version constraint scheme.
-Gradle does not support multiple ranges (e.g. `[1.0,2.0),[3.0,4.0)`). Gradle range notation more closely conform to the
+Gradle does not support multiple ranges (e.g. `[1.0,2.0),[3.0,4.0)`). Gradle range notation more closely conforms to the
 <a href="https://en.wikipedia.org/wiki/ISO_31-11#Sets">ISO 31-11</a> standard set notation, and to provide the
 `strictly`, `require`, `prefer`, and `rejects` version resolution modes. In addition, Gradle provides programmatic
 intervention in the dependency resolution process. While all this provides maximum flexibility for dependency version
-resolution, it can present a high learning curve, and lead to resolution decisions that are difficult to debug.
+resolution, it can present a high learning curve, and lead to resolution decisions that are difficult to debug. In addition
+to the symbolic constraint notation, Gradle provides a programmatic
+[Rich Versions](https://docs.gradle.org/current/userguide/rich_versions.html) mechanism, which augments the symbolic
+notation to indicate how strict Gradle should be when attempting to satisfy a constraint. Due to the complexity and
+potential confusion this mechanism introduces, it is not supported by this library. The following table represents
+the default definitions of the symbolic constraints.
 
 | Constraint            | Equivalent              | Definition                  | Description                                                                             |
 |-----------------------|-------------------------|-----------------------------|-----------------------------------------------------------------------------------------|

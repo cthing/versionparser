@@ -57,6 +57,7 @@ public class MvnVersionSchemeTest {
                                            @Nullable final String versionRep) throws VersionParsingException {
         final VersionConstraint constraint = MvnVersionScheme.parseConstraint(version);
         assertThat(constraint).hasToString(rangeRep);
+        assertThat(constraint.isWeak()).isTrue();
         final VersionRange versionRange = constraint.getRanges().get(0);
         assertThat(versionRange.getMinVersion()).hasToString(versionRep);
         assertThat(versionRange.getMaxVersion()).isNull();
@@ -81,6 +82,7 @@ public class MvnVersionSchemeTest {
                                          final boolean maxIncluded) throws VersionParsingException {
         final VersionConstraint constraint = MvnVersionScheme.parseConstraint(range);
         assertThat(constraint).hasToString(rangeRep);
+        assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
         if (minRep == null) {
             assertThat(versionRange.getMinVersion()).isNull();
@@ -98,9 +100,10 @@ public class MvnVersionSchemeTest {
 
     @Test
     public void testParseConstraintUnion() throws VersionParsingException {
-        final VersionConstraint vc1 = MvnVersionScheme.parseConstraint("[1.2.3, 1.3.0  ], [2.0.0,)");
-        assertThat(vc1).hasToString("[1.2.3,1.3.0],[2.0.0,)");
-        final List<VersionRange> ranges1 = vc1.getRanges();
+        final VersionConstraint constraint = MvnVersionScheme.parseConstraint("[1.2.3, 1.3.0  ], [2.0.0,)");
+        assertThat(constraint).hasToString("[1.2.3,1.3.0],[2.0.0,)");
+        assertThat(constraint.isWeak()).isFalse();
+        final List<VersionRange> ranges1 = constraint.getRanges();
         assertThat(ranges1).hasSize(2);
         final VersionRange vr11 = ranges1.get(0);
         assertThat(vr11.getMinVersion()).hasToString("1.2.3");

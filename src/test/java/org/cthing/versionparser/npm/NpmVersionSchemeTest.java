@@ -58,6 +58,7 @@ public class NpmVersionSchemeTest {
             throws VersionParsingException {
         final VersionConstraint constraint = NpmVersionScheme.parseConstraint(version);
         assertThat(constraint).hasToString(rangeRep);
+        assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
         assertThat(versionRange.getMinVersion()).hasToString(versionRep);
         assertThat(versionRange.getMaxVersion()).hasToString(versionRep);
@@ -91,6 +92,7 @@ public class NpmVersionSchemeTest {
                                          final boolean maxIncluded) throws VersionParsingException {
         final VersionConstraint constraint = NpmVersionScheme.parseConstraint(range);
         assertThat(constraint).hasToString(rangeRep);
+        assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
         if (minRep == null) {
             assertThat(versionRange.getMinVersion()).isNull();
@@ -108,9 +110,10 @@ public class NpmVersionSchemeTest {
 
     @Test
     public void testParseConstraintUnion() throws VersionParsingException {
-        final VersionConstraint vc1 = NpmVersionScheme.parseConstraint(">=1.2.3 <=1.3.0 || =2.0.0");
-        assertThat(vc1).hasToString("[1.2.3,1.3.0],[2.0.0]");
-        final List<VersionRange> ranges1 = vc1.getRanges();
+        final VersionConstraint constraint = NpmVersionScheme.parseConstraint(">=1.2.3 <=1.3.0 || =2.0.0");
+        assertThat(constraint).hasToString("[1.2.3,1.3.0],[2.0.0]");
+        assertThat(constraint.isWeak()).isFalse();
+        final List<VersionRange> ranges1 = constraint.getRanges();
         assertThat(ranges1).hasSize(2);
         final VersionRange vr11 = ranges1.get(0);
         assertThat(vr11.getMinVersion()).hasToString("1.2.3");
