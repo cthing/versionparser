@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [4.1.0] - 2023-10-02
+
 ### Added
 
 - Added a `weak` property to a `VersionConstraint` to support Maven's concept of a `soft` constraint (i.e. an
@@ -47,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Parsing versions of various formats using the `Version` class.
 
-[unreleased]: https://github.com/cthing/versionparser/compare/4.0.0...HEAD
+[unreleased]: https://github.com/cthing/versionparser/compare/4.1.0...HEAD
+[4.1.0]: https://github.com/cthing/versionparser/releases/tag/4.1.0
 [4.0.0]: https://github.com/cthing/versionparser/releases/tag/4.0.0
 [3.0.0]: https://github.com/cthing/versionparser/releases/tag/3.0.0
