@@ -411,6 +411,15 @@ public class VersionRange implements Comparable<VersionRange> {
         return other.strictlyLower(this);
     }
 
+    /**
+     * Performs null-safe comparison of the specified versions.
+     *
+     * @param version1 First version to compare
+     * @param version2 Second version to compare
+     * @return Zero if the two versions are equal, less than zero if the first version is less than the second version,
+     *      and greater than zero if the first version is greater than the second. If both versions are {@code null},
+     *      they are considered equal. A {@code null} version is considered less than a non-null version.
+     */
     @SuppressWarnings("ObjectEquality")
     private static int compare(@Nullable final Version version1, @Nullable final Version version2) {
         if (version1 == version2) {
@@ -429,17 +438,17 @@ public class VersionRange implements Comparable<VersionRange> {
     public int compareTo(final VersionRange other) {
         final Supplier<Integer> compareMax = () -> {
             if (this.maxVersion == null) {
-                return (other.getMaxVersion() == null) ? 0 : 1;
+                return (other.maxVersion == null) ? 0 : 1;
             }
-            if (other.getMaxVersion() == null) {
+            if (other.maxVersion == null) {
                 return -1;
             }
 
-            final int result = this.maxVersion.compareTo(other.getMaxVersion());
+            final int result = this.maxVersion.compareTo(other.maxVersion);
             if (result != 0) {
                 return result;
             }
-            if (this.maxIncluded != other.isMaxIncluded()) {
+            if (this.maxIncluded != other.maxIncluded) {
                 return this.maxIncluded ? 1 : -1;
             }
             return 0;
@@ -447,17 +456,17 @@ public class VersionRange implements Comparable<VersionRange> {
 
 
         if (this.minVersion == null) {
-            return (other.getMinVersion() == null) ? compareMax.get() : -1;
+            return (other.minVersion == null) ? compareMax.get() : -1;
         }
-        if (other.getMinVersion() == null) {
+        if (other.minVersion == null) {
             return 1;
         }
 
-        final int result = this.minVersion.compareTo(other.getMinVersion());
+        final int result = this.minVersion.compareTo(other.minVersion);
         if (result != 0) {
             return result;
         }
-        if (this.minIncluded != other.isMinIncluded()) {
+        if (this.minIncluded != other.minIncluded) {
             return this.minIncluded ? -1 : 1;
         }
         return compareMax.get();
