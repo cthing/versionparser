@@ -48,7 +48,7 @@ import org.cthing.versionparser.internal.annotations.UtilityClass;
 
 /**
  * Represents the version scheme used by the Gradle build tool. To parse a version string, call the
- * {@link #parseVersion(String)} method. To parse a version constraint expressions, call the
+ * {@link #parseVersion(String)} method. To parse a version constraint expression, call the
  * {@link #parseConstraint(String)} method.
  * <p>
  * The following are examples of version constraint expressions supported by Gradle:

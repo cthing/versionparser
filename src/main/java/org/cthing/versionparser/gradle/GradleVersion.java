@@ -74,6 +74,7 @@ public final class GradleVersion extends AbstractVersion {
     private final List<String> components;
     private final List<Long> numericParts;
     private final GradleVersion baseVersion;
+    private final boolean preRelease;
 
     /**
      * Constructs a version from the specified version and its components.
@@ -88,6 +89,13 @@ public final class GradleVersion extends AbstractVersion {
         this.components = Collections.unmodifiableList(parts);
         this.numericParts = parts.stream().map(GradleVersion::parseLong).toList();
         this.baseVersion = baseVersion == null ? this : baseVersion;
+        this.preRelease = isQualified() && this.components.stream()
+                                                          .map(part -> SPECIAL_MEANINGS.get(part.toLowerCase(Locale.US)))
+                                                          .filter(Objects::nonNull)
+                                                          .findFirst()
+                                                          .filter(qualifier -> (QUALIFIER_DEV.equals(qualifier)
+                                                                  || QUALIFIER_RC.equals(qualifier)
+                                                                  || QUALIFIER_SNAPSHOT.equals(qualifier))).isPresent();
     }
 
     /**
@@ -132,13 +140,7 @@ public final class GradleVersion extends AbstractVersion {
 
     @Override
     public boolean isPreRelease() {
-        return isQualified() && this.components.stream()
-                                               .map(part -> SPECIAL_MEANINGS.get(part.toLowerCase(Locale.US)))
-                                               .filter(Objects::nonNull)
-                                               .findFirst()
-                                               .filter(qualifier -> (QUALIFIER_DEV.equals(qualifier)
-                                                  || QUALIFIER_RC.equals(qualifier)
-                                                  || QUALIFIER_SNAPSHOT.equals(qualifier))).isPresent();
+        return this.preRelease;
     }
 
     /**

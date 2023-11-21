@@ -82,6 +82,7 @@ import org.cthing.versionparser.Version;
 public final class MvnVersion extends AbstractVersion {
 
     private final List<Component> components;
+    private final boolean preRelease;
 
     /**
      * Creates a version instance.
@@ -91,7 +92,13 @@ public final class MvnVersion extends AbstractVersion {
      */
     private MvnVersion(final String version, final List<Component> components) {
         super(version);
+
         this.components = components;
+        this.preRelease = components.stream()
+                                    .filter(Component::isQualifier)
+                                    .mapToInt(component -> (int)component.value())
+                                    .anyMatch(qualifier -> qualifier != Tokenizer.QUALIFIER_RELEASE
+                                            && qualifier != Tokenizer.QUALIFIER_SP);
     }
 
     /**
@@ -106,11 +113,7 @@ public final class MvnVersion extends AbstractVersion {
 
     @Override
     public boolean isPreRelease() {
-        return this.components.stream()
-                              .filter(Component::isQualifier)
-                              .mapToInt(component -> (int)component.value())
-                              .anyMatch(qualifier -> qualifier != Tokenizer.QUALIFIER_RELEASE
-                                      && qualifier != Tokenizer.QUALIFIER_SP);
+        return this.preRelease;
     }
 
     /**
