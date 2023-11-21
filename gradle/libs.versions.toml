@@ -1,13 +1,13 @@
 [versions]
 java = "17"
-checkstyle = "10.12.3"
-jacoco = "0.8.10"
-junit = "5.10.0"
-spotbugs = "4.7.3"
+checkstyle = "10.12.5"
+jacoco = "0.8.11"
+junit = "5.10.1"
+spotbugs = "4.8.1"
 
 [plugins]
-spotbugs = { id = "com.github.spotbugs", version = "5.1.3" }
-versions = { id = "com.github.ben-manes.versions", version = "0.47.0" }
+spotbugs = { id = "com.github.spotbugs", version = "5.2.3" }
+versions = { id = "com.github.ben-manes.versions", version = "0.49.0" }
 
 [libraries]
 assertJ = "org.assertj:assertj-core:3.24.2"
@@ -16,5 +16,5 @@ junitApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "juni
 junitEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 junitLauncher = "org.junit.platform:junit-platform-launcher:1.10.0"
 junitParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
-mockito = "org.mockito:mockito-core:5.5.0"
+mockito = "org.mockito:mockito-core:5.7.0"
 spotbugsContrib = "com.mebigfatguy.sb-contrib:sb-contrib:7.6.0"
