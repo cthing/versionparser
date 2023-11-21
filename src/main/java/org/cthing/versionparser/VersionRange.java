@@ -140,14 +140,14 @@ public class VersionRange implements Comparable<VersionRange> {
     boolean allows(final Version version) {
         if (this.minVersion != null) {
             if ((version.compareTo(this.minVersion) < 0)
-                    || (!this.minIncluded && version.equals(this.minVersion))) {
+                    || (!this.minIncluded && version.compareTo(this.minVersion) == 0)) {
                 return false;
             }
         }
 
         if (this.maxVersion != null) {
             return (version.compareTo(this.maxVersion) <= 0)
-                    && (this.maxIncluded || !version.equals(this.maxVersion));
+                    && (this.maxIncluded || version.compareTo(this.maxVersion) != 0);
         }
 
         return true;
