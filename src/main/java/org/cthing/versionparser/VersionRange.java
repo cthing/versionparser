@@ -128,7 +128,7 @@ public class VersionRange implements Comparable<VersionRange> {
      * @return {@code true} if this range represents a single version.
      */
     boolean isSingleVersion() {
-        return Objects.equals(this.minVersion, this.maxVersion) && this.minIncluded && this.maxIncluded;
+        return compare(this.minVersion, this.maxVersion) == 0 && this.minIncluded && this.maxIncluded;
     }
 
     /**
@@ -214,11 +214,12 @@ public class VersionRange implements Comparable<VersionRange> {
         }
 
         // If the range is just a single version.
-        if (Objects.equals(intersectMinVersion, intersectMaxVersion)) {
+        if (compare(intersectMinVersion, intersectMaxVersion) == 0) {
             // Because we already verified that the lower range isn't strictly lower, there must be some overlap.
             if (!intersectMinIncluded || !intersectMaxIncluded) {
                 throw new IllegalStateException("Min and max not included in intersection");
             }
+            assert intersectMinVersion != null;
             return Optional.of(new VersionRange(intersectMinVersion));
         }
 
@@ -241,7 +242,7 @@ public class VersionRange implements Comparable<VersionRange> {
         final VersionRange before;
         if (!allowsLower(other)) {
             before = null;
-        } else if (Objects.equals(this.minVersion, other.minVersion)) {
+        } else if (compare(this.minVersion, other.minVersion) == 0) {
             if (!this.minIncluded || other.minIncluded) {
                 throw new IllegalStateException("Minimum included cannot equal other minimum included");
             }
@@ -256,7 +257,7 @@ public class VersionRange implements Comparable<VersionRange> {
         final VersionRange after;
         if (!allowsHigher(other)) {
             after = null;
-        } else if (Objects.equals(this.maxVersion, other.maxVersion)) {
+        } else if (compare(this.maxVersion, other.maxVersion) == 0) {
             if (!this.maxIncluded || other.maxIncluded) {
                 throw new IllegalStateException("Maximum included cannot equal other maximum included");
             }
@@ -291,10 +292,10 @@ public class VersionRange implements Comparable<VersionRange> {
      * @return {@code true} if this is immediately adjacent to the specified range without overlapping.
      */
     boolean isAdjacent(final VersionRange other) {
-        if (Objects.equals(this.maxVersion, other.minVersion)) {
+        if (compare(this.maxVersion, other.minVersion) == 0) {
             return this.maxIncluded ^ other.minIncluded;
         }
-        if (Objects.equals(this.minVersion, other.maxVersion)) {
+        if (compare(this.minVersion, other.maxVersion) == 0) {
             return this.minIncluded ^ other.maxIncluded;
         }
         return false;
@@ -410,6 +411,20 @@ public class VersionRange implements Comparable<VersionRange> {
         return other.strictlyLower(this);
     }
 
+    @SuppressWarnings("ObjectEquality")
+    private static int compare(@Nullable final Version version1, @Nullable final Version version2) {
+        if (version1 == version2) {
+            return 0;
+        }
+        if (version1 == null) {
+            return -1;
+        }
+        if (version2 == null) {
+            return 1;
+        }
+        return version1.compareTo(version2);
+    }
+
     @Override
     public int compareTo(final VersionRange other) {
         final Supplier<Integer> compareMax = () -> {
@@ -475,7 +490,7 @@ public class VersionRange implements Comparable<VersionRange> {
             builder.append(this.minIncluded ? '[' : '(');
             builder.append(this.minVersion);
 
-            if (!this.minVersion.equals(this.maxVersion) || !this.minIncluded || !this.maxIncluded) {
+            if (compare(this.minVersion, this.maxVersion) != 0 || !this.minIncluded || !this.maxIncluded) {
                 builder.append(',');
             }
         }
@@ -483,7 +498,7 @@ public class VersionRange implements Comparable<VersionRange> {
         if (this.maxVersion == null) {
             builder.append(')');
         } else {
-            if (!this.maxVersion.equals(this.minVersion) || !this.minIncluded || !this.maxIncluded) {
+            if (compare(this.maxVersion, this.minVersion) != 0 || !this.minIncluded || !this.maxIncluded) {
                 builder.append(this.maxVersion);
             }
             builder.append(this.maxIncluded ? ']' : ')');
