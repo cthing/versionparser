@@ -523,27 +523,26 @@ The following versions are sorted in descending order.
 | `1.0.dev456`           |
 | `1.dev0`               |
 
-## Ruby Bundler
-[Bundler](https://bundler.io/) is the package (i.e. Gem) manager for the [Ruby](https://www.ruby-lang.org) programming
-language.
+## RubyGems
+[RubyGems](https://rubygems.org/) is the packaging format for the [Ruby](https://www.ruby-lang.org) programming language.
 
 ### Numbering
 Versions consist of numbers separated by periods. Any number of components is allowed. If the final component is
-the keyword `pre`, the package is considered to be prerelease.
+an ASCII letter, the package is considered to be prerelease.
 
 ### Constraints
-| Constraint        | Equivalent          | Definition             | Description              |
-|-------------------|---------------------|------------------------|--------------------------|
-| `1.2.3`           | `[1.2.3]`           |  x = 1.2.3             | Fixed version            |
-| `>= 1.2.3`        | `[1.2.3,)`          | 1.2.3 &#x2264; x       | Greater than or equal to |
-| `> 1.2.3`         | `(1.2.3,)`          | 1.2.3 < x              | Greater than             |
-| `<= 1.2.3`        | `(,1.2.3]`          | x &#x2264; 1.2.3       | Less than or equal to    |
-| `< 1.2.3`         | `(,1.2.3)`          | x < 1.2.3              | Less than                |
-| `>= 2.2.0, < 3.0` | `[2.2.0,3.0)`       | 2.2.0 &#x2264; x < 3.0 | Multiple constraints     |
-| `~> 3.0.3`        | `[3.0.3,3.1)`       | 3.0.3 &#x2264; x < 3.1 | Minor compatible         |
-| `~> 1.1`          | `[1.1,2.0)`         | >= 1.1 and < 2.0       | Major compatible         |
-| `!= 1.2.3`        | `(,1.2.3),(1.2.3,)` | x &#x2260; 1.2.3       | Exclude version          |
-| the empty string  | `(,)`               | 0 &#x2264; x           | Any version              |
+| Constraint        | Equivalent                     | Definition                 | Description                                                                |
+|-------------------|--------------------------------|----------------------------|----------------------------------------------------------------------------|
+| `1.2.3`           | `[1.2.3]`                      | x = 1.2.3                  | Fixed version                                                              |
+| `>= 1.2.3`        | `[1.2.3,)`                     | 1.2.3 &#x2264; x           | Greater than or equal to                                                   |
+| `> 1.2.3`         | `(1.2.3,)`                     | 1.2.3 < x                  | Greater than                                                               |
+| `<= 1.2.3`        | `(,1.2.3]`                     | x &#x2264; 1.2.3           | Less than or equal to                                                      |
+| `< 1.2.3`         | `(,1.2.3)`                     | x < 1.2.3                  | Less than                                                                  |
+| `>= 2.2.0, < 3.0` | `[2.2.0,3.0)`                  | 2.2.0 &#x2264; x < 3.0     | Multiple constraints                                                       |
+| `~> 3.0.3`        | `[3.0.3,3.1.ZZZ)`<sup>1</sup>  | 3.0.3 &#x2264; x < 3.1.ZZZ | Pessimistic - <sup>1</sup>Ensures prerelease versions are handled properly |
+| `~> 1.1`          | `[1.1,2.0.ZZZ)`<sup>1</sup>    | 1.1 &#x2264; x < 2.0.ZZZ   | Possimistic - <sup>1</sup>Ensures prerelease versions are handled properly |
+| `!= 1.2.3`        | `(,1.2.3),(1.2.3,)`            | x &#x2260; 1.2.3           | Exclude version                                                            |
+| the empty string  | `(,)`                          | 0 &#x2264; x               | Any version                                                                |
 
 ### Precedence
 Version ordering is defined by the

@@ -28,3 +28,12 @@ tasks {
         options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:-options", "-Werror"))
     }
 }
+
+listOf("CalVerExample", "GradleExample", "MavenExample", "NpmExample", "RubyGemsExample").forEach { example ->
+    tasks.register("run$example", JavaExec::class) {
+        group = "Example"
+        description = "Run $example program"
+        mainClass = "org.cthing.versionparser.examples.$example"
+        classpath = sourceSets["main"].runtimeClasspath
+    }
+}

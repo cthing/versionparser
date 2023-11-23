@@ -14,6 +14,7 @@ The following version and version constraint schemes are supported:
 * [Maven](https://maven.apache.org/)
 * [Gradle](https://gradle.org/)
 * [NPM](https://www.npmjs.com/)
+* [RubyGems](https://rubygems.org/)
 * [Semantic Versioning](https://semver.org/)
 * [Calendar Versioning](https://calver.org/)
 
@@ -120,6 +121,35 @@ assertThat(constraint1.allows(version2)).isFalse();
 // Perform constraint set operations
 assertThat(constraint1.intersect(constraint2)).isEqualTo(NpmVersionScheme.parseConstraint(">=1.5.0 <2.0.0-0"));
 assertThat(constraint1.union(constraint2)).isEqualTo(NpmVersionScheme.parseConstraint(">=1.0.0 <3.0.0"));
+```
+
+#### RubyGems Versioning
+Support is provided for parsing RubyGems versions and version requirements.
+
+```java
+// Parse versions
+final GemVersion version1 = GemVersionScheme.parseVersion("1.2.3");
+final Version version2 = GemVersionScheme.parseVersion("2.0.7");
+
+// Obtain information from the parsed version
+assertThat(version1.getOriginalVersion()).isEqualTo("1.2.3");
+assertThat(version1.isPreRelease()).isFalse();
+assertThat(version1.getComponents()).containsExactly("1", "2", "3");
+
+// Verify ordering
+assertThat(version1.compareTo(version2)).isEqualTo(-1);
+
+// Parse version constraints
+final VersionConstraint constraint1 = GemVersionScheme.parseConstraint("~>1.0");
+final VersionConstraint constraint2 = GemVersionScheme.parseConstraint(">=1.5.0", "<3.0.0");
+
+// Perform constraint checking
+assertThat(constraint1.allows(version1)).isTrue();
+assertThat(constraint1.allows(version2)).isFalse();
+
+// Perform constraint set operations
+assertThat(constraint1.intersect(constraint2)).isEqualTo(GemVersionScheme.parseConstraint(">=1.5.0", "<2.ZZZ"));
+assertThat(constraint1.union(constraint2)).isEqualTo(GemVersionScheme.parseConstraint(">=1.0.0", "<3.0.0"));
 ```
 
 #### Semantic Versioning
