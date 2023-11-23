@@ -34,6 +34,25 @@ or the following Gradle dependency:
 implementation("org.cthing:versionparser:4.1.0")
 ```
 
+#### Versioning Overview
+
+| Scheme   | Version Factory                                    | Version Constraint Factory                    |
+|----------|----------------------------------------------------|-----------------------------------------------|
+| Maven    | `MvnVersionScheme.parseVersion(String)`            | `MvnVersionScheme.parseConstraint(String)`    |                           
+| Gradle   | `GradleVersionScheme.parseVersion(String)`         | `GradleVersionScheme.parseConstraint(String)` |                           
+| Npm      | `NpmVersionScheme.parseVersion(String)`            | `NpmVersionScheme.parseConstraint(String)`    |                           
+| RubyGems | `GemVersionScheme.parseVersion(String)`            | `GemVersionScheme.parseConstraint(String)`    |                           
+| Semantic | `SemanticVersion.parseVersion(String)`             | N/A                                           |                           
+| Calendar | `CalendardVersionScheme.parse(String)`<sup>1</sup> | N/A                                           |
+<sup>1</sup> A `CalendarVersionScheme` instance must be created to define the version format. Call the `parse` method
+on that instance to create a version instance.
+
+All version factories create an instance of a scheme-specific version class (e.g. `MvnVersion`) that implements the
+`Version` interface. All version constraint factories create an instance of the `VersionConstraint` class. A
+`VersionConstraint` class consists of one or more `VersionRange` instances. If desired, both the `VersionConstraint`
+and `VersionRange` classes can be directly constructed. Do not mix version schemes (e.g. do not use Maven version
+instances to create NPM version constraints).
+
 #### Maven Versioning
 Support is provided for parsing Maven versions and dependency version constraints.
 
