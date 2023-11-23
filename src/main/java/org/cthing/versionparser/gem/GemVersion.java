@@ -72,13 +72,13 @@ import org.cthing.versionparser.VersionParsingException;
  * </p>
  * <p>
  * Pre-release versions sort between real releases (newest to oldest):
+ * </p>
  * <ol>
  *   <li>1.0</li>
  *   <li>1.0.b1</li>
  *   <li>1.0.a.2</li>
  *   <li>0.9</li>
  * </ol>
- * </p>
  */
 public final class GemVersion extends AbstractVersion {
 
