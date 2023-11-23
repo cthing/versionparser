@@ -44,6 +44,7 @@ implementation("org.cthing:versionparser:4.1.0")
 | RubyGems | `GemVersionScheme.parseVersion(String)`            | `GemVersionScheme.parseConstraint(String)`    |                           
 | Semantic | `SemanticVersion.parseVersion(String)`             | N/A                                           |                           
 | Calendar | `CalendardVersionScheme.parse(String)`<sup>1</sup> | N/A                                           |
+
 <sup>1</sup> A `CalendarVersionScheme` instance must be created to define the version format. Call the `parse` method
 on that instance to create a version instance.
 
