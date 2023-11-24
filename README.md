@@ -220,7 +220,7 @@ assertThat(version2.compareTo(version3)).isEqualTo(-1);
 ### Additional Information
 In preparation for creating this library, a [survey of many popular versioning schemes](docs/VersioningSurvey.md) was conducted.
 Among other things, this lead to the recognition that all version constraint specifications could be expressed using a single notation.
-This in term allows version constraints to be handled in a version scheme independent manner. To work with a constraint, the only
+This in turn allows version constraints to be handled in a version scheme independent manner. To work with a constraint, the only
 requirement of a version is that it be ordered.
 
 ### Building
