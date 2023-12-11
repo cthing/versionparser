@@ -43,7 +43,7 @@ implementation("org.cthing:versionparser:4.2.0")
 | Npm      | `NpmVersionScheme.parseVersion(String)`            | `NpmVersionScheme.parseConstraint(String)`    |                           
 | RubyGems | `GemVersionScheme.parseVersion(String)`            | `GemVersionScheme.parseConstraint(String)`    |                           
 | Semantic | `SemanticVersion.parseVersion(String)`             | N/A                                           |                           
-| Calendar | `CalendardVersionScheme.parse(String)`<sup>1</sup> | N/A                                           |
+| Calendar | `CalendarVersionScheme.parse(String)`<sup>1</sup>  | N/A                                           |
 
 <sup>1</sup> A `CalendarVersionScheme` instance must be created to define the version format. Call the `parse` method
 on that instance to create a version instance.
@@ -224,7 +224,7 @@ This in turn allows version constraints to be handled in a version scheme indepe
 requirement of a version is that it be ordered.
 
 ### Building
-The libray is compiled for Java 17. If a Java 17 toolchain is not available, one will be downloaded.
+The library is compiled for Java 17. If a Java 17 toolchain is not available, one will be downloaded.
 
 Gradle is used to build the library:
 ```bash
@@ -250,7 +250,7 @@ Perform the following steps to create a release.
 - Log in
 - Use the `Staging Upload` to upload the generated artifact bundle `versionparser-bundle-<version>.jar`
 - Click on `Staging Repositories`
-- Once it is enalbed, press `Release` to release the artifacts to Maven Central
+- Once it is enabled, press `Release` to release the artifacts to Maven Central
 - Log out
 - Wait for the new release to be available on Maven Central
 - In a browser, go to the project on GitHub
