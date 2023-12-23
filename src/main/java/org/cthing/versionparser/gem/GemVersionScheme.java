@@ -22,9 +22,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.cthing.annotations.NoCoverageGenerated;
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
-import org.cthing.versionparser.internal.annotations.UtilityClass;
 
 
 /**
@@ -46,7 +46,7 @@ public final class GemVersionScheme {
                                           EQ, NE, GT, LT, GE, LE, PE, GemVersion.VERSION_PATTERN));
     private static final String PESSIMISTIC_SUFFIX = ".ZZZ";
 
-    @UtilityClass
+    @NoCoverageGenerated
     private GemVersionScheme() {
     }
 

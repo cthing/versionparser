@@ -20,4 +20,4 @@
 @PackageNonnullByDefault
 package org.cthing.versionparser.semver;
 
-import org.cthing.versionparser.internal.annotations.PackageNonnullByDefault;
+import org.cthing.annotations.PackageNonnullByDefault;

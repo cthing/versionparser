@@ -11,6 +11,7 @@ versions = { id = "com.github.ben-manes.versions", version = "0.50.0" }
 
 [libraries]
 assertJ = "org.assertj:assertj-core:3.24.2"
+cthingAnnots = "org.cthing:cthing-annotations:1.0.0"
 jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 junitApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junitEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }

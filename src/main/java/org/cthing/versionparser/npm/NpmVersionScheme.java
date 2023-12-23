@@ -47,11 +47,11 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.cthing.annotations.NoCoverageGenerated;
 import org.cthing.versionparser.Version;
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
 import org.cthing.versionparser.VersionRange;
-import org.cthing.versionparser.internal.annotations.UtilityClass;
 import org.cthing.versionparser.semver.SemanticVersion;
 
 
@@ -74,7 +74,7 @@ public final class NpmVersionScheme {
                                           SemanticVersion.SEMVER));
     private static final Pattern SPACE_PATTERN = Pattern.compile("\\s+");
 
-    @UtilityClass
+    @NoCoverageGenerated
     private NpmVersionScheme() {
     }
 

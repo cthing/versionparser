@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+- Dependency on org.cthing:cthing-annotations library
+
+### Changed
+
+- Migrated from internal annotations to using cthing-annotations library
+
+### Removed
+
+- The internal package org.cthing.versionparser.internal has been removed
+
 ## [4.2.0] - 2023-11-23
 
 ### Added

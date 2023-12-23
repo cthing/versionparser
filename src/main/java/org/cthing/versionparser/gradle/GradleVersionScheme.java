@@ -41,9 +41,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.cthing.annotations.NoCoverageGenerated;
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
-import org.cthing.versionparser.internal.annotations.UtilityClass;
 
 
 /**
@@ -118,7 +118,7 @@ public final class GradleVersionScheme {
                                                                     + INFINITE_DYNAMIC_RANGE + "|"
                                                                     + SINGLE_VALUE_RANGE);
 
-    @UtilityClass
+    @NoCoverageGenerated
     private GradleVersionScheme() {
     }
 

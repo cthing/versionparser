@@ -39,11 +39,11 @@ package org.cthing.versionparser.maven;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cthing.annotations.NoCoverageGenerated;
 import org.cthing.versionparser.Version;
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
 import org.cthing.versionparser.VersionRange;
-import org.cthing.versionparser.internal.annotations.UtilityClass;
 
 
 /**
@@ -53,7 +53,7 @@ import org.cthing.versionparser.internal.annotations.UtilityClass;
  */
 public final class MvnVersionScheme {
 
-    @UtilityClass
+    @NoCoverageGenerated
     private MvnVersionScheme() {
     }
 

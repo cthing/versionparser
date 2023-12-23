@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
-import org.cthing.versionparser.internal.annotations.UtilityClass;
+import org.cthing.annotations.NoCoverageGenerated;
 import org.cthing.versionparser.semver.SemanticVersion;
 
 import static org.cthing.versionparser.npm.ConstraintComponent.Operator.EQ;
@@ -101,7 +101,7 @@ public final class ConstraintTranslator {
 
     private static final int X_RANGE_MARKER = -1;
 
-    @UtilityClass
+    @NoCoverageGenerated
     private ConstraintTranslator() {
     }
 

@@ -36,6 +36,7 @@ java {
 }
 
 dependencies {
+    implementation(libs.cthingAnnots)
     implementation(libs.jsr305)
 
     testImplementation(libs.junitApi)
