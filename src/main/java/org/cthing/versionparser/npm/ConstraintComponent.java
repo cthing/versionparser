@@ -41,8 +41,9 @@
 
 package org.cthing.versionparser.npm;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import org.cthing.versionparser.VersionParsingException;
@@ -86,7 +87,15 @@ class ConstraintComponent {
          */
         GTE(">=");
 
+        private static final Map<String, Operator> OPERATORS = new HashMap<>();
+
         private final String string;
+
+        static {
+            for (final Operator operator : values()) {
+                OPERATORS.put(operator.string, operator);
+            }
+        }
 
         /**
          * Creates an operator instance with the specified string representation.
@@ -116,11 +125,13 @@ class ConstraintComponent {
             if (operatorStr.isEmpty()) {
                 return EQ;
             }
-            return Arrays.stream(values())
-                         .filter(rangeOperator -> rangeOperator.string.equals(operatorStr))
-                         .findFirst()
-                         .orElseThrow(() -> new IllegalArgumentException(
-                                 String.format(Locale.ROOT, "Range operator for '%s' not found", operatorStr)));
+
+            final Operator op = OPERATORS.get(operatorStr);
+            if (op == null) {
+                throw new IllegalArgumentException(String.format(Locale.ROOT, "Range operator for '%s' not found",
+                                                                 operatorStr));
+            }
+            return op;
         }
     }
 

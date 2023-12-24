@@ -15,8 +15,9 @@
  */
 package org.cthing.versionparser.calver;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -39,9 +40,17 @@ enum ComponentFormat {
     ZERO_D(ComponentCategory.DAY, "0D", "([\\d]{2})"),
     MODIFIER(ComponentCategory.MODIFIER, "modifier", "(?:[\\-._](.+))?");
 
+    private static final Map<String, ComponentFormat> FORMATS = new HashMap<>();
+
     private final ComponentCategory category;
     private final String format;
     private final String regex;
+
+    static {
+        for (final ComponentFormat compFormat : values()) {
+            FORMATS.put(compFormat.format, compFormat);
+        }
+    }
 
     /**
      * Constructs a format enum instance.
@@ -95,8 +104,6 @@ enum ComponentFormat {
      */
     static Optional<ComponentFormat> from(final String formatStr) {
         final String normalizedFormatStr = formatStr.trim().toUpperCase(Locale.ROOT);
-        return Arrays.stream(values())
-                     .filter(componentFormat -> componentFormat.format.equals(normalizedFormatStr))
-                     .findFirst();
+        return Optional.ofNullable(FORMATS.get(normalizedFormatStr));
     }
 }

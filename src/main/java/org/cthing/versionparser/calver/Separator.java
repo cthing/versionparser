@@ -15,7 +15,8 @@
  */
 package org.cthing.versionparser.calver;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -35,8 +36,16 @@ public enum Separator {
     /** Represent a separator using the '_' character as a delimiter. */
     UNDERSCORE("_", "_");
 
+    private static final Map<String, Separator> DELIMITERS = new HashMap<>();
+
     private final String delimiter;
     private final String regex;
+
+    static {
+        for (final Separator separator : values()) {
+            DELIMITERS.put(separator.delimiter, separator);
+        }
+    }
 
     /**
      * Constructs a separator enum instance.
@@ -76,9 +85,6 @@ public enum Separator {
      *      specified delimiter is not valid.
      */
     static Optional<Separator> from(final String delimiterStr) {
-        final String normalizedDelimiterStr = delimiterStr.trim();
-        return Arrays.stream(values())
-                     .filter(separator -> separator.delimiter.equals(normalizedDelimiterStr))
-                     .findFirst();
+        return Optional.ofNullable(DELIMITERS.get(delimiterStr.trim()));
     }
 }

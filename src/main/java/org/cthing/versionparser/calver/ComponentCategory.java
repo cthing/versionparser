@@ -17,8 +17,6 @@ package org.cthing.versionparser.calver;
 
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-
 import org.cthing.versionparser.VersionParsingException;
 
 
@@ -29,32 +27,30 @@ import org.cthing.versionparser.VersionParsingException;
  */
 public enum ComponentCategory {
     /** Represents a year. Values in this category must be greater than or equal to 1900. */
-    YEAR(integer -> integer >= 1900, "Invalid year '%d' (year >= 1900)"),
+    YEAR(integer -> integer < 1900, "Invalid year '%d' (year >= 1900)"),
 
     /** Represents a month of the year. Values in this category must be between 1 and 12 inclusive. */
-    MONTH(integer -> integer >= 1 && integer <= 12, "Invalid month '%d' (1 <= month <= 12)"),
+    MONTH(integer -> integer < 1 || integer > 12, "Invalid month '%d' (1 <= month <= 12)"),
 
     /** Represents a day of the month. Values in this category must be between 1 and 31 inclusive. */
-    DAY(integer -> integer >= 1 && integer <= 31, "Invalid day '%d' (1 <= day <= 31)"),
+    DAY(integer -> integer < 1 || integer > 31, "Invalid day '%d' (1 <= day <= 31)"),
 
     /** Represents a week of the year. Values in this category must be between 1 and 52 inclusive. */
-    WEEK(integer -> integer >= 1 && integer <= 52, "Invalid week '%d' (1 <= week <= 52)"),
+    WEEK(integer -> integer < 1 || integer > 52, "Invalid week '%d' (1 <= week <= 52)"),
 
     /** Represents a major version number per the Semantic Version specification. Values must be positive. */
-    MAJOR(integer -> integer >= 0, "Invalid major version '%d' (major >= 0)"),
+    MAJOR(integer -> integer < 0, "Invalid major version '%d' (major >= 0)"),
 
     /** Represents a minor version number per the Semantic Version specification. Values must be positive. */
-    MINOR(integer -> integer >= 0, "Invalid minor version '%d' (minor >= 0)"),
+    MINOR(integer -> integer < 0, "Invalid minor version '%d' (minor >= 0)"),
 
     /** Represents a patch version number per the Semantic Version specification. Values must be positive. */
-    PATCH(integer -> integer >= 0, "Invalid patch version '%d' (patch >= 0)"),
+    PATCH(integer -> integer < 0, "Invalid patch version '%d' (patch >= 0)"),
 
     /** Represents an optional modifier on the version (e.g. alpha). */
-    MODIFIER(null, "");
+    MODIFIER(integer -> false, "");
 
-    @Nullable
     private final Predicate<Integer> validator;
-
     private final String validationMessage;
 
     /**
@@ -63,7 +59,7 @@ public enum ComponentCategory {
      * @param validator Predicate to validate the category's value
      * @param message Message to emit if validation fails
      */
-    ComponentCategory(@Nullable final Predicate<Integer> validator, final String message) {
+    ComponentCategory(final Predicate<Integer> validator, final String message) {
         this.validator = validator;
         this.validationMessage = message;
     }
@@ -75,7 +71,7 @@ public enum ComponentCategory {
      * @throws VersionParsingException if the specified value violates the category's validator predicate.
      */
     void validate(final int value) throws VersionParsingException {
-        if (this.validator != null && !this.validator.test(value)) {
+        if (this.validator.test(value)) {
             throw new VersionParsingException(String.format(this.validationMessage, value));
         }
     }
