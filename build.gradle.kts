@@ -50,6 +50,12 @@ dependencies {
     spotbugsPlugins(libs.spotbugsContrib)
 }
 
+configurations.checkstyle {
+    resolutionStrategy.capabilitiesResolution.withCapability("com.google.collections:google-collections") {
+        select("com.google.guava:guava:0")
+    }
+}
+
 checkstyle {
     toolVersion = libs.versions.checkstyle.get()
     isIgnoreFailures = false
