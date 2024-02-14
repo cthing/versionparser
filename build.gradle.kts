@@ -50,16 +50,6 @@ dependencies {
     spotbugsPlugins(libs.spotbugsContrib)
 }
 
-allprojects {
-    dependencies {
-        modules {
-            module("com.google.collections:google-collections") {
-                replacedBy("com.google.guava:guava", "google-collections is now part of Guava")
-            }
-        }
-    }
-}
-
 checkstyle {
     toolVersion = libs.versions.checkstyle.get()
     isIgnoreFailures = false
