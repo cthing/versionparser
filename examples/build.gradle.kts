@@ -10,7 +10,8 @@ java {
 }
 
 dependencies {
-    implementation(rootProject)
+    api(project(":"))
+
     implementation(libs.assertJ)
 }
 
