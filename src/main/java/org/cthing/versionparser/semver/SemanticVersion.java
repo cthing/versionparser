@@ -106,6 +106,7 @@ public final class SemanticVersion extends AbstractVersion {
     private final int patch;
     private final List<String> preRelease;
     private final List<String> build;
+    private final String coreVersion;
     private final String normalizedVersion;
 
     /**
@@ -130,6 +131,8 @@ public final class SemanticVersion extends AbstractVersion {
 
         final StringBuilder buffer = new StringBuilder();
         buffer.append(this.major).append('.').append(this.minor).append('.').append(this.patch);
+        this.coreVersion = buffer.toString();
+
         if (!this.preRelease.isEmpty()) {
             buffer.append('-').append(String.join(".", this.preRelease));
         }
@@ -207,6 +210,16 @@ public final class SemanticVersion extends AbstractVersion {
      */
     public List<String> getBuild() {
         return Collections.unmodifiableList(this.build);
+    }
+
+    /**
+     * Obtains the version in the standard semantic version format without the pre-release or build metadata portions.
+     * For example, if the full version is {@code 1.0.1-123+abc}, the core version is {@code 1.0.1}.
+     *
+     * @return Major, minor and patch portions of the version.
+     */
+    public String getCoreVersion() {
+        return this.coreVersion;
     }
 
     /**

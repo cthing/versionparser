@@ -191,6 +191,23 @@ assertThat(version1.getPatch()).isEqualTo(3);
 assertThat(version1.compareTo(version2)).isEqualTo(-1);
 ```
 
+Pre-release and build metadata is supported, and a "v" prefix is ignored.
+
+```java
+final SemanticVersion version = SemanticVersion.parse("v1.2.3-beta.1+56709")
+        
+assertThat(version.getOriginalVersion()).isEqualTo("v1.2.3-beta.1+56709");
+assertThat(version).hasToString("v1.2.3-beta.1+56709");
+assertThat(version.getNormalizedVersion()).isEqualTo("1.2.3-beta.1+56709");
+assertThat(version.getCoreVersion()).isEqualTo("1.2.3");
+assertThat(version.isPreRelease()).isTrue();
+assertThat(version.getMajor()).isEqualTo(1);
+assertThat(version.getMinor()).isEqualTo(2);
+assertThat(version.getPatch()).isEqualTo(3);
+assertThat(version.getPreReleaseIdentifiers()).containsExactly("beta", "1");
+assertThat(version.getBuild()).containsExactly("56709");
+```
+
 ### Calendar Versioning
 Support is provided for parsing calendar versions.
 

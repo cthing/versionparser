@@ -43,27 +43,28 @@ public class SemanticVersionTest {
 
     static Stream<Arguments> parsingProvider() {
         return Stream.of(
-                arguments("1.2.3", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
-                arguments("  1.2.3  ", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
-                arguments("1.2.3", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
-                arguments("v1.2.3", "v1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
-                arguments("1.2.3-abc", "1.2.3-abc", "1.2.3-abc", 1, 2, 3, List.of("abc"), List.of()),
-                arguments("1.2.3-abc.2.foo", "1.2.3-abc.2.foo", "1.2.3-abc.2.foo", 1, 2, 3,
+                arguments("1.2.3", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
+                arguments("  1.2.3  ", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
+                arguments("1.2.3", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
+                arguments("v1.2.3", "v1.2.3", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
+                arguments("1.2.3-abc", "1.2.3-abc", "1.2.3-abc", "1.2.3", 1, 2, 3, List.of("abc"), List.of()),
+                arguments("1.2.3-abc.2.foo", "1.2.3-abc.2.foo", "1.2.3-abc.2.foo", "1.2.3", 1, 2, 3,
                           List.of("abc", "2", "foo"), List.of()),
-                arguments("1.2.3+1234", "1.2.3+1234", "1.2.3+1234", 1, 2, 3, List.of(), List.of("1234")),
-                arguments("1.2.3-abc+1234", "1.2.3-abc+1234", "1.2.3-abc+1234", 1, 2, 3, List.of("abc"),
+                arguments("1.2.3+1234", "1.2.3+1234", "1.2.3+1234", "1.2.3", 1, 2, 3, List.of(), List.of("1234")),
+                arguments("1.2.3-abc+1234", "1.2.3-abc+1234", "1.2.3-abc+1234", "1.2.3", 1, 2, 3, List.of("abc"),
                           List.of("1234"))
         );
     }
 
     @ParameterizedTest
     @MethodSource("parsingProvider")
-    public void testParsing(final String versionStr, final String rep, final String value, final int major,
-                            final int minor, final int patch, final List<String> preRelease,
+    public void testParsing(final String versionStr, final String rep, final String value, final String core,
+                            final int major, final int minor, final int patch, final List<String> preRelease,
                             final List<String> build) throws VersionParsingException {
         final SemanticVersion version = SemanticVersion.parse(versionStr);
         assertThat(version).hasToString(rep).isInstanceOf(Version.class);
         assertThat(version.getOriginalVersion()).isEqualTo(rep);
+        assertThat(version.getCoreVersion()).isEqualTo(core);
         assertThat(version.getNormalizedVersion()).isEqualTo(value);
         assertThat(version.getMajor()).isEqualTo(major);
         assertThat(version.getMinor()).isEqualTo(minor);

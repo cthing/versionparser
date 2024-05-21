@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- The `SemanticVersion.getCoreVersion()` method to obtain the major, minor and patch version without
+  pre-release and build metadata
 - [Dependency analysis Gradle plugin](https://github.com/autonomousapps/dependency-analysis-gradle-plugin)
 - The `check` task now depends on the `buildHealth` task and will fail the build on health violations
 
