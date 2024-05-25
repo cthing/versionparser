@@ -32,7 +32,7 @@ buildscript {
     }
 }
 
-version = ProjectVersion("4.3.0", BuildType.release)
+version = ProjectVersion("4.3.1", BuildType.snapshot)
 group = "org.cthing"
 description = "Parses version numbers, ranges and constraints in a variety of formats."
 
