@@ -1,10 +1,9 @@
+import com.github.spotbugs.snom.Confidence
+import com.github.spotbugs.snom.Effort
 import org.cthing.projectversion.BuildType
 import org.cthing.projectversion.ProjectVersion
-import com.github.spotbugs.snom.Effort
-import com.github.spotbugs.snom.Confidence
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 allprojects {
     repositories {
