@@ -3,7 +3,8 @@ import com.github.spotbugs.snom.Effort
 import org.cthing.projectversion.BuildType
 import org.cthing.projectversion.ProjectVersion
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 allprojects {
     repositories {
