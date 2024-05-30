@@ -12,24 +12,22 @@ allprojects {
     }
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
 plugins {
     `java-library`
     checkstyle
     jacoco
     `maven-publish`
     signing
+    alias(libs.plugins.cthingVersioning)
     alias(libs.plugins.dependencyAnalysis)
     alias(libs.plugins.spotbugs)
     alias(libs.plugins.versions)
-}
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath(libs.cthingProjectVersion)
-    }
 }
 
 version = ProjectVersion("4.3.1", BuildType.snapshot)
