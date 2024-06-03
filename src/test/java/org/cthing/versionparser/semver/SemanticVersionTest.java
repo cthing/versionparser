@@ -35,32 +35,34 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 public class SemanticVersionTest {
 
+    private static final List<String> EMPTY = List.of();
+
     enum Order {
         LT,
         EQ,
         GT,
     }
 
-    static Stream<Arguments> parsingProvider() {
+    static Stream<Arguments> parsingSingleProvider() {
         return Stream.of(
-                arguments("1.2.3", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
-                arguments("  1.2.3  ", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
-                arguments("1.2.3", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
-                arguments("v1.2.3", "v1.2.3", "1.2.3", "1.2.3", 1, 2, 3, List.of(), List.of()),
-                arguments("1.2.3-abc", "1.2.3-abc", "1.2.3-abc", "1.2.3", 1, 2, 3, List.of("abc"), List.of()),
+                arguments("1.2.3", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, EMPTY, EMPTY),
+                arguments("  1.2.3  ", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, EMPTY, EMPTY),
+                arguments("1.2.3", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, EMPTY, EMPTY),
+                arguments("v1.2.3", "v1.2.3", "1.2.3", "1.2.3", 1, 2, 3, EMPTY, EMPTY),
+                arguments("1.2.3-abc", "1.2.3-abc", "1.2.3-abc", "1.2.3", 1, 2, 3, List.of("abc"), EMPTY),
                 arguments("1.2.3-abc.2.foo", "1.2.3-abc.2.foo", "1.2.3-abc.2.foo", "1.2.3", 1, 2, 3,
-                          List.of("abc", "2", "foo"), List.of()),
-                arguments("1.2.3+1234", "1.2.3+1234", "1.2.3+1234", "1.2.3", 1, 2, 3, List.of(), List.of("1234")),
+                          List.of("abc", "2", "foo"), EMPTY),
+                arguments("1.2.3+1234", "1.2.3+1234", "1.2.3+1234", "1.2.3", 1, 2, 3, EMPTY, List.of("1234")),
                 arguments("1.2.3-abc+1234", "1.2.3-abc+1234", "1.2.3-abc+1234", "1.2.3", 1, 2, 3, List.of("abc"),
                           List.of("1234"))
         );
     }
 
     @ParameterizedTest
-    @MethodSource("parsingProvider")
-    public void testParsing(final String versionStr, final String rep, final String value, final String core,
-                            final int major, final int minor, final int patch, final List<String> preRelease,
-                            final List<String> build) throws VersionParsingException {
+    @MethodSource("parsingSingleProvider")
+    public void testSingleParsing(final String versionStr, final String rep, final String value, final String core,
+                                  final int major, final int minor, final int patch, final List<String> preRelease,
+                                  final List<String> build) throws VersionParsingException {
         final SemanticVersion version = SemanticVersion.parse(versionStr);
         assertThat(version).hasToString(rep).isInstanceOf(Version.class);
         assertThat(version.getOriginalVersion()).isEqualTo(rep);
@@ -71,6 +73,71 @@ public class SemanticVersionTest {
         assertThat(version.getPatch()).isEqualTo(patch);
         assertThat(version.getPreReleaseIdentifiers()).isEqualTo(preRelease);
         assertThat(version.getBuild()).isEqualTo(build);
+    }
+
+    static Stream<Arguments> parsingPreReleaseProvider() {
+        return Stream.of(
+                arguments("1.2.3", "", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, EMPTY),
+                arguments("1.2.3", "  ", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, EMPTY),
+                arguments("  1.2.3  ", "", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, EMPTY),
+                arguments("1.2.3", "", "1.2.3", "1.2.3", "1.2.3", 1, 2, 3, EMPTY),
+                arguments("v1.2.3", "", "v1.2.3", "1.2.3", "1.2.3", 1, 2, 3, EMPTY),
+                arguments("1.2.3", "abc", "1.2.3-abc", "1.2.3-abc", "1.2.3", 1, 2, 3, List.of("abc")),
+                arguments("1.2.3", "abc.2.foo", "1.2.3-abc.2.foo", "1.2.3-abc.2.foo", "1.2.3", 1, 2, 3,
+                          List.of("abc", "2", "foo"))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("parsingPreReleaseProvider")
+    public void testPreReleaseParsing(final String baseVersion, final String preReleaseIdentifier, final String rep,
+                                      final String value, final String core, final int major, final int minor,
+                                      final int patch, final List<String> preRelease)
+            throws VersionParsingException {
+        final SemanticVersion version = SemanticVersion.parse(baseVersion, preReleaseIdentifier);
+        assertThat(version).hasToString(rep).isInstanceOf(Version.class);
+        assertThat(version.getOriginalVersion()).isEqualTo(rep);
+        assertThat(version.getCoreVersion()).isEqualTo(core);
+        assertThat(version.getNormalizedVersion()).isEqualTo(value);
+        assertThat(version.getMajor()).isEqualTo(major);
+        assertThat(version.getMinor()).isEqualTo(minor);
+        assertThat(version.getPatch()).isEqualTo(patch);
+        assertThat(version.getPreReleaseIdentifiers()).isEqualTo(preRelease);
+        assertThat(version.getBuild()).isEmpty();
+    }
+
+    static Stream<Arguments> parsingSnapshotProvider() {
+        return Stream.of(
+                arguments("1.2.3", false, "1\\.2\\.3", "1\\.2\\.3", "1.2.3", 1, 2, 3),
+                arguments("  1.2.3  ", false, "1\\.2\\.3", "1\\.2\\.3", "1.2.3", 1, 2, 3),
+                arguments("v1.2.3", false, "v1\\.2\\.3", "1\\.2\\.3", "1.2.3", 1, 2, 3),
+                arguments("1.2.3", true, "1\\.2\\.3-\\d+", "1\\.2\\.3-\\d+", "1.2.3", 1, 2, 3),
+                arguments(" v1.2.3 ", true, "v1\\.2\\.3-\\d+", "1\\.2\\.3-\\d+", "1.2.3", 1, 2, 3)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("parsingSnapshotProvider")
+    public void testSnapshotParsing(final String baseVersion, final boolean snapshot, final String rep,
+                                    final String value, final String core, final int major, final int minor,
+                                    final int patch)
+            throws VersionParsingException {
+        final SemanticVersion version = SemanticVersion.parse(baseVersion, snapshot);
+        assertThat(version).isInstanceOf(Version.class);
+        assertThat(version.toString()).matches(rep);
+        assertThat(version.getOriginalVersion()).matches(rep);
+        assertThat(version.getCoreVersion()).isEqualTo(core);
+        assertThat(version.getNormalizedVersion()).matches(value);
+        assertThat(version.getMajor()).isEqualTo(major);
+        assertThat(version.getMinor()).isEqualTo(minor);
+        assertThat(version.getPatch()).isEqualTo(patch);
+        assertThat(version.getBuild()).isEmpty();
+        if (snapshot) {
+            assertThat(version.getPreReleaseIdentifiers()).hasSize(1);
+            assertThat(version.getPreReleaseIdentifiers().get(0)).matches("\\d+");
+        } else {
+            assertThat(version.getPreReleaseIdentifiers()).isEmpty();
+        }
     }
 
     @ParameterizedTest

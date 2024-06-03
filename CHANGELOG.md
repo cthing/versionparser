@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+- The `SemanticVersion.parse(String coreVersion, String preReleaseIdentifier)` and
+  `SemanticVersion.parse(String coreVersion, boolean snapshot)` convenience methods.
+
 ## [4.3.0] - 2024-05-25
 
 ### Added

@@ -194,7 +194,7 @@ assertThat(version1.compareTo(version2)).isEqualTo(-1);
 Pre-release and build metadata is supported, and a "v" prefix is ignored.
 
 ```java
-final SemanticVersion version = SemanticVersion.parse("v1.2.3-beta.1+56709")
+final SemanticVersion version = SemanticVersion.parse("v1.2.3-beta.1+56709");
         
 assertThat(version.getOriginalVersion()).isEqualTo("v1.2.3-beta.1+56709");
 assertThat(version).hasToString("v1.2.3-beta.1+56709");
@@ -206,6 +206,53 @@ assertThat(version.getMinor()).isEqualTo(2);
 assertThat(version.getPatch()).isEqualTo(3);
 assertThat(version.getPreReleaseIdentifiers()).containsExactly("beta", "1");
 assertThat(version.getBuild()).containsExactly("56709");
+```
+
+A convenience parsing method is provided for the common case of specifying a core version
+and a separate pre-release identifier.
+
+```java
+final SemanticVersion version = SemanticVersion.parse("1.2.3", "beta.1");
+
+assertThat(version.getOriginalVersion()).isEqualTo("1.2.3-beta.1");
+assertThat(version).hasToString("1.2.3-beta.1");
+assertThat(version.getNormalizedVersion()).isEqualTo("1.2.3-beta.1");
+assertThat(version.getCoreVersion()).isEqualTo("1.2.3");
+assertThat(version.isPreRelease()).isTrue();
+assertThat(version.getMajor()).isEqualTo(1);
+assertThat(version.getMinor()).isEqualTo(2);
+assertThat(version.getPatch()).isEqualTo(3);
+assertThat(version.getPreReleaseIdentifiers()).containsExactly("beta", "1");
+```
+
+Another convenience parsing method is provided to accommodate snapshot builds. This method takes a core version
+and a flag to indicate whether the version represents a snapshot. Snapshot versions are given a pre-release
+component which is the number of milliseconds since the Unix Epoch.
+
+```java
+final SemanticVersion version1 = SemanticVersion("1.2.3", true);
+
+assertThat(version1.getOriginalVersion()).isEqualTo("1.2.3-1717386681940");
+assertThat(version1).hasToString("1.2.3-1717386681940");
+assertThat(version1.getNormalizedVersion()).isEqualTo("1.2.3-1717386681940");
+assertThat(version1.getCoreVersion()).isEqualTo("1.2.3");
+assertThat(version1.isPreRelease()).isTrue();
+assertThat(version1.getMajor()).isEqualTo(1);
+assertThat(version1.getMinor()).isEqualTo(2);
+assertThat(version1.getPatch()).isEqualTo(3);
+assertThat(version1.getPreReleaseIdentifiers()).containsExactly("1717386681940");
+
+final SemanticVersion version2 = SemanticVersion("1.2.3", false);
+
+assertThat(version2.getOriginalVersion()).isEqualTo("1.2.3");
+assertThat(version2).hasToString("1.2.3");
+assertThat(version2.getNormalizedVersion()).isEqualTo("1.2.3");
+assertThat(version2.getCoreVersion()).isEqualTo("1.2.3");
+assertThat(version2.isPreRelease()).isFalse();
+assertThat(version2.getMajor()).isEqualTo(1);
+assertThat(version2.getMinor()).isEqualTo(2);
+assertThat(version2.getPatch()).isEqualTo(3);
+assertThat(version2.getPreReleaseIdentifiers()).isEmpty();
 ```
 
 ### Calendar Versioning

@@ -43,6 +43,7 @@ package org.cthing.versionparser.semver;
 
 import java.math.BigInteger;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -146,7 +147,7 @@ public final class SemanticVersion extends AbstractVersion {
      * Parses the specified version string and returns a new instance of this class.
      *
      * @param version Version string to parse
-     * @return Version object
+     * @return Semantic version object
      * @throws VersionParsingException if there is a problem parsing the version
      */
     public static SemanticVersion parse(final String version) throws VersionParsingException {
@@ -164,6 +165,47 @@ public final class SemanticVersion extends AbstractVersion {
         final List<String> build = toList(semverMatcher.group(5));
 
         return new SemanticVersion(trimmedVersion, major, minor, patch, preRelease, build);
+    }
+
+    /**
+     * Constructs a semantic version from the specified core version (i.e. major.minor.patch) and the specified
+     * pre-release identifier. Calling this method is equivalent to calling the {@link #parse(String)} method
+     * with a string in the format {@code major.minor.patch-preReleaseIdentifier}.
+     *
+     * @param coreVersion Core version in the format {@code major.minor.patch}
+     * @param preReleaseIdentifier Pre-release portion of the semantic version. If a blank string is specified,
+     *      no pre-release identifier will be added to the returned semantic version.
+     * @return Semantic version object
+     * @throws VersionParsingException if there is a problem parsing the version
+     */
+    @SuppressWarnings("ParameterHidesMemberVariable")
+    public static SemanticVersion parse(final String coreVersion, final String preReleaseIdentifier)
+            throws VersionParsingException {
+        return parse(preReleaseIdentifier.isBlank()
+                     ? coreVersion
+                     : coreVersion.trim() + "-" + preReleaseIdentifier.trim());
+    }
+
+    /**
+     * Constructs a semantic version from the specified core version (i.e. major.minor.patch) and a flag indicating
+     * whether the version represents a release or snapshot. If {@code snapshot} is {@code false}, a semantic
+     * version is constructed using only the core version. If {@code snapshot} is {@code true}, a pre-release
+     * identifier is appended to the core version. The pre-release identifier is the number of milliseconds since
+     * the Unix Epoch. Calling this method is equivalent to calling the {@link #parse(String)} method with a string
+     * in the format {@code major.minor.patch-preReleaseIdentifier} where {@code preReleaseIdentifier} is equal to
+     * {@code new Date().getTime()}.
+     *
+     * @param coreVersion Core version in the format {@code major.minor.patch}
+     * @param snapshot If {@code true}, a pre-release identifier equal to the current Unix time in milliseconds
+     *      is appended to the core version. If {@code false}, no pre-release identifier is appended to the core
+     *      version.
+     * @return Semantic version object
+     * @throws VersionParsingException if there is a problem parsing the version
+     */
+    @SuppressWarnings("ParameterHidesMemberVariable")
+    public static SemanticVersion parse(final String coreVersion, final boolean snapshot)
+            throws VersionParsingException {
+        return snapshot ? parse(coreVersion, Long.toString(new Date().getTime())) : parse(coreVersion);
     }
 
     /**
