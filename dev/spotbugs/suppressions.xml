@@ -9,6 +9,9 @@
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>
+        <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+    </Match>
+    <Match>
         <Bug pattern="LII_LIST_INDEXED_ITERATING"/>
         <Class name="~.*VersionConstraint"/>
     </Match>

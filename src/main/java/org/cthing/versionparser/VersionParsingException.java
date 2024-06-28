@@ -34,7 +34,7 @@ public class VersionParsingException extends Exception {
      * @param throwable Underlying cause of the exception for later retrieval by the {@link Throwable#getCause()}
      *      method. A {@code null} value indicates that the cause is nonexistent or unknown.
      */
-    VersionParsingException(final String message, @Nullable final Throwable throwable) {
+    public VersionParsingException(final String message, @Nullable final Throwable throwable) {
         super(message, throwable);
     }
 }
