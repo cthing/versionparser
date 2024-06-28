@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+- New `JavaVersion` and `JavaVersionScheme` classes to represent and interact with Java language
+  versions (e.g. 11, 1.4, 17.0.11+34-cthing, 8u17)
+- A `JavaVersionExample` class has been added to the examples sub-project
+- New `VersionConstraint.complement()` method to obtain a constraint representing all versions
+  not in a constraint. For example, the complement of the constraint `[1.5,2.0)` is `(,1.5),[2.0,)`.
+- New `VersionConstraint.isNotEmpty()` method to indicate that a version constraint contains version
+  ranges. This method complements the existing `VersionConstraint.isEmpty` method.
+- The `VersionParsingException` constructor taking a message and a throwable is now public.
+- The Javadoc for the `VersionConstraint` `intersect`, `union`, and `difference` methods now have
+  examples showing the results of the operations on various constraints
+
 ## [4.4.0] - 2024-06-02
 
 ### Added
@@ -53,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a `weak` property to a `VersionConstraint` to support Maven's concept of a `soft` constraint (i.e. an
-  undecorated dependency verson).
+  undecorated dependency version).
 
 ## [4.0.0] - 2023-09-20
 

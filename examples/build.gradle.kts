@@ -30,7 +30,12 @@ tasks {
     }
 }
 
-listOf("CalVerExample", "GradleExample", "MavenExample", "NpmExample", "RubyGemsExample").forEach { example ->
+listOf("CalVerExample",
+       "GradleExample",
+       "JavaVersionExample",
+       "MavenExample",
+       "NpmExample",
+       "RubyGemsExample").forEach { example ->
     tasks.register("run$example", JavaExec::class) {
         group = "Example"
         description = "Run $example program"
