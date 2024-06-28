@@ -210,4 +210,19 @@ public class JavaVersionTest {
             default -> throw new IllegalStateException("Unexpected value: " + order);
         }
     }
+
+    @Test
+    public void testRuntimeVersion() {
+        final Runtime.Version expectedVersion = Runtime.version();
+        final JavaVersion actualVersion = JavaVersion.RUNTIME_VERSION;
+
+        assertThat(actualVersion.getFeature()).isEqualTo(expectedVersion.feature());
+        assertThat(actualVersion.getInterim()).isEqualTo(expectedVersion.interim());
+        assertThat(actualVersion.getUpdate()).isEqualTo(expectedVersion.update());
+        assertThat(actualVersion.getPatch()).isEqualTo(expectedVersion.patch());
+        assertThat(actualVersion.getBuild()).isEqualTo(expectedVersion.build());
+        assertThat(actualVersion.getPre()).isEqualTo(expectedVersion.pre());
+        assertThat(actualVersion.getOptional()).isEqualTo(expectedVersion.optional());
+        assertThat(actualVersion.getComponents()).isEqualTo(expectedVersion.version());
+    }
 }
