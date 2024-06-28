@@ -27,6 +27,7 @@ public class VersionConstraintTest {
     @Test
     public void testAny() throws VersionParsingException {
         assertThat(ANY.isEmpty()).isFalse();
+        assertThat(ANY.isNotEmpty()).isTrue();
         assertThat(ANY.isAny()).isTrue();
         assertThat(ANY.isWeak()).isFalse();
         assertThat(ANY.isSingleVersion()).isFalse();
@@ -45,6 +46,7 @@ public class VersionConstraintTest {
         when(constraint.isEmpty()).thenReturn(true);
 
         assertThat(EMPTY.isEmpty()).isTrue();
+        assertThat(EMPTY.isNotEmpty()).isFalse();
         assertThat(EMPTY.isAny()).isFalse();
         assertThat(EMPTY.isWeak()).isFalse();
         assertThat(EMPTY.isSingleVersion()).isFalse();
@@ -63,6 +65,7 @@ public class VersionConstraintTest {
 
         VersionConstraint constraint = new VersionConstraint(version);
         assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isNotEmpty()).isTrue();
         assertThat(constraint.isAny()).isFalse();
         assertThat(constraint.isWeak()).isFalse();
         assertThat(constraint.isSingleVersion()).isTrue();
@@ -70,6 +73,7 @@ public class VersionConstraintTest {
 
         constraint = new VersionConstraint(version, true);
         assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isNotEmpty()).isTrue();
         assertThat(constraint.isAny()).isFalse();
         assertThat(constraint.isWeak()).isTrue();
         assertThat(constraint.isSingleVersion()).isTrue();
@@ -82,6 +86,7 @@ public class VersionConstraintTest {
         final Version version2 = version("3.0");
         VersionConstraint constraint = new VersionConstraint(version1, version2, true, false);
         assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isNotEmpty()).isTrue();
         assertThat(constraint.isAny()).isFalse();
         assertThat(constraint.isWeak()).isFalse();
         assertThat(constraint.isSingleVersion()).isFalse();
@@ -90,6 +95,7 @@ public class VersionConstraintTest {
         final Version version3 = version("1.2.3");
         constraint = new VersionConstraint(version3, version3, false, false);
         assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isNotEmpty()).isTrue();
         assertThat(constraint.isAny()).isFalse();
         assertThat(constraint.isWeak()).isFalse();
         assertThat(constraint.isSingleVersion()).isFalse();
@@ -97,6 +103,7 @@ public class VersionConstraintTest {
 
         constraint = new VersionConstraint(version3, version3, false, false, true);
         assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isNotEmpty()).isTrue();
         assertThat(constraint.isAny()).isFalse();
         assertThat(constraint.isWeak()).isTrue();
         assertThat(constraint.isSingleVersion()).isFalse();
@@ -111,6 +118,7 @@ public class VersionConstraintTest {
 
         VersionConstraint constraint = new VersionConstraint(List.of(range2, range1));
         assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isNotEmpty()).isTrue();
         assertThat(constraint.isAny()).isFalse();
         assertThat(constraint.isWeak()).isFalse();
         assertThat(constraint.isSingleVersion()).isFalse();
@@ -118,6 +126,7 @@ public class VersionConstraintTest {
 
         constraint = new VersionConstraint(List.of(range2, range1), true);
         assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isNotEmpty()).isTrue();
         assertThat(constraint.isAny()).isFalse();
         assertThat(constraint.isWeak()).isTrue();
         assertThat(constraint.isSingleVersion()).isFalse();
@@ -125,6 +134,7 @@ public class VersionConstraintTest {
 
         constraint = new VersionConstraint(List.of(range3));
         assertThat(constraint.isEmpty()).isFalse();
+        assertThat(constraint.isNotEmpty()).isTrue();
         assertThat(constraint.isAny()).isFalse();
         assertThat(constraint.isWeak()).isFalse();
         assertThat(constraint.isSingleVersion()).isTrue();
@@ -304,6 +314,11 @@ public class VersionConstraintTest {
 
     @Test
     public void testIntersect() throws VersionParsingException {
+        assertThat(EMPTY.intersect(EMPTY)).isEmpty();
+        assertThat(EMPTY.intersect(ANY)).isEmpty();
+        assertThat(ANY.intersect(EMPTY)).isEmpty();
+        assertThat(ANY.intersect(ANY)).isAny();
+
         assertThat(constraint("[1.5]").intersect(EMPTY)).isEmpty();
 
         assertThat(constraint("[1.5]").intersect(constraint("[1.5]"))).isConstraint("[1.5]");
@@ -355,6 +370,11 @@ public class VersionConstraintTest {
 
     @Test
     public void testUnion() throws VersionParsingException {
+        assertThat(EMPTY.union(EMPTY)).isEmpty();
+        assertThat(EMPTY.union(ANY)).isAny();
+        assertThat(ANY.union(EMPTY)).isAny();
+        assertThat(ANY.union(ANY)).isAny();
+
         assertThat(constraint("[1.5]").union(EMPTY)).isConstraint("[1.5]");
 
         assertThat(constraint("[1.5]").union(constraint("[1.5]"))).isConstraint("[1.5]");
@@ -437,7 +457,20 @@ public class VersionConstraintTest {
                 .isConstraint("[1.0,2.0),(2.0,3.0),(4.0,6.0)");
 
         assertThat(EMPTY.difference(EMPTY)).isEmpty();
+        assertThat(EMPTY.difference(ANY)).isEmpty();
+        assertThat(ANY.difference(EMPTY)).isAny();
         assertThat(EMPTY.difference(constraint("[1.2,2.0)"))).isEmpty();
+    }
+
+    @Test
+    public void testComplement() throws VersionParsingException {
+        assertThat(EMPTY.complement()).isEqualTo(ANY);
+        assertThat(ANY.complement()).isEqualTo(EMPTY);
+        assertThat(constraint("[1.5]").complement()).isConstraint("(,1.5),(1.5,)");
+        assertThat(constraint("[1.2,2.0)").complement()).isConstraint("(,1.2),[2.0,)");
+        assertThat(constraint("[1.5],[2.0,3.0)").complement()).isConstraint("(,1.5),(1.5,2.0),[3.0,)");
+        assertThat(constraint("[1.5],[2.0,3.0),[4.0,7.0)").complement())
+                .isConstraint("(,1.5),(1.5,2.0),[3.0,4.0),[7.0,)");
     }
 
     @Test

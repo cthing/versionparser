@@ -140,6 +140,15 @@ public class VersionConstraint {
     }
 
     /**
+     * Indicates whether this constraint contains any versions.
+     *
+     * @return {@code true} if this constraint contains at least one version.
+     */
+    public boolean isNotEmpty() {
+        return !this.ranges.isEmpty();
+    }
+
+    /**
      * Indicates whether this constraint allows all versions.
      *
      * @return {@code true} if this constraint allows all versions.
@@ -175,7 +184,7 @@ public class VersionConstraint {
      * @return {@code true} if the specified version is allowed by this constraint.
      */
     public boolean allows(final Version version) {
-        return !isEmpty() && this.ranges.stream().anyMatch(range -> range.allows(version));
+        return isNotEmpty() && this.ranges.stream().anyMatch(range -> range.allows(version));
     }
 
     /**
@@ -245,6 +254,21 @@ public class VersionConstraint {
 
     /**
      * Creates a constraint that only allows versions allowed by both this and the specified constraints.
+     * The following examples show the intersection of this constraint T and the specified constraint C:
+     * <pre>
+     * T = []                    C = []                    T &#8745; C = []
+     * T = []                    C = (,)                   T &#8745; C = []
+     * T = [1.5]                 C = []                    T &#8745; C = []
+     * T = [1.5,2.0]             C = [1.7]                 T &#8745; C = [1.7]
+     * T = [1.5,2.0]             C = [1.6,1.9]             T &#8745; C = [1.6,1.9]
+     * T = [1.5,)                C = [1.2,1.8]             T &#8745; C = [1.5,1.8]
+     * T = (,3.0)                C = (,1.8]                T &#8745; C = (,1.8]
+     * T = [1.5,2.0)             C = [1.6],[1.8]           T &#8745; C = [1.6],[1.8]
+     * T = [1.5,2.0),[3.0,4.0)   C = []                    T &#8745; C = []
+     * T = [1.5,2.0),[3.0,4.0)   C = [1.6,1.6]             T &#8745; C = [1.6,1.6]
+     * T = [1.5,2.0),[3.0,4.0)   C = [1.6,1.8]             T &#8745; C = [1.6,1.8]
+     * T = [1.5,2.0),[3.0,4.0)   C = [1.6,1.8],[3.2,3.4]   T &#8745; C = [1.6,1.8],[3.2,3.4]
+     * </pre>
      *
      * @param other Constraint to intersect with this constraint
      * @return A new constraint that only allows versions allowed by both this and the specified constraints.
@@ -285,6 +309,21 @@ public class VersionConstraint {
 
     /**
      * Creates a constraint that allows versions allowed by either this or the specified constraint.
+     * The following examples show the union of this constraint T and the specified constraint C:
+     * <pre>
+     * T = []                    C = []          T &#8746; C = []
+     * T = []                    C= (,)          T &#8746; C = (,)
+     * T = [1.5]                 C = []          T &#8746; C = [1.5]
+     * T = [1.5]                 C = [1.5]       T &#8746; C = [1.5]
+     * T = [1.5]                 C = [1.6]       T &#8746; C = [1.5],[1.6]
+     * T = [1.5,1.7)             C = [1.6]       T &#8746; C = [1.5,1.7)
+     * T = (1.5,)                C = [1.3,2.0]   T &#8746; C = [1.3,)
+     * T = (,1.7]                C = [1.5,2.0]   T &#8746; C = (,2.0]
+     * T = (,)                   C = [1.5,2.0]   T &#8746; C = (,)
+     * T = [1.2,2.0)             C = (,)         T &#8746; C = (,)
+     * T = (1.0,2.0)             C = (2.0,3.0)   T &#8746; C = (1.0,2.0),(2.0,3.0)
+     * T = [1.5,2.0),[3.0,4.0)   C = [1.6,1.6]   T &#8746; C = [1.5,2.0),[3.0,4.0)
+     * </pre>
      *
      * @param other Constraint to for a union with this constraint
      * @return A new constraint that allows versions allowed by either this or the specified constraint.
@@ -327,6 +366,20 @@ public class VersionConstraint {
 
     /**
      * Creates a constraint that allows versions allowed by this constraint but not by the specified constraint.
+     * The following examples show the difference between this constraint T and the specified constraint C:
+     * <pre>
+     * T = [1.5]                 C = []                    T - C = [1.5]
+     * T = [1.5]                 C = [1.5]                 T - C = []
+     * T = [1.2,2.0)             C = [1.5,1.5]             T - C = [1.2,1.5),(1.5,2.0)
+     * T = [1.2,2.0)             C = [1.2,1.2]             T - C = (1.2,2.0)
+     * T = [1.2,2.0)             C = (,)                   T - C = []
+     * T = [1.2,2.0)             C = [1.5,1.5],[1.7,1.7]   T - C = [1.2,1.5),(1.5,1.7),(1.7,2.0)
+     * T = [1.5],[2.0,3.0)       C = []                    T - C = [1.5],[2.0,3.0)
+     * T = [1.5],[2.0,3.0)       C = [1.5,1.5]             T - C = [2.0,3.0)
+     * T = [1.0,3.0),(4.0,6.0)   C = [2.0],[7.0,8.0)       T - C = [1.0,2.0),(2.0,3.0),(4.0,6.0)
+     * T = []                    C = []                    T - C = []
+     * T = []                    C = [1.2,2.0)             T - C = []
+     * </pre>
      *
      * @param other Constraint to form the difference with this constraint
      * @return A new constraint that allows versions allowed by this constraint but not by the specified constraint.
@@ -431,6 +484,23 @@ public class VersionConstraint {
         }
 
         return differenceRanges.isEmpty() ? EMPTY : new VersionConstraint(differenceRanges);
+    }
+
+    /**
+     * Creates a constraint that is the complement of this constraint. The following examples show the constraint C
+     * and its complement C':
+     * <pre>
+     * C = []                          C' = (,)
+     * C = [1.5]                       C' = (,1.5),(1.5,)
+     * C = [1.2,2.0)                   C' = (,1.2),[2.0,)
+     * C = [1.5],[2.0,3.0)             C' = (,1.5),(1.5,2.0),[3.0,)
+     * C = [1.5],[2.0,3.0),[4.0,7.0)   C' = (,1.5),(1.5,2.0),[3.0,4.0),[7.0,)
+     * </pre>
+     *
+     * @return Complement of this constraint.
+     */
+    public VersionConstraint complement() {
+        return ANY.difference(this);
     }
 
     @Override
