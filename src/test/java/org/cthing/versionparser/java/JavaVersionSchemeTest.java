@@ -15,8 +15,10 @@ import org.cthing.versionparser.VersionRange;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
@@ -98,9 +100,9 @@ public class JavaVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("rangeProvider")
-    public void testParseConstraintRange(final String range, final String rangeRep, @Nullable final String minRep,
-                                         @Nullable final String maxRep, final boolean minIncluded,
-                                         final boolean maxIncluded) throws VersionParsingException {
+    public void testParseRange(final String range, final String rangeRep, @Nullable final String minRep,
+                               @Nullable final String maxRep, final boolean minIncluded,
+                               final boolean maxIncluded) throws VersionParsingException {
         final VersionConstraint constraint = JavaVersionScheme.parseRange(range);
         assertThat(constraint).hasToString(rangeRep);
         assertThat(constraint.isWeak()).isFalse();
@@ -117,6 +119,32 @@ public class JavaVersionSchemeTest {
         }
         assertThat(versionRange.isMinIncluded()).isEqualTo(minIncluded);
         assertThat(versionRange.isMaxIncluded()).isEqualTo(maxIncluded);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "",
+            "[)",
+            "(]",
+            "()",
+            "[,",
+            "(,",
+            "[",
+            "(",
+            "[11",
+            "[11.0.7,",
+            "(11",
+            "(11,",
+            "(17)",
+            "[1.4,1.5,1.6)",
+            "[17,11]",
+            "[17,11)",
+            "(17,11]",
+            "(17,11)"
+    })
+    public void testParseRangeBad(final String range) {
+        assertThatExceptionOfType(VersionParsingException.class)
+                .isThrownBy(() -> JavaVersionScheme.parseRange(range));
     }
 
     static Stream<Arguments> allowsProvider() {
@@ -180,6 +208,49 @@ public class JavaVersionSchemeTest {
         final VersionRange versionRange = javaRelease.getRanges().get(0);
         assertThat(versionRange.getMinVersion()).hasToString(minRep);
         assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
+        assertThat(versionRange.isMinIncluded()).isTrue();
+        assertThat(versionRange.isMaxIncluded()).isFalse();
+    }
+
+    static Stream<Arguments> releasesPlusProvider() {
+        return Stream.of(
+                arguments(JavaVersionScheme.JAVA_1_2_PLUS, "1.2"),
+                arguments(JavaVersionScheme.JAVA_1_3_PLUS, "1.3"),
+                arguments(JavaVersionScheme.JAVA_1_4_PLUS, "1.4"),
+                arguments(JavaVersionScheme.JAVA_1_5_PLUS, "1.5"),
+                arguments(JavaVersionScheme.JAVA_1_6_PLUS, "1.6"),
+                arguments(JavaVersionScheme.JAVA_1_7_PLUS, "1.7"),
+                arguments(JavaVersionScheme.JAVA_1_8_PLUS, "1.8"),
+                arguments(JavaVersionScheme.JAVA_9_PLUS,   "9"),
+                arguments(JavaVersionScheme.JAVA_10_PLUS,  "10"),
+                arguments(JavaVersionScheme.JAVA_11_PLUS,  "11"),
+                arguments(JavaVersionScheme.JAVA_12_PLUS,  "12"),
+                arguments(JavaVersionScheme.JAVA_13_PLUS,  "13"),
+                arguments(JavaVersionScheme.JAVA_14_PLUS,  "14"),
+                arguments(JavaVersionScheme.JAVA_15_PLUS,  "15"),
+                arguments(JavaVersionScheme.JAVA_16_PLUS,  "16"),
+                arguments(JavaVersionScheme.JAVA_17_PLUS,  "17"),
+                arguments(JavaVersionScheme.JAVA_18_PLUS,  "18"),
+                arguments(JavaVersionScheme.JAVA_19_PLUS,  "19"),
+                arguments(JavaVersionScheme.JAVA_20_PLUS,  "20"),
+                arguments(JavaVersionScheme.JAVA_21_PLUS,  "21"),
+                arguments(JavaVersionScheme.JAVA_22_PLUS,  "22"),
+                arguments(JavaVersionScheme.JAVA_23_PLUS,  "23"),
+                arguments(JavaVersionScheme.JAVA_24_PLUS,  "24"),
+                arguments(JavaVersionScheme.JAVA_25_PLUS,  "25"),
+                arguments(JavaVersionScheme.JAVA_26_PLUS,  "26"),
+                arguments(JavaVersionScheme.JAVA_27_PLUS,  "27")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("releasesPlusProvider")
+    public void testReleasesPlus(final VersionConstraint javaRelease, final String minRep) {
+        assertThat(javaRelease).hasToString("[" + minRep + ",)");
+        assertThat(javaRelease.isWeak()).isFalse();
+        final VersionRange versionRange = javaRelease.getRanges().get(0);
+        assertThat(versionRange.getMinVersion()).hasToString(minRep);
+        assertThat(versionRange.getMaxVersion()).isNull();
         assertThat(versionRange.isMinIncluded()).isTrue();
         assertThat(versionRange.isMaxIncluded()).isFalse();
     }

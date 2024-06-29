@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New `JavaVersion` and `JavaVersionScheme` classes to represent and interact with Java language
   versions (e.g. 11, 1.4, 17.0.11+34-cthing, 8u17)
-- A `JavaVersionExample` class has been added to the examples sub-project
+- A `JavaVersionExample` class has been added to the examples subproject
 - New `VersionConstraint.complement()` method to obtain a constraint representing all versions
   not in a constraint. For example, the complement of the constraint `[1.5,2.0)` is `(,1.5),[2.0,)`.
 - New `VersionConstraint.isNotEmpty()` method to indicate that a version constraint contains version

@@ -88,63 +88,70 @@ public final class JavaVersion extends AbstractVersion {
     }
 
     /**
-     * Obtains the build number, if present. See {@link Runtime.Version#build()}.
+     * Obtains the build number, if present.
      *
      * @return Build number
+     * @see Runtime.Version#build()
      */
     public Optional<Integer> getBuild() {
         return this.javaVersion.build();
     }
 
     /**
-     * Obtains the feature component of the version. See {@link Runtime.Version#feature()}.
+     * Obtains the feature component of the version.
      *
      * @return Feature component of the version.
+     * @see Runtime.Version#feature()
      */
     public int getFeature() {
         return this.javaVersion.feature();
     }
 
     /**
-     * Obtains the interim component of the version. See {@link Runtime.Version#interim()}.
+     * Obtains the interim component of the version.
      *
      * @return Interim component of the version.
+     * @see Runtime.Version#interim()
      */
     public int getInterim() {
         return this.javaVersion.interim();
     }
 
     /**
-     * Obtains the optional portion of the version, if present. See {@link Runtime.Version#optional()}.
+     * Obtains the optional portion of the version, if present.
      *
      * @return Optional portion of the version.
+     * @see Runtime.Version#optional()
      */
     public Optional<String> getOptional() {
         return this.javaVersion.optional();
     }
 
     /**
-     * Obtains the patch portion of the version. See {@link Runtime.Version#patch()}.
+     * Obtains the patch portion of the version.
      *
      * @return Patch portion of the version.
+     * @see Runtime.Version#patch()
      */
     public int getPatch() {
         return this.javaVersion.patch();
     }
 
     /**
-     * Obtains the pre-release portion of the version, if present. See {@link Runtime.Version#pre()}.
+     * Obtains the pre-release portion of the version, if present.
      *
      * @return Pre-release portion of the version.
+     * @see Runtime.Version#pre()
      */
     public Optional<String> getPre() {
         return this.javaVersion.pre();
     }
 
     /**
-     * Obtains the update portion of the version. See {@link Runtime.Version#update()}.
+     * Obtains the update portion of the version.
      *
      * @return Update portion of the version.
+     * @see Runtime.Version#update()
      */
     public int getUpdate() {
         return this.javaVersion.update();

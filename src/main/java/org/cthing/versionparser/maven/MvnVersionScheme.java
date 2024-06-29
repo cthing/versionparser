@@ -178,11 +178,9 @@ public final class MvnVersionScheme {
             minVersion = minVersionStr.isEmpty() ? null : MvnVersion.parse(minVersionStr);
             maxVersion = maxVersionStr.isEmpty() ? null : MvnVersion.parse(maxVersionStr);
 
-            if (maxVersion != null && minVersion != null) {
-                if (maxVersion.compareTo(minVersion) < 0) {
-                    throw new VersionParsingException("Invalid version range '" + range
-                                                              + "', lower bound must not be greater than upper bound");
-                }
+            if (maxVersion != null && minVersion != null && maxVersion.compareTo(minVersion) < 0) {
+                throw new VersionParsingException("Invalid version range '" + range
+                                                          + "', lower bound must not be greater than upper bound");
             }
         }
 

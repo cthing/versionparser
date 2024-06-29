@@ -63,6 +63,12 @@ public final class JavaVersionExample {
         assertThat(JavaVersionScheme.isVersion(JavaVersionScheme.JAVA_17, "17.0.11")).isTrue();
         assertThat(JavaVersionScheme.isVersion(JavaVersionScheme.JAVA_17, "21")).isFalse();
 
+        assertThat(JavaVersionScheme.isVersion(JavaVersionScheme.JAVA_17_PLUS, "11")).isFalse();
+        assertThat(JavaVersionScheme.isVersion(JavaVersionScheme.JAVA_17_PLUS, "16")).isFalse();
+        assertThat(JavaVersionScheme.isVersion(JavaVersionScheme.JAVA_17_PLUS, "17")).isTrue();
+        assertThat(JavaVersionScheme.isVersion(JavaVersionScheme.JAVA_17_PLUS, "17.0.11")).isTrue();
+        assertThat(JavaVersionScheme.isVersion(JavaVersionScheme.JAVA_17_PLUS, "21")).isTrue();
+
         // Runtime Java version
         assertThat(JavaVersion.RUNTIME_VERSION.getFeature()).isGreaterThanOrEqualTo(17);
     }
