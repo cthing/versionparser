@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [4.5.0] - 2024-06-29
+
 ### Added
 
 - New `JavaVersion` and `JavaVersionScheme` classes to represent and interact with Java language
@@ -103,7 +105,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Parsing versions of various formats using the `Version` class.
 
-[unreleased]: https://github.com/cthing/versionparser/compare/4.4.0...HEAD
+[unreleased]: https://github.com/cthing/versionparser/compare/4.5.0...HEAD
+[4.5.0]: https://github.com/cthing/versionparser/releases/tag/4.5.0
 [4.4.0]: https://github.com/cthing/versionparser/releases/tag/4.4.0
 [4.3.0]: https://github.com/cthing/versionparser/releases/tag/4.3.0
 [4.2.1]: https://github.com/cthing/versionparser/releases/tag/4.2.1

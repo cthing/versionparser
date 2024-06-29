@@ -13,6 +13,7 @@ The following version and version constraint schemes are supported:
 
 * [Maven](https://maven.apache.org/)
 * [Gradle](https://gradle.org/)
+* [Java](https://www.java.com/releases/)
 * [NPM](https://www.npmjs.com/)
 * [RubyGems](https://rubygems.org/)
 * [Semantic Versioning](https://semver.org/)
@@ -26,24 +27,25 @@ following Maven dependency:
 <dependency>
   <groupId>org.cthing</groupId>
   <artifactId>versionparser</artifactId>
-  <version>4.4.0</version>
+  <version>4.5.0</version>
 </dependency>
 ```
 or the following Gradle dependency:
 ```kotlin
-implementation("org.cthing:versionparser:4.4.0")
+implementation("org.cthing:versionparser:4.5.0")
 ```
 
 ### Versioning Overview
 
-| Scheme   | Version Factory                                    | Version Constraint Factory                    |
-|----------|----------------------------------------------------|-----------------------------------------------|
-| Maven    | `MvnVersionScheme.parseVersion(String)`            | `MvnVersionScheme.parseConstraint(String)`    |                           
-| Gradle   | `GradleVersionScheme.parseVersion(String)`         | `GradleVersionScheme.parseConstraint(String)` |                           
-| Npm      | `NpmVersionScheme.parseVersion(String)`            | `NpmVersionScheme.parseConstraint(String)`    |                           
-| RubyGems | `GemVersionScheme.parseVersion(String)`            | `GemVersionScheme.parseConstraint(String)`    |                           
-| Semantic | `SemanticVersion.parseVersion(String)`             | N/A                                           |                           
-| Calendar | `CalendarVersionScheme.parse(String)`<sup>1</sup>  | N/A                                           |
+| Scheme   | Version Factory                                   | Version Constraint Factory                    |
+|----------|---------------------------------------------------|-----------------------------------------------|
+| Calendar | `CalendarVersionScheme.parse(String)`<sup>1</sup> | N/A                                           |
+| Gradle   | `GradleVersionScheme.parseVersion(String)`        | `GradleVersionScheme.parseConstraint(String)` |                           
+| Java     | `JavaVersionScheme.parseVersion(String)`          | `JavaVersionScheme.parseRange(String)`        |                           
+| Maven    | `MvnVersionScheme.parseVersion(String)`           | `MvnVersionScheme.parseConstraint(String)`    |                           
+| Npm      | `NpmVersionScheme.parseVersion(String)`           | `NpmVersionScheme.parseConstraint(String)`    |                           
+| RubyGems | `GemVersionScheme.parseVersion(String)`           | `GemVersionScheme.parseConstraint(String)`    |                           
+| Semantic | `SemanticVersion.parseVersion(String)`            | N/A                                           |                           
 
 <sup>1</sup> A `CalendarVersionScheme` instance must be created to define the version format. Call the `parse` method
 on that instance to create a version instance.
@@ -110,6 +112,44 @@ assertThat(constraint1.allows(version2)).isFalse();
 // Perform constraint set operations
 assertThat(constraint1.intersect(constraint2)).isEqualTo(GradleVersionScheme.parseConstraint("[1.5.0,2.+]"));
 assertThat(constraint1.union(constraint2)).isEqualTo(GradleVersionScheme.parseConstraint("[1.0.0,2.0.0)"));
+```
+
+### Java Versioning
+Support is provided for parsing versions of the Java programming language and creating constraints based
+on those versions. During its long history, Java has used different versioning schemes (e.g. 1.4.2_151, 17.0.12+34).
+
+```java
+// Parse versions
+final JavaVersion version1 = JavaVersionScheme.parseVersion("17.0.11+9");
+final Version version2 = GradleVersionScheme.parseVersion("1.4.2_151");
+
+// Obtain information from the parsed version
+assertThat(version1.getOriginalVersion()).isEqualTo("17.0.11+9");
+assertThat(version1.isPreRelease()).isFalse();
+assertThat(version1.getFeature()).isEqualTo(17);
+assertThat(version1.getInterim()).isEqualTo(0);
+assertThat(version1.getUpdate()).isEqualTo(11);
+assertThat(version1.getBuild()).contains(9);
+
+// Verify ordering
+assertThat(version1.compareTo(version2)).isEqualTo(1);
+
+// Parse version constraints
+final VersionConstraint constraint1 = GradleVersionScheme.parseConstraint("[11,21)");
+final VersionConstraint constraint2 = GradleVersionScheme.parseConstraint("[1.5,1.7]");
+
+// Perform constraint checking
+assertThat(constraint1.allows(version1)).isTrue();
+assertThat(constraint1.allows(version2)).isFalse();
+
+// Perform constraint set operations
+assertThat(constraint1.union(constraint2)).isEqualTo(GradleVersionScheme.parseConstraint("[1.5,1.7],[11,21)"));
+
+// Test current runtime Java version
+assertThat(JavaVersionScheme.isVersion(JavaVersionScheme.JAVA_17, JavaVersion.RUNTIME_VERSION)).isTrue();
+
+// Test a Java version is greater than or equal to Java 17
+assertThat(JavaVersionScheme.isVersion(JavaVersionScheme.JAVA_17_PLUS, "21")).isTrue();
 ```
 
 ### NPM Versioning
