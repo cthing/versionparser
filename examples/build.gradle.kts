@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     checkstyle
+    alias(libs.plugins.dependencyAnalysis)
 }
 
 java {
