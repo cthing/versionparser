@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.0.0] - 2024-10-25
+
+### Changed
+
+- The library has been migrated from JSR 305 to [JSpecify](https://jspecify.dev/) for `null` checking
+
 ## [4.5.0] - 2024-06-29
 
 ### Added
@@ -105,7 +111,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Parsing versions of various formats using the `Version` class.
 
-[unreleased]: https://github.com/cthing/versionparser/compare/4.5.0...HEAD
+[unreleased]: https://github.com/cthing/versionparser/compare/5.0.0...HEAD
+[5.0.0]: https://github.com/cthing/versionparser/releases/tag/5.0.0
 [4.5.0]: https://github.com/cthing/versionparser/releases/tag/4.5.0
 [4.4.0]: https://github.com/cthing/versionparser/releases/tag/4.4.0
 [4.3.0]: https://github.com/cthing/versionparser/releases/tag/4.3.0

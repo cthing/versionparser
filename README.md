@@ -27,12 +27,12 @@ following Maven dependency:
 <dependency>
   <groupId>org.cthing</groupId>
   <artifactId>versionparser</artifactId>
-  <version>4.5.0</version>
+  <version>5.0.0</version>
 </dependency>
 ```
 or the following Gradle dependency:
 ```kotlin
-implementation("org.cthing:versionparser:4.5.0")
+implementation("org.cthing:versionparser:5.0.0")
 ```
 
 ### Versioning Overview
