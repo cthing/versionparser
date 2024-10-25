@@ -37,11 +37,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
 import org.cthing.versionparser.AbstractVersion;
 import org.cthing.versionparser.Version;
 import org.cthing.versionparser.VersionParsingException;
+import org.jspecify.annotations.Nullable;
 
 
 /**

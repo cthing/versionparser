@@ -30,10 +30,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-
 import org.cthing.versionparser.AbstractVersion;
 import org.cthing.versionparser.Version;
+import org.jspecify.annotations.Nullable;
 
 
 /**
@@ -61,7 +60,7 @@ public final class GradleVersion extends AbstractVersion {
                                                                         "sp", QUALIFIER_SP);
 
     private final List<String> components;
-    private final List<Long> numericParts;
+    private final List<@Nullable Long> numericParts;
     private final GradleVersion baseVersion;
     private final boolean preRelease;
 
@@ -123,7 +122,7 @@ public final class GradleVersion extends AbstractVersion {
      *
      * @return All numeric components of this version.
      */
-    public List<Long> getNumericParts() {
+    public List<@Nullable Long> getNumericParts() {
         return this.numericParts;
     }
 

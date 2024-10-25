@@ -6,7 +6,7 @@
 /**
  * <a href="https://maven.apache.org">Maven</a> version handling.
  */
-@PackageNonnullByDefault
+@NullMarked
 package org.cthing.versionparser.maven;
 
-import org.cthing.annotations.PackageNonnullByDefault;
+import org.jspecify.annotations.NullMarked;

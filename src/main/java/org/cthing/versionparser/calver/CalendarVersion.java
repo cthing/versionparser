@@ -12,10 +12,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nullable;
-
 import org.cthing.versionparser.AbstractVersion;
 import org.cthing.versionparser.Version;
+import org.jspecify.annotations.Nullable;
 
 
 /**

@@ -6,7 +6,7 @@
 /**
  * <a href="https://www.npmjs.com">NPM</a> version handling.
  */
-@PackageNonnullByDefault
+@NullMarked
 package org.cthing.versionparser.npm;
 
-import org.cthing.annotations.PackageNonnullByDefault;
+import org.jspecify.annotations.NullMarked;

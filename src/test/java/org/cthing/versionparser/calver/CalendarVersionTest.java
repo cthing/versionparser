@@ -156,7 +156,7 @@ public class CalendarVersionTest {
     }
 
     @Test
-    @SuppressWarnings({ "EqualsWithItself", "AssertBetweenInconvertibleTypes" })
+    @SuppressWarnings("EqualsWithItself")
     public void testEquality2() throws VersionParsingException {
         final CalendarVersion version = CalendarVersionScheme.parse("YYYY.WW", "2023.50");
         assertThat(version).isEqualTo(version);

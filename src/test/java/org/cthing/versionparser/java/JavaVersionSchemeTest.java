@@ -7,11 +7,12 @@ package org.cthing.versionparser.java;
 import java.util.List;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
-
+import org.assertj.core.api.Assertions;
+import org.cthing.versionparser.Version;
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
 import org.cthing.versionparser.VersionRange;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -108,14 +109,14 @@ public class JavaVersionSchemeTest {
         assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
         if (minRep == null) {
-            assertThat(versionRange.getMinVersion()).isNull();
+            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).isNull();
         } else {
-            assertThat(versionRange.getMinVersion()).hasToString(minRep);
+            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(minRep);
         }
         if (maxRep == null) {
-            assertThat(versionRange.getMaxVersion()).isNull();
+            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).isNull();
         } else {
-            assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
+            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
         }
         assertThat(versionRange.isMinIncluded()).isEqualTo(minIncluded);
         assertThat(versionRange.isMaxIncluded()).isEqualTo(maxIncluded);
@@ -206,8 +207,8 @@ public class JavaVersionSchemeTest {
         assertThat(javaRelease).hasToString("[" + minRep + "," + maxRep + ")");
         assertThat(javaRelease.isWeak()).isFalse();
         final VersionRange versionRange = javaRelease.getRanges().get(0);
-        assertThat(versionRange.getMinVersion()).hasToString(minRep);
-        assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
+        Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(minRep);
+        Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
         assertThat(versionRange.isMinIncluded()).isTrue();
         assertThat(versionRange.isMaxIncluded()).isFalse();
     }
@@ -249,8 +250,8 @@ public class JavaVersionSchemeTest {
         assertThat(javaRelease).hasToString("[" + minRep + ",)");
         assertThat(javaRelease.isWeak()).isFalse();
         final VersionRange versionRange = javaRelease.getRanges().get(0);
-        assertThat(versionRange.getMinVersion()).hasToString(minRep);
-        assertThat(versionRange.getMaxVersion()).isNull();
+        Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(minRep);
+        Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).isNull();
         assertThat(versionRange.isMinIncluded()).isTrue();
         assertThat(versionRange.isMaxIncluded()).isFalse();
     }

@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
-
+import org.assertj.core.api.Assertions;
 import org.cthing.versionparser.Version;
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
 import org.cthing.versionparser.VersionRange;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
@@ -56,14 +56,14 @@ public class GemVersionSchemeTest {
         assertThat(versionConstraint.isWeak()).isFalse();
         final VersionRange versionRange = versionConstraint.getRanges().get(0);
         if (minRep == null) {
-            assertThat(versionRange.getMinVersion()).isNull();
+            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).isNull();
         } else {
-            assertThat(versionRange.getMinVersion()).hasToString(minRep);
+            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(minRep);
         }
         if (maxRep == null) {
-            assertThat(versionRange.getMaxVersion()).isNull();
+            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).isNull();
         } else {
-            assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
+            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
         }
         assertThat(versionRange.isMinIncluded()).isEqualTo(minIncluded);
         assertThat(versionRange.isMaxIncluded()).isEqualTo(maxIncluded);
@@ -75,8 +75,8 @@ public class GemVersionSchemeTest {
         assertThat(versionConstraint).hasToString("[0,)");
         assertThat(versionConstraint.isWeak()).isFalse();
         final VersionRange versionRange = versionConstraint.getRanges().get(0);
-        assertThat(versionRange.getMinVersion()).hasToString("0");
-        assertThat(versionRange.getMaxVersion()).isNull();
+        Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString("0");
+        Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).isNull();
         assertThat(versionRange.isMinIncluded()).isTrue();
         assertThat(versionRange.isMaxIncluded()).isFalse();
     }
@@ -89,13 +89,13 @@ public class GemVersionSchemeTest {
         final List<VersionRange> ranges = versionConstraint.getRanges();
         assertThat(ranges).hasSize(2);
         final VersionRange versionRange1 = ranges.get(0);
-        assertThat(versionRange1.getMinVersion()).isNull();
-        assertThat(versionRange1.getMaxVersion()).hasToString("1");
+        Assertions.<@Nullable Version>assertThat(versionRange1.getMinVersion()).isNull();
+        Assertions.<@Nullable Version>assertThat(versionRange1.getMaxVersion()).hasToString("1");
         assertThat(versionRange1.isMinIncluded()).isFalse();
         assertThat(versionRange1.isMaxIncluded()).isFalse();
         final VersionRange versionRange2 = ranges.get(1);
-        assertThat(versionRange2.getMinVersion()).hasToString("1");
-        assertThat(versionRange2.getMaxVersion()).isNull();
+        Assertions.<@Nullable Version>assertThat(versionRange2.getMinVersion()).hasToString("1");
+        Assertions.<@Nullable Version>assertThat(versionRange2.getMaxVersion()).isNull();
         assertThat(versionRange2.isMinIncluded()).isFalse();
         assertThat(versionRange2.isMaxIncluded()).isFalse();
     }

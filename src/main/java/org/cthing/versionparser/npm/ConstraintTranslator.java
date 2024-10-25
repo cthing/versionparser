@@ -36,10 +36,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nullable;
-
 import org.cthing.annotations.NoCoverageGenerated;
 import org.cthing.versionparser.semver.SemanticVersion;
+import org.jspecify.annotations.Nullable;
 
 import static org.cthing.versionparser.npm.ConstraintComponent.Operator.EQ;
 import static org.cthing.versionparser.npm.ConstraintComponent.Operator.GT;

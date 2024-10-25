@@ -6,7 +6,7 @@
 /**
  * <a href="https://rubygems.org/">RubyGems</a> version handling.
  */
-@PackageNonnullByDefault
+@NullMarked
 package org.cthing.versionparser.gem;
 
-import org.cthing.annotations.PackageNonnullByDefault;
+import org.jspecify.annotations.NullMarked;

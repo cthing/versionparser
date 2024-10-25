@@ -8,12 +8,13 @@ package org.cthing.versionparser.npm;
 import java.util.List;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
-
+import org.assertj.core.api.Assertions;
+import org.cthing.versionparser.Version;
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
 import org.cthing.versionparser.VersionRange;
 import org.cthing.versionparser.semver.SemanticVersion;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -49,8 +50,8 @@ public class NpmVersionSchemeTest {
         assertThat(constraint).hasToString(rangeRep);
         assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
-        assertThat(versionRange.getMinVersion()).hasToString(versionRep);
-        assertThat(versionRange.getMaxVersion()).hasToString(versionRep);
+        Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(versionRep);
+        Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).hasToString(versionRep);
         assertThat(versionRange.isMinIncluded()).isTrue();
         assertThat(versionRange.isMaxIncluded()).isTrue();
     }
@@ -84,14 +85,14 @@ public class NpmVersionSchemeTest {
         assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
         if (minRep == null) {
-            assertThat(versionRange.getMinVersion()).isNull();
+            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).isNull();
         } else {
-            assertThat(versionRange.getMinVersion()).hasToString(minRep);
+            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(minRep);
         }
         if (maxRep == null) {
-            assertThat(versionRange.getMaxVersion()).isNull();
+            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).isNull();
         } else {
-            assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
+            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
         }
         assertThat(versionRange.isMinIncluded()).isEqualTo(minIncluded);
         assertThat(versionRange.isMaxIncluded()).isEqualTo(maxIncluded);
@@ -105,13 +106,13 @@ public class NpmVersionSchemeTest {
         final List<VersionRange> ranges1 = constraint.getRanges();
         assertThat(ranges1).hasSize(2);
         final VersionRange vr11 = ranges1.get(0);
-        assertThat(vr11.getMinVersion()).hasToString("1.2.3");
-        assertThat(vr11.getMaxVersion()).hasToString("1.3.0");
+        Assertions.<@Nullable Version>assertThat(vr11.getMinVersion()).hasToString("1.2.3");
+        Assertions.<@Nullable Version>assertThat(vr11.getMaxVersion()).hasToString("1.3.0");
         assertThat(vr11.isMinIncluded()).isTrue();
         assertThat(vr11.isMaxIncluded()).isTrue();
         final VersionRange vr12 = ranges1.get(1);
-        assertThat(vr12.getMinVersion()).hasToString("2.0.0");
-        assertThat(vr12.getMaxVersion()).hasToString("2.0.0");
+        Assertions.<@Nullable Version>assertThat(vr12.getMinVersion()).hasToString("2.0.0");
+        Assertions.<@Nullable Version>assertThat(vr12.getMaxVersion()).hasToString("2.0.0");
         assertThat(vr12.isMinIncluded()).isTrue();
         assertThat(vr12.isMaxIncluded()).isTrue();
     }

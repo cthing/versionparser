@@ -35,10 +35,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
-import javax.annotation.Nullable;
-
 import org.cthing.versionparser.AbstractVersion;
 import org.cthing.versionparser.Version;
+import org.jspecify.annotations.Nullable;
 
 
 /**

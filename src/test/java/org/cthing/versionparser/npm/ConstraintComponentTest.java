@@ -56,7 +56,7 @@ public class ConstraintComponentTest {
     }
 
     @Test
-    @SuppressWarnings({ "EqualsWithItself", "AssertBetweenInconvertibleTypes" })
+    @SuppressWarnings("EqualsWithItself")
     public void testEquality() throws VersionParsingException {
         final ConstraintComponent comp1 = new ConstraintComponent("1.2.3", "=");
         final ConstraintComponent comp2 = new ConstraintComponent("1.2.3", "=");

@@ -7,7 +7,7 @@
  * Representations of version numbers and dependency version constraints. See the README.md file for information
  * on using this library.
  */
-@PackageNonnullByDefault
+@NullMarked
 package org.cthing.versionparser;
 
-import org.cthing.annotations.PackageNonnullByDefault;
+import org.jspecify.annotations.NullMarked;

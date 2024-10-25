@@ -6,7 +6,7 @@
 /**
  * Represents a version of the Java language.
  */
-@PackageNonnullByDefault
+@NullMarked
 package org.cthing.versionparser.java;
 
-import org.cthing.annotations.PackageNonnullByDefault;
+import org.jspecify.annotations.NullMarked;

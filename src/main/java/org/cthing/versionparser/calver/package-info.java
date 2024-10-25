@@ -6,7 +6,7 @@
 /**
  * Version handling according to the <a href="https://calver.org">Calendar Versioning</a> specification.
  */
-@PackageNonnullByDefault
+@NullMarked
 package org.cthing.versionparser.calver;
 
-import org.cthing.annotations.PackageNonnullByDefault;
+import org.jspecify.annotations.NullMarked;

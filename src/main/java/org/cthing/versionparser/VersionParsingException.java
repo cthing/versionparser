@@ -7,7 +7,7 @@ package org.cthing.versionparser;
 
 import java.io.Serial;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 
 /**

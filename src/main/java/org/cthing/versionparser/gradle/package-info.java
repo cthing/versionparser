@@ -6,7 +6,7 @@
 /**
  * <a href="https://gadle.org">Gradle</a> version handling.
  */
-@PackageNonnullByDefault
+@NullMarked
 package org.cthing.versionparser.gradle;
 
-import org.cthing.annotations.PackageNonnullByDefault;
+import org.jspecify.annotations.NullMarked;

@@ -5,9 +5,9 @@
 
 package org.cthing.versionparser;
 
-import javax.annotation.Nullable;
-
+import org.assertj.core.api.Assertions;
 import org.cthing.versionparser.maven.MvnVersionScheme;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,8 +19,8 @@ public class VersionRangeTest {
     @Test
     public void testConstructionOpenRange() {
         final VersionRange range = new VersionRange(null, null, false, false);
-        assertThat(range.getMinVersion()).isNull();
-        assertThat(range.getMaxVersion()).isNull();
+        Assertions.<@Nullable Version>assertThat(range.getMinVersion()).isNull();
+        Assertions.<@Nullable Version>assertThat(range.getMaxVersion()).isNull();
         assertThat(range.isMinIncluded()).isFalse();
         assertThat(range.isMaxIncluded()).isFalse();
         assertThat(range.isAny()).isTrue();
@@ -32,8 +32,8 @@ public class VersionRangeTest {
     public void testConstructionSingleVersion() {
         final Version version = version("1.2.3");
         final VersionRange range = new VersionRange(version, version, true, true);
-        assertThat(range.getMinVersion()).isEqualTo(version);
-        assertThat(range.getMaxVersion()).isEqualTo(version);
+        Assertions.<@Nullable Version>assertThat(range.getMinVersion()).isEqualTo(version);
+        Assertions.<@Nullable Version>assertThat(range.getMaxVersion()).isEqualTo(version);
         assertThat(range.isMinIncluded()).isTrue();
         assertThat(range.isMaxIncluded()).isTrue();
         assertThat(range.isAny()).isFalse();
@@ -46,8 +46,8 @@ public class VersionRangeTest {
         final Version version1 = version("1.2.3");
         final Version version2 = version("3.0");
         VersionRange range = new VersionRange(version1, version2, true, false);
-        assertThat(range.getMinVersion()).isEqualTo(version1);
-        assertThat(range.getMaxVersion()).isEqualTo(version2);
+        Assertions.<@Nullable Version>assertThat(range.getMinVersion()).isEqualTo(version1);
+        Assertions.<@Nullable Version>assertThat(range.getMaxVersion()).isEqualTo(version2);
         assertThat(range.isMinIncluded()).isTrue();
         assertThat(range.isMaxIncluded()).isFalse();
         assertThat(range.isAny()).isFalse();
@@ -56,8 +56,8 @@ public class VersionRangeTest {
 
         final Version version3 = version("1.2.3");
         range = new VersionRange(version3, version3, false, false);
-        assertThat(range.getMinVersion()).isEqualTo(version3);
-        assertThat(range.getMaxVersion()).isEqualTo(version3);
+        Assertions.<@Nullable Version>assertThat(range.getMinVersion()).isEqualTo(version3);
+        Assertions.<@Nullable Version>assertThat(range.getMaxVersion()).isEqualTo(version3);
         assertThat(range.isMinIncluded()).isFalse();
         assertThat(range.isMaxIncluded()).isFalse();
         assertThat(range.isAny()).isFalse();

@@ -7,8 +7,7 @@ package org.cthing.versionparser.calver;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
-
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
