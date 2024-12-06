@@ -1,14 +1,14 @@
 [versions]
 java = "17"
-checkstyle = "10.18.2"
+checkstyle = "10.20.2"
 jacoco = "0.8.12"
-junit = "5.11.2"
+junit = "5.11.3"
 spotbugs = "4.8.6"
 
 [plugins]
 cthingVersioning = { id = "org.cthing.cthing-versioning", version = "3.0.0" }
-dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version = "2.2.0" }
-spotbugs = { id = "com.github.spotbugs", version = "6.0.25" }
+dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version = "2.6.0" }
+spotbugs = { id = "com.github.spotbugs", version = "6.0.26" }
 versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
 
 [libraries]
@@ -17,7 +17,7 @@ cthingAnnots = "org.cthing:cthing-annotations:2.0.0"
 jspecify = "org.jspecify:jspecify:1.0.0"
 junitApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junitEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
-junitLauncher = "org.junit.platform:junit-platform-launcher:1.11.2"
+junitLauncher = "org.junit.platform:junit-platform-launcher:1.11.3"
 junitParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
 mockito = "org.mockito:mockito-core:5.14.2"
-spotbugsContrib = "com.mebigfatguy.sb-contrib:sb-contrib:7.6.5"
+spotbugsContrib = "com.mebigfatguy.sb-contrib:sb-contrib:7.6.8"

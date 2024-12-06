@@ -48,6 +48,7 @@ import org.cthing.versionparser.semver.SemanticVersion;
  * Represents the version scheme used by the NPM ecosystem. To parse a version string, call the
  * {@link #parseVersion(String)} method. To parse a version constraint expression, call the
  * {@link #parseConstraint(String)} method.
+ *
  * <p>
  * Artifacts in the NPM ecosystem are versioned using the <a href="https://semver.org/">Semantic Version</a>
  * specification. Therefore the {@link #parseVersion(String)} method returns an instance of a {@link SemanticVersion}

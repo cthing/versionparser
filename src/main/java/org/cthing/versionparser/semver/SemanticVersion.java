@@ -48,6 +48,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * Represents an artifact version adhering to the <a href="https://semver.org/">Semantic Versioning 2.0</a>
  * specification. To create an instance of this class, call the {@link #parse(String)} method.
+ *
  * <p>
  * Note that the natural ordering of this class is <b>not</b> consistent with {@link #equals(Object)}
  * due to the build metadata being ignored when version precedence is determined but considered for equality.

@@ -29,12 +29,16 @@ import org.jspecify.annotations.Nullable;
  *     <li>Modifier according to the <a href="https://semver.org/">Semantic Version</a> specification for pre-release
  *         versions (specification item 9)</li>
  * </ol>
+ *
  * <p>
- * With the exception of modifier components, a missing component is always less than a present component of the same
+ * Except for modifier components, a missing component is always less than a present component of the same
  * category.
  * </p>
+ *
+ * <p>
  * The version is considered pre-release if a modifier is present and begins with one of the following identifiers
  * (case-insensitive):
+ * </p>
  * <ul>
  *     <li>{@code alpha}</li>
  *     <li>{@code beta}</li>

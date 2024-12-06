@@ -43,11 +43,13 @@ import org.jspecify.annotations.Nullable;
 /**
  * Represents the version of an artifact in the <a href="https://maven.apache.org">Maven</a> ecosystem. To obtain
  * an instance of this class, call the  {@link MvnVersionScheme#parseVersion(String)} method.
+ *
  * <p>
  * Versions are interpreted as a sequence of numeric and alphabetic components. The characters '-', '_', and '.' as
  * well as the transitions from digit to letter and vice versa delimit the version components. Delimiters are
  * considered equivalent.
  * </p>
+ *
  * <p>
  * Numeric components are compared mathematically. Alphabetic components are treated as case-insensitive and compared
  * lexicographically. However, the following qualifier strings are treated specially with the following ordering:
@@ -56,11 +58,13 @@ import org.jspecify.annotations.Nullable;
  * well-known qualifiers are considered smaller/older than other strings. An empty component or string is equivalent to
  * 0.
  * </p>
+ *
  * <p>
  * In addition to the above mentioned qualifiers, the tokens {@code min} and {@code max} may be used as the last
  * version component to denote the smallest/greatest version having a given prefix. For example, "1.2.min" denotes
  * the smallest version in the 1.2 line, and "1.2.max" denotes the greatest version in the 1.2 line.
  * </p>
+ *
  * <p>
  * Numbers and strings are considered incomparable when compared against each other. Where version components of
  * a different kind collide, comparison assumes that the previous components are padded with trailing 0 or "ga"

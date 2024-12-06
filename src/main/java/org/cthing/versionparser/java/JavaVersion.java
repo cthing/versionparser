@@ -31,6 +31,7 @@ import org.cthing.versionparser.VersionParsingException;
  *     <li>1.4.2_151-b034</li>
  *     <li>1.4.2_151-internal-b034</li>
  * </ul>
+ *
  * <p>
  * An instance of {@link JavaVersion} representing the runtime Java version is available as {@link #RUNTIME_VERSION}.
  * </p>

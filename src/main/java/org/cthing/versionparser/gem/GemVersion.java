@@ -46,11 +46,13 @@ import org.jspecify.annotations.Nullable;
 /**
  * Represents the version of an artifact in the <a href="https://rubygems.org/">RubyGems</a> ecosystem. To obtain
  * an instance of this class, call the  {@link GemVersionScheme#parseVersion(String)} method.
+ *
  * <p>
  * This class processes string versions into comparable values. A version string should normally be a series of
  * numbers separated by periods. Each part (digits separated by periods) is considered its own number, and these
  * are used for sorting. For instance, 3.10 sorts higher than 3.2 because ten is greater than two.
  * </p>
+ *
  * <p>
  * If any part of the version string contains letters (currently only a-z and A-Z are supported) then that version
  * is considered pre-release. Versions with a pre-release part in the Nth part sort less than versions with N-1
@@ -58,6 +60,7 @@ import org.jspecify.annotations.Nullable;
  * contains both letters and numbers, it will be broken into multiple parts to provide the expected sort behavior
  * (e.g. 1.0.a10 becomes 1.0.a.10, and is greater than 1.0.a9).
  * </p>
+ *
  * <p>
  * Pre-release versions sort between real releases (newest to oldest):
  * </p>
