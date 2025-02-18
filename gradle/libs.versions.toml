@@ -6,7 +6,7 @@ junit = "5.11.4"
 spotbugs = "4.9.0"
 
 [plugins]
-cthingPublishing = { id = "org.cthing.cthing-publishing", version = "1.0.0" }
+cthingPublishing = { id = "org.cthing.cthing-publishing", version = "2.0.0" }
 cthingVersioning = { id = "org.cthing.cthing-versioning", version = "3.0.0" }
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version = "2.8.0" }
 spotbugs = { id = "com.github.spotbugs", version = "6.1.3" }
