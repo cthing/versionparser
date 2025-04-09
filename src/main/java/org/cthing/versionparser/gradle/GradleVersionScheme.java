@@ -113,7 +113,9 @@ public final class GradleVersionScheme {
     }
 
     /**
-     * Parses a Gradle artifact version.
+     * Parses a Gradle artifact version. Refer to the {@link GradleVersion} class and
+     * <a href="https://docs.gradle.org/current/userguide/single_versions.html">Declaring Versions and Ranges</a>
+     * in the Gradle User Guide for detailed information about Gradle's interpretation of version numbers.
      *
      * @param version Version to parse
      * @return Version object corresponding to the specified version string.

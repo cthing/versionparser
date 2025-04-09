@@ -47,7 +47,11 @@ public final class MvnVersionScheme {
     }
 
     /**
-     * Parses a Maven artifact version.
+     * Parses a Maven artifact version. A Maven version consists of almost any combination of digits, letters, periods
+     * and dashes (e.g. 1, 1.0.0, a, 1.0b, 1.0-alpha). Semantic Versions are valid Maven versions, but the converse
+     * is not true. Refer to the {@link MvnVersion} class and the
+     * <a href="https://maven.apache.org/pom.html#Version_Order_Specification">Maven Version Ordering Specification</a>
+     * for a detailed explanation of Maven version numbers and their relationships.
      *
      * @param version Version to parse
      * @return Version object corresponding to the specified version string.

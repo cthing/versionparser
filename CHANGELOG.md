@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+- Improved Javadoc for a number of version parsing methods.
+
 ## [5.0.0] - 2024-10-25
 
 ### Changed

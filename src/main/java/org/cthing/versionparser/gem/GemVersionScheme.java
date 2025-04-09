@@ -40,7 +40,8 @@ public final class GemVersionScheme {
     }
 
     /**
-     * Parses a RubyGems version.
+     * Parses a RubyGems version. Refer to the {@link GemVersion} class for detailed information about Gem version
+     * numbers.
      *
      * @param version Version to parse
      * @return Version object corresponding to the specified version string.
