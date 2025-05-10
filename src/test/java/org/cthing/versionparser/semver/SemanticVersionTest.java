@@ -131,15 +131,17 @@ public class SemanticVersionTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            "1.Y.3",
-            "1.2.Y",
-            "1.1.1.1",
+            "1",
+            "1.0",
+            "1.2.3.",
             "1.0.0+",
             "1.0.0-",
+            "1.1.1.1",
+            "1.Y.3",
+            "1.2.Y",
             "1.0.0-alpha..1",
             "1.0.0-001",
             "1.0.0-äöü",
-            "1.2.3.",
             "1.2.30000000000000000000000000000000000000"
     })
     public void testParsingBad(final String versionStr) {
