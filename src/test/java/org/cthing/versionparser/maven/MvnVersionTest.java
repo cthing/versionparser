@@ -147,6 +147,8 @@ public class MvnVersionTest {
                 arguments("1.1.0.0-alpha.1", Order.LT, "1.1.0-beta"),
                 arguments("1.3.0.Beta1", Order.LT, "1.3.0.Final"),
                 arguments("4.1.0-173", Order.LT, "4.1.1-178"),
+                arguments("4.1.1-173", Order.LT, "4.1.1-178"),
+                arguments("4.1.1-002", Order.LT, "4.1.1-3"),
 
                 // Trailing delimiters are semantically irrelevant
                 arguments("1", Order.EQ, "1............."),
