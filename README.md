@@ -350,13 +350,18 @@ Perform the following steps to create a release.
 - Commit the changes
 - Wait until CI builds the release candidate
 - Run the command `mkrelease versionparser <version>`
-- In a browser go to the [Maven Central Repository Manager](https://s01.oss.sonatype.org/)
+- In a browser go to the [Maven Central Repository](https://central.sonatype.com/)
 - Log in
-- Use the `Staging Upload` to upload the generated artifact bundle `versionparser-bundle-<version>.jar`
-- Click on `Staging Repositories`
-- Once it is enabled, press `Release` to release the artifacts to Maven Central
+- Select `Publish` from the menubar
+- Press `Publish Component`
+- Enter a name for the deployment
+- Choose the file `versionparser-bundle-<version>.zip`
+- Press `Publish Component`
+- Refresh the page until the deployment has been validated
+- Press `Publish`
+- Refresh the page until the status is `Published`
 - Log out
-- Wait for the new release to be available on Maven Central
+- Delete the file `versionparser-bundle-<version>.zip`
 - In a browser, go to the project on GitHub
 - Generate a release with the tag `<version>`
 - In the build.gradle.kts file, edit the `ProjectVersion` object
