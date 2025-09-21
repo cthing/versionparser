@@ -362,7 +362,7 @@ Perform the following steps to create a release.
 - Refresh the page until the status is `Published`
 - Log out
 - Delete the file `versionparser-bundle-<version>.zip`
-- In a browser, go to the project on GitHub
+- In a browser, go to the project on [GitHub](https://github.com/cthing/versionparser)
 - Generate a release with the tag `<version>`
 - In the build.gradle.kts file, edit the `ProjectVersion` object
     - Increment the version patch number
