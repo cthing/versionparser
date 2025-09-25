@@ -1,7 +1,7 @@
 # ![C Thing Software](https://www.cthing.com/branding/CThingSoftware-57x60.png "C Thing Software") versionparser
 
 [![CI](https://github.com/cthing/versionparser/actions/workflows/ci.yml/badge.svg)](https://github.com/cthing/versionparser/actions/workflows/ci.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.cthing/versionparser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.cthing/versionparser)
+[![Maven Central Version](https://img.shields.io/maven-central/v/org.cthing/versionparser)](https://central.sonatype.com/artifact/org.cthing/versionparser)
 [![javadoc](https://javadoc.io/badge2/org.cthing/versionparser/javadoc.svg)](https://javadoc.io/doc/org.cthing/versionparser)
 
 A Java library for parsing and working with versions and version constraints. Versions and  constraints can be
