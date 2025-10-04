@@ -7,7 +7,7 @@ spotbugs = "4.9.6"
 
 [plugins]
 cthingPublishing = { id = "org.cthing.cthing-publishing", version = "3.0.0" }
-cthingVersioning = { id = "org.cthing.cthing-versioning", version = "3.0.0" }
+cthingVersioning = { id = "org.cthing.cthing-versioning", version = "3.1.0" }
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version = "3.0.4" }
 spotbugs = { id = "com.github.spotbugs", version = "6.4.2" }
 versions = { id = "com.github.ben-manes.versions", version = "0.53.0" }
