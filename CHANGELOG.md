@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.1.0] - 2026-02-01
+
 ### Added
 
+- Support for Debian package versions
 - Improved Javadoc for a number of version parsing methods.
 
 ## [5.0.0] - 2024-10-25
@@ -115,7 +118,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Parsing versions of various formats using the `Version` class.
 
-[unreleased]: https://github.com/cthing/versionparser/compare/5.0.0...HEAD
+[unreleased]: https://github.com/cthing/versionparser/compare/5.1.0...HEAD
+[5.1.0]: https://github.com/cthing/versionparser/releases/tag/5.1.0
 [5.0.0]: https://github.com/cthing/versionparser/releases/tag/5.0.0
 [4.5.0]: https://github.com/cthing/versionparser/releases/tag/4.5.0
 [4.4.0]: https://github.com/cthing/versionparser/releases/tag/4.4.0

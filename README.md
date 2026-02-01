@@ -18,6 +18,7 @@ The following version and version constraint schemes are supported:
 * [RubyGems](https://rubygems.org/)
 * [Semantic Versioning](https://semver.org/)
 * [Calendar Versioning](https://calver.org/)
+* [Debian Package Versioning](https://www.debian.org/doc/debian-policy/ch-controlfields.html#version)
 
 ## Usage
 See the [examples folder](examples) for complete working code demonstrating the usage of this library. The
@@ -27,12 +28,12 @@ following Maven dependency:
 <dependency>
   <groupId>org.cthing</groupId>
   <artifactId>versionparser</artifactId>
-  <version>5.0.0</version>
+  <version>5.1.0</version>
 </dependency>
 ```
 or the following Gradle dependency:
 ```kotlin
-implementation("org.cthing:versionparser:5.0.0")
+implementation("org.cthing:versionparser:5.1.0")
 ```
 
 ### Versioning Overview
@@ -40,6 +41,7 @@ implementation("org.cthing:versionparser:5.0.0")
 | Scheme   | Version Factory                                   | Version Constraint Factory                    |
 |----------|---------------------------------------------------|-----------------------------------------------|
 | Calendar | `CalendarVersionScheme.parse(String)`<sup>1</sup> | N/A                                           |
+| Debian   | `DebVersionScheme.parseVersion(String)`           | `DebVersionScheme.parseConstraint(String)`    |
 | Gradle   | `GradleVersionScheme.parseVersion(String)`        | `GradleVersionScheme.parseConstraint(String)` |                           
 | Java     | `JavaVersionScheme.parseVersion(String)`          | `JavaVersionScheme.parseRange(String)`        |                           
 | Maven    | `MvnVersionScheme.parseVersion(String)`           | `MvnVersionScheme.parseConstraint(String)`    |                           
@@ -319,6 +321,34 @@ assertThat(component1.getCategory()).isEqualTo(ComponentCategory.YEAR);
 
 // Verify ordering
 assertThat(version2.compareTo(version3)).isEqualTo(-1);
+```
+
+### Debian Packageg Versioning
+Support is provided for parsing Debian package versions and version constraints.
+
+```java
+// Parse versions
+final DebVersion version1 = DebVersionScheme.parseVersion("22.07.5-2ubuntu1.5");
+final Version version2 = DebVersionScheme.parseVersion("20.01.2-1ubuntu1.5");
+
+// Obtain information from the parsed version
+assertThat(version1.getOriginalVersion()).isEqualTo("22.07.5-2ubuntu1.5");
+assertThat(version1.isPreRelease()).isFalse();
+assertThat(version1.getEpoch()).isEqualTo(0);
+assertThat(version1.getUpstream()).isEqualTo("22.07.5");
+assertThat(version1.getRevision()).isEqualTo("2ubuntu1.5");
+
+// Verify ordering
+assertThat(version1.compareTo(version2)).isEqualTo(1);
+
+// Parse version constraints
+final VersionConstraint constraint1 = DebVersionScheme.parseConstraint(">20");
+final VersionConstraint constraint2 = DebVersionScheme.parseConstraint(">21 <=23");
+
+// Perform constraint checking
+assertThat(constraint1.allows(version2)).isTrue();
+assertThat(constraint2.allows(version1)).isTrue();
+assertThat(constraint2.allows(version2)).isFalse();
 ```
 
 ## Additional Information
