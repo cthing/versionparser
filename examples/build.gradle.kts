@@ -32,6 +32,7 @@ tasks {
 }
 
 listOf("CalVerExample",
+       "DebianExample",
        "GradleExample",
        "JavaVersionExample",
        "MavenExample",

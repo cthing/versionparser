@@ -60,7 +60,7 @@ import org.jspecify.annotations.Nullable;
  * </p>
  *
  * <p>
- * In addition to the above mentioned qualifiers, the tokens {@code min} and {@code max} may be used as the last
+ * In addition to the above-mentioned qualifiers, the tokens {@code min} and {@code max} may be used as the last
  * version component to denote the smallest/greatest version having a given prefix. For example, "1.2.min" denotes
  * the smallest version in the 1.2 line, and "1.2.max" denotes the greatest version in the 1.2 line.
  * </p>

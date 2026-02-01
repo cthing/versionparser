@@ -32,7 +32,7 @@ plugins {
     alias(libs.plugins.versions)
 }
 
-version = ProjectVersion("5.0.1", BuildType.snapshot)
+version = ProjectVersion("5.1.0", BuildType.snapshot)
 group = "org.cthing"
 description = "Parses version numbers, ranges and constraints in a variety of formats."
 

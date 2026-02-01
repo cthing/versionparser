@@ -29,7 +29,7 @@
     </Match>
     <Match>
         <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
-        <Class name="~.*MvnVersion\$Tokenizer"/>
+        <Class name="~.*(MvnVersion\$Tokenizer|DebVersion)"/>
     </Match>
     <Match>
         <Bug pattern="STT_TOSTRING_STORED_IN_FIELD"/>
