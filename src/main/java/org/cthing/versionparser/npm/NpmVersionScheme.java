@@ -51,7 +51,7 @@ import org.cthing.versionparser.semver.SemanticVersion;
  *
  * <p>
  * Artifacts in the NPM ecosystem are versioned using the <a href="https://semver.org/">Semantic Version</a>
- * specification. Therefore the {@link #parseVersion(String)} method returns an instance of a {@link SemanticVersion}
+ * specification. Therefore, the {@link #parseVersion(String)} method returns an instance of a {@link SemanticVersion}
  * and there is no NPM-specific version class.
  * </p>
  */

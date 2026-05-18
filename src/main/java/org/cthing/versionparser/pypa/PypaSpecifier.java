@@ -177,7 +177,7 @@ public final class PypaSpecifier {
          * Provides a canonical string representation of the specified version.
          *
          * @param version Version to canonicalize
-         * @param stripTrailingZeros {@code true} to strip trailing zeros from the release portion of the verison
+         * @param stripTrailingZeros {@code true} to strip trailing zeros from the release portion of the version
          * @return Canonical representation of the specified version
          */
         @AccessForTesting
