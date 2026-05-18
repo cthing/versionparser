@@ -34,6 +34,7 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>
  * with the following six parts:
+ * </p>
  * <ul>
  *   <li>Epoch segment: N!</li>
  *   <li>Release segment: N(.N)*</li>
@@ -42,7 +43,6 @@ import org.jspecify.annotations.Nullable;
  *   <li>Development release segment: .devN</li>
  *   <li>Local segment: +label</li>
  * </ul>
- * </p>
  *
  * <p>
  * Refer to
@@ -57,8 +57,11 @@ public final class PypaVersion extends AbstractVersion {
      * sorting order (i.e. "a" is less than "b").
      */
     public enum PrePhase {
+        /** Alpha. */
         a,
+        /** Beta. */
         b,
+        /** Release candidate. */
         rc
     }
 
