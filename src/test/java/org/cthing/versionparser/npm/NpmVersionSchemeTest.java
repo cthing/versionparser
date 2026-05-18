@@ -8,8 +8,6 @@ package org.cthing.versionparser.npm;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.assertj.core.api.Assertions;
-import org.cthing.versionparser.Version;
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
 import org.cthing.versionparser.VersionRange;
@@ -25,10 +23,10 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class NpmVersionSchemeTest {
+class NpmVersionSchemeTest {
 
     @Test
-    public void testParseVersion() throws VersionParsingException {
+    void testParseVersion() throws VersionParsingException {
         assertThat(NpmVersionScheme.parseVersion("1.2.3")).isInstanceOf(SemanticVersion.class).hasToString("1.2.3");
         assertThat(NpmVersionScheme.parseVersion("1.2.3-abc1+20230405")).isInstanceOf(SemanticVersion.class)
                                                                    .hasToString("1.2.3-abc1+20230405");
@@ -44,14 +42,14 @@ public class NpmVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("versionProvider")
-    public void testParseConstraintVersion(final String version, final String rangeRep, final String versionRep)
+    void testParseConstraintVersion(final String version, final String rangeRep, final String versionRep)
             throws VersionParsingException {
         final VersionConstraint constraint = NpmVersionScheme.parseConstraint(version);
         assertThat(constraint).hasToString(rangeRep);
         assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
-        Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(versionRep);
-        Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).hasToString(versionRep);
+        assertThat(versionRange.getMinVersion()).hasToString(versionRep);
+        assertThat(versionRange.getMaxVersion()).hasToString(versionRep);
         assertThat(versionRange.isMinIncluded()).isTrue();
         assertThat(versionRange.isMaxIncluded()).isTrue();
     }
@@ -66,7 +64,6 @@ public class NpmVersionSchemeTest {
                 arguments(">1.2.3", "(1.2.3,)", "1.2.3", null, false, false),
                 arguments("<=2.0.0", "(,2.0.0]", null, "2.0.0", false, true),
                 arguments("<2.0.0", "(,2.0.0)", null, "2.0.0", false, false),
-                arguments("<=2.0.0", "(,2.0.0]", null, "2.0.0", false, true),
                 arguments(">=1.2.3 <2.0.0", "[1.2.3,2.0.0)", "1.2.3", "2.0.0", true, false),
                 arguments("<2.0.0 >=1.2.3 ", "[1.2.3,2.0.0)", "1.2.3", "2.0.0", true, false),
                 arguments(">1.0.0 <=1.5.0 ", "(1.0.0,1.5.0]", "1.0.0", "1.5.0", false, true),
@@ -77,48 +74,48 @@ public class NpmVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("rangeProvider")
-    public void testParseConstraintRange(final String range, final String rangeRep, @Nullable final String minRep,
-                                         @Nullable final String maxRep, final boolean minIncluded,
-                                         final boolean maxIncluded) throws VersionParsingException {
+    void testParseConstraintRange(final String range, final String rangeRep, @Nullable final String minRep,
+                                  @Nullable final String maxRep, final boolean minIncluded, final boolean maxIncluded)
+            throws VersionParsingException {
         final VersionConstraint constraint = NpmVersionScheme.parseConstraint(range);
         assertThat(constraint).hasToString(rangeRep);
         assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
         if (minRep == null) {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).isNull();
+            assertThat(versionRange.getMinVersion()).isNull();
         } else {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(minRep);
+            assertThat(versionRange.getMinVersion()).hasToString(minRep);
         }
         if (maxRep == null) {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).isNull();
+            assertThat(versionRange.getMaxVersion()).isNull();
         } else {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
+            assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
         }
         assertThat(versionRange.isMinIncluded()).isEqualTo(minIncluded);
         assertThat(versionRange.isMaxIncluded()).isEqualTo(maxIncluded);
     }
 
     @Test
-    public void testParseConstraintUnion() throws VersionParsingException {
+    void testParseConstraintUnion() throws VersionParsingException {
         final VersionConstraint constraint = NpmVersionScheme.parseConstraint(">=1.2.3 <=1.3.0 || =2.0.0");
         assertThat(constraint).hasToString("[1.2.3,1.3.0],[2.0.0]");
         assertThat(constraint.isWeak()).isFalse();
         final List<VersionRange> ranges1 = constraint.getRanges();
         assertThat(ranges1).hasSize(2);
         final VersionRange vr11 = ranges1.get(0);
-        Assertions.<@Nullable Version>assertThat(vr11.getMinVersion()).hasToString("1.2.3");
-        Assertions.<@Nullable Version>assertThat(vr11.getMaxVersion()).hasToString("1.3.0");
+        assertThat(vr11.getMinVersion()).hasToString("1.2.3");
+        assertThat(vr11.getMaxVersion()).hasToString("1.3.0");
         assertThat(vr11.isMinIncluded()).isTrue();
         assertThat(vr11.isMaxIncluded()).isTrue();
         final VersionRange vr12 = ranges1.get(1);
-        Assertions.<@Nullable Version>assertThat(vr12.getMinVersion()).hasToString("2.0.0");
-        Assertions.<@Nullable Version>assertThat(vr12.getMaxVersion()).hasToString("2.0.0");
+        assertThat(vr12.getMinVersion()).hasToString("2.0.0");
+        assertThat(vr12.getMaxVersion()).hasToString("2.0.0");
         assertThat(vr12.isMinIncluded()).isTrue();
         assertThat(vr12.isMaxIncluded()).isTrue();
     }
 
     @Test
-    public void testParseConstraintBad() {
+    void testParseConstraintBad() {
         assertThatExceptionOfType(VersionParsingException.class)
                 .isThrownBy(() -> NpmVersionScheme.parseConstraint(">2.0.0 =1.2.3"));
         assertThatExceptionOfType(VersionParsingException.class)

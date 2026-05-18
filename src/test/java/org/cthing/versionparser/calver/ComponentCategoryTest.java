@@ -7,8 +7,8 @@ package org.cthing.versionparser.calver;
 import org.cthing.versionparser.VersionParsingException;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.cthing.versionparser.calver.ComponentCategory.DAY;
 import static org.cthing.versionparser.calver.ComponentCategory.MAJOR;
 import static org.cthing.versionparser.calver.ComponentCategory.MINOR;
@@ -18,27 +18,29 @@ import static org.cthing.versionparser.calver.ComponentCategory.WEEK;
 import static org.cthing.versionparser.calver.ComponentCategory.YEAR;
 
 
-public class ComponentCategoryTest {
+class ComponentCategoryTest {
 
     @Test
-    public void testValidate() {
-        assertThatNoException().isThrownBy(() -> YEAR.validate(1900));
-        assertThatNoException().isThrownBy(() -> YEAR.validate(2023));
-        assertThatNoException().isThrownBy(() -> MONTH.validate(1));
-        assertThatNoException().isThrownBy(() -> MONTH.validate(6));
-        assertThatNoException().isThrownBy(() -> MONTH.validate(12));
-        assertThatNoException().isThrownBy(() -> DAY.validate(1));
-        assertThatNoException().isThrownBy(() -> DAY.validate(15));
-        assertThatNoException().isThrownBy(() -> DAY.validate(31));
-        assertThatNoException().isThrownBy(() -> WEEK.validate(1));
-        assertThatNoException().isThrownBy(() -> WEEK.validate(20));
-        assertThatNoException().isThrownBy(() -> WEEK.validate(52));
-        assertThatNoException().isThrownBy(() -> MAJOR.validate(0));
-        assertThatNoException().isThrownBy(() -> MAJOR.validate(16));
-        assertThatNoException().isThrownBy(() -> MINOR.validate(0));
-        assertThatNoException().isThrownBy(() -> MINOR.validate(16));
-        assertThatNoException().isThrownBy(() -> PATCH.validate(0));
-        assertThatNoException().isThrownBy(() -> PATCH.validate(16));
+    void testValidate() {
+        assertThatCode(() -> {
+            YEAR.validate(1900);
+            YEAR.validate(2023);
+            MONTH.validate(1);
+            MONTH.validate(6);
+            MONTH.validate(12);
+            DAY.validate(1);
+            DAY.validate(15);
+            DAY.validate(31);
+            WEEK.validate(1);
+            WEEK.validate(20);
+            WEEK.validate(52);
+            MAJOR.validate(0);
+            MAJOR.validate(16);
+            MINOR.validate(0);
+            MINOR.validate(16);
+            PATCH.validate(0);
+            PATCH.validate(16);
+        }).doesNotThrowAnyException();
 
         assertThatExceptionOfType(VersionParsingException.class).isThrownBy(() -> YEAR.validate(1000))
                                                                 .withMessage("Invalid year '1000' (year >= 1900)");

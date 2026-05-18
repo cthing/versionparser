@@ -10,42 +10,42 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class ComponentTest {
+class ComponentTest {
 
     @Test
-    public void testConstruction() throws VersionParsingException {
-        Component component = new Component(ComponentFormat.MM, "10");
-        assertThat(component.getCategory()).isEqualTo(ComponentCategory.MONTH);
-        assertThat(component.getFormat()).isEqualTo(ComponentFormat.MM);
-        assertThat(component.getValueStr()).isEqualTo("10");
-        assertThat(component.getValue()).isEqualTo(10);
-        assertThat(component).hasToString("10");
+    void testConstruction() throws VersionParsingException {
+        final Component monthComponent = new Component(ComponentFormat.MM, "10");
+        assertThat(monthComponent.getCategory()).isEqualTo(ComponentCategory.MONTH);
+        assertThat(monthComponent.getFormat()).isEqualTo(ComponentFormat.MM);
+        assertThat(monthComponent.getValueStr()).isEqualTo("10");
+        assertThat(monthComponent.getValue()).isEqualTo(10);
+        assertThat(monthComponent).hasToString("10");
 
-        component = new Component(ComponentFormat.YY, "10");
-        assertThat(component.getCategory()).isEqualTo(ComponentCategory.YEAR);
-        assertThat(component.getFormat()).isEqualTo(ComponentFormat.YY);
-        assertThat(component.getValueStr()).isEqualTo("10");
-        assertThat(component.getValue()).isEqualTo(2010);
-        assertThat(component).hasToString("10");
+        final Component year = new Component(ComponentFormat.YY, "10");
+        assertThat(year.getCategory()).isEqualTo(ComponentCategory.YEAR);
+        assertThat(year.getFormat()).isEqualTo(ComponentFormat.YY);
+        assertThat(year.getValueStr()).isEqualTo("10");
+        assertThat(year.getValue()).isEqualTo(2010);
+        assertThat(year).hasToString("10");
 
-        component = new Component(ComponentFormat.ZERO_Y, "20");
-        assertThat(component.getCategory()).isEqualTo(ComponentCategory.YEAR);
-        assertThat(component.getFormat()).isEqualTo(ComponentFormat.ZERO_Y);
-        assertThat(component.getValueStr()).isEqualTo("20");
-        assertThat(component.getValue()).isEqualTo(2020);
-        assertThat(component).hasToString("20");
+        final Component zeroYearComponent = new Component(ComponentFormat.ZERO_Y, "20");
+        assertThat(zeroYearComponent.getCategory()).isEqualTo(ComponentCategory.YEAR);
+        assertThat(zeroYearComponent.getFormat()).isEqualTo(ComponentFormat.ZERO_Y);
+        assertThat(zeroYearComponent.getValueStr()).isEqualTo("20");
+        assertThat(zeroYearComponent.getValue()).isEqualTo(2020);
+        assertThat(zeroYearComponent).hasToString("20");
 
-        component = new Component(ComponentFormat.MODIFIER, "hello");
-        assertThat(component.getCategory()).isEqualTo(ComponentCategory.MODIFIER);
-        assertThat(component.getFormat()).isEqualTo(ComponentFormat.MODIFIER);
-        assertThat(component.getValueStr()).isEqualTo("hello");
-        assertThat(component.getValue()).isEqualTo(0);
-        assertThat(component).hasToString("hello");
+        final Component modifierComponent = new Component(ComponentFormat.MODIFIER, "hello");
+        assertThat(modifierComponent.getCategory()).isEqualTo(ComponentCategory.MODIFIER);
+        assertThat(modifierComponent.getFormat()).isEqualTo(ComponentFormat.MODIFIER);
+        assertThat(modifierComponent.getValueStr()).isEqualTo("hello");
+        assertThat(modifierComponent.getValue()).isEqualTo(0);
+        assertThat(modifierComponent).hasToString("hello");
     }
 
     @Test
     @SuppressWarnings("EqualsWithItself")
-    public void testEquality() throws VersionParsingException {
+    void testEquality() throws VersionParsingException {
         final Component component1 = new Component(ComponentFormat.YYYY, "2023");
         final Component component2 = new Component(ComponentFormat.YYYY, "2023");
         final Component component3 = new Component(ComponentFormat.YY, "23");

@@ -25,7 +25,7 @@ import static org.cthing.versionparser.gem.GemVersionTest.Order.LT;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class GemVersionTest {
+class GemVersionTest {
 
     enum Order {
         LT,
@@ -37,7 +37,7 @@ public class GemVersionTest {
     class ComponentTest {
 
         @Test
-        public void testConstructNumber() {
+        void testConstructNumber() {
             final GemVersion.Component component = new GemVersion.Component(123);
             assertThat(component.isString()).isFalse();
             assertThat(component.isNumber()).isTrue();
@@ -47,7 +47,7 @@ public class GemVersionTest {
         }
 
         @Test
-        public void testConstructString() {
+        void testConstructString() {
             final GemVersion.Component component = new GemVersion.Component("abc");
             assertThat(component.isString()).isTrue();
             assertThat(component.isNumber()).isFalse();
@@ -57,7 +57,7 @@ public class GemVersionTest {
         }
 
         @Test
-        public void testEquality() {
+        void testEquality() {
             final GemVersion.Component component1 = new GemVersion.Component("abc");
             final GemVersion.Component component2 = new GemVersion.Component("abc");
             final GemVersion.Component component3 = new GemVersion.Component("xyz");
@@ -81,7 +81,7 @@ public class GemVersionTest {
 
         @Test
         @SuppressWarnings("EqualsWithItself")
-        public void testOrdering() {
+        void testOrdering() {
             final GemVersion.Component component1 = new GemVersion.Component("def");
             final GemVersion.Component component2 = new GemVersion.Component("def");
             final GemVersion.Component component3 = new GemVersion.Component("abc");
@@ -118,7 +118,7 @@ public class GemVersionTest {
 
     @ParameterizedTest
     @MethodSource("partitionProvider")
-    public void testPartitionComponents(final String version, final List<GemVersion.Component> components) {
+    void testPartitionComponents(final String version, final List<GemVersion.Component> components) {
         assertThat(GemVersion.partitionComponents(version)).isEqualTo(components);
     }
 
@@ -137,7 +137,7 @@ public class GemVersionTest {
 
     @ParameterizedTest
     @MethodSource("correctProvider")
-    public void testIsCorrect(final String version, final boolean correct) {
+    void testIsCorrect(final String version, final boolean correct) {
         assertThat(GemVersion.isCorrect(version)).isEqualTo(correct);
         if (!correct) {
             assertThatExceptionOfType(VersionParsingException.class).isThrownBy(() -> GemVersion.parse(version));
@@ -162,8 +162,8 @@ public class GemVersionTest {
 
     @ParameterizedTest
     @MethodSource("parsingProvider")
-    public void testParsing(final String versionStr, final String rep, final List<String> components,
-                            final boolean prerelease) throws VersionParsingException {
+    void testParsing(final String versionStr, final String rep, final List<String> components,
+                     final boolean prerelease) throws VersionParsingException {
         final GemVersion version = GemVersion.parse(versionStr);
         assertThat(version).hasToString(rep).isInstanceOf(Version.class);
         assertThat(version.getOriginalVersion()).isEqualTo(rep);
@@ -172,7 +172,7 @@ public class GemVersionTest {
     }
 
     @Test
-    public void testParsingBad() {
+    void testParsingBad() {
         assertThatExceptionOfType(VersionParsingException.class).isThrownBy(() -> GemVersion.parse("__asdf__"));
     }
 
@@ -189,7 +189,11 @@ public class GemVersionTest {
 
     @ParameterizedTest
     @MethodSource("equalityProvider")
-    public void testEquality(final String version1, final String version2, final boolean eq) {
+    void testEquality(final String versionStr1, final String versionStr2, final boolean eq)
+            throws VersionParsingException {
+        final GemVersion version1 = GemVersion.parse(versionStr1);
+        final GemVersion version2 = GemVersion.parse(versionStr2);
+
         if (eq) {
             assertThat(version1).isEqualTo(version2);
             assertThat(version1).hasSameHashCodeAs(version2);
@@ -233,7 +237,7 @@ public class GemVersionTest {
 
     @ParameterizedTest
     @MethodSource("orderingProvider")
-    public void testOrdering(final String version1, final String version2, final Order order)
+    void testOrdering(final String version1, final String version2, final Order order)
             throws VersionParsingException {
         final Version v1 = GemVersion.parse(version1);
         final Version v2 = GemVersion.parse(version2);
@@ -279,7 +283,7 @@ public class GemVersionTest {
 
     @ParameterizedTest
     @MethodSource("nextProvider")
-    public void testToNextVersion(final String version, final String nextVersion) throws VersionParsingException {
+    void testToNextVersion(final String version, final String nextVersion) throws VersionParsingException {
         final GemVersion v1 = GemVersion.parse(version);
         final GemVersion v2 = GemVersion.parse(nextVersion);
         assertThat(v1.toNextVersion()).isEqualTo(v2);

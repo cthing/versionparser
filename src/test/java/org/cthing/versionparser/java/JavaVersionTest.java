@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class JavaVersionTest {
+class JavaVersionTest {
 
     enum Order {
         LT,
@@ -49,7 +49,7 @@ public class JavaVersionTest {
 
     @ParameterizedTest
     @MethodSource("canonicalProvider")
-    public void testCanonicalize(final String version, final String canonicalVersion) {
+    void testCanonicalize(final String version, final String canonicalVersion) {
         assertThat(JavaVersion.canonicalize(version)).isEqualTo(canonicalVersion);
     }
 
@@ -80,9 +80,9 @@ public class JavaVersionTest {
 
     @ParameterizedTest
     @MethodSource("versionProvider")
-    public void testParse(final String version, final String originalVersion, final int feature, final int interim,
-                          final int update, final int patch, @Nullable final Integer build, @Nullable final String pre,
-                          @Nullable final String opt, final List<Integer> components, final boolean preRelease)
+    void testParse(final String version, final String originalVersion, final int feature, final int interim,
+                   final int update, final int patch, @Nullable final Integer build, @Nullable final String pre,
+                   @Nullable final String opt, final List<Integer> components, final boolean preRelease)
             throws VersionParsingException {
         final JavaVersion javaVersion = JavaVersion.parse(version);
         assertThat(javaVersion).hasToString(originalVersion);
@@ -111,7 +111,7 @@ public class JavaVersionTest {
     }
 
     @Test
-    public void testBadParse() {
+    void testBadParse() {
         assertThatExceptionOfType(VersionParsingException.class).isThrownBy(() -> JavaVersion.parse(""));
         assertThatExceptionOfType(VersionParsingException.class).isThrownBy(() -> JavaVersion.parse("  "));
         assertThatExceptionOfType(VersionParsingException.class).isThrownBy(() -> JavaVersion.parse("abc"));
@@ -145,7 +145,7 @@ public class JavaVersionTest {
 
     @ParameterizedTest
     @MethodSource("equalityProvider")
-    public void testEquality(final String version1, final String version2, final boolean eq)
+    void testEquality(final String version1, final String version2, final boolean eq)
             throws VersionParsingException {
         final JavaVersion javaVersion1 = JavaVersion.parse(version1);
         final JavaVersion javaVersion2 = JavaVersion.parse(version2);
@@ -179,8 +179,7 @@ public class JavaVersionTest {
 
     @ParameterizedTest
     @MethodSource("orderingProvider")
-    public void testOrdering(final String version1, final Order order, final String version2)
-            throws VersionParsingException {
+    void testOrdering(final String version1, final Order order, final String version2) throws VersionParsingException {
         final Version v1 = JavaVersion.parse(version1);
         final Version v2 = JavaVersion.parse(version2);
 
@@ -211,7 +210,7 @@ public class JavaVersionTest {
     }
 
     @Test
-    public void testRuntimeVersion() {
+    void testRuntimeVersion() {
         final Runtime.Version expectedVersion = Runtime.version();
         final JavaVersion actualVersion = JavaVersion.RUNTIME_VERSION;
 

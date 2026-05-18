@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class CalendarVersionTest {
+class CalendarVersionTest {
 
     private static final int GT = 1;
     private static final int LT = -1;
@@ -98,11 +98,18 @@ public class CalendarVersionTest {
 
     @ParameterizedTest
     @MethodSource("orderProvider")
-    public void testOrdering(final String format1, final String version1, final String format2, final String version2,
-                             final int result) throws VersionParsingException {
+    void testOrdering(final String format1, final String version1, final String format2, final String version2,
+                      final int result) throws VersionParsingException {
         final CalendarVersion v1 = CalendarVersionScheme.parse(format1, version1);
         final CalendarVersion v2 = CalendarVersionScheme.parse(format2, version2);
-        assertThat(v1.compareTo(v2)).isEqualTo(result);
+
+        if (result == GT) {
+            assertThat(v1.compareTo(v2)).isPositive();
+        } else if (result == LT) {
+            assertThat(v1.compareTo(v2)).isNegative();
+        } else {
+            assertThat(v1.compareTo(v2)).isZero();
+        }
     }
 
     static Stream<Arguments> equalityProvider() {
@@ -141,8 +148,8 @@ public class CalendarVersionTest {
 
     @ParameterizedTest
     @MethodSource("equalityProvider")
-    public void testEquality(final String format1, final String version1, final String format2, final String version2,
-                             final boolean equal) throws VersionParsingException {
+    void testEquality(final String format1, final String version1, final String format2, final String version2,
+                      final boolean equal) throws VersionParsingException {
         final CalendarVersion v1 = CalendarVersionScheme.parse(format1, version1);
         final CalendarVersion v2 = CalendarVersionScheme.parse(format2, version2);
 
@@ -157,7 +164,7 @@ public class CalendarVersionTest {
 
     @Test
     @SuppressWarnings("EqualsWithItself")
-    public void testEquality2() throws VersionParsingException {
+    void testEqualityEdgeCases() throws VersionParsingException {
         final CalendarVersion version = CalendarVersionScheme.parse("YYYY.WW", "2023.50");
         assertThat(version).isEqualTo(version);
         assertThat(version).isNotEqualTo(null);

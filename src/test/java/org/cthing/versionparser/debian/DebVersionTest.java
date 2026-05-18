@@ -21,9 +21,9 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class DebVersionTest {
+class DebVersionTest {
 
-    public static Stream<Arguments> goodVersionProvider() {
+    static Stream<Arguments> goodVersionProvider() {
         return Stream.of(
                 arguments("1.2.3", 0, "1.2.3", "0", false),
                 arguments("1.2.3-1ubuntu1", 0, "1.2.3", "1ubuntu1", false),
@@ -42,9 +42,8 @@ public class DebVersionTest {
 
     @ParameterizedTest
     @MethodSource("goodVersionProvider")
-    public void testValidParsing(final String versionStr, final int expectedEpoch, final String expectedUpstream,
-                                 final String expectedRevision, final boolean isPrerelease)
-            throws VersionParsingException {
+    void testValidParsing(final String versionStr, final int expectedEpoch, final String expectedUpstream,
+                          final String expectedRevision, final boolean isPrerelease) throws VersionParsingException {
         final DebVersion version = DebVersion.parse(versionStr);
         assertThat(version.getEpoch()).isEqualTo(expectedEpoch);
         assertThat(version.getUpstream()).isEqualTo(expectedUpstream);
@@ -66,13 +65,13 @@ public class DebVersionTest {
             "1:2:3",            // Multiple colons not allowed
             "a:1.2.3"           // Epoch must be numeric [0-9]+
     })
-    public void testInvalidParsing(final String version) {
+    void testInvalidParsing(final String version) {
         assertThatExceptionOfType(VersionParsingException.class)
                 .isThrownBy(() -> DebVersion.parse(version))
                 .withMessage("Invalid Debian version: " + version);
     }
 
-    public static Stream<Arguments> equalityProvider() {
+    static Stream<Arguments> equalityProvider() {
         return Stream.of(
                 arguments("1:2.3.4-5", "1:2.3.4-5", true),
                 arguments(" 1:2.3.4-5 ", "1:2.3.4-5", true),
@@ -88,7 +87,7 @@ public class DebVersionTest {
 
     @ParameterizedTest
     @MethodSource("equalityProvider")
-    public void testEquality(final String versionStr1, final String versionStr2, final boolean isEqual)
+    void testEquality(final String versionStr1, final String versionStr2, final boolean isEqual)
             throws VersionParsingException {
         final DebVersion version1 = DebVersion.parse(versionStr1);
         final DebVersion version2 = DebVersion.parse(versionStr2);
@@ -106,7 +105,7 @@ public class DebVersionTest {
 
     @Test
     @SuppressWarnings("AssertBetweenInconvertibleTypes")
-    public void testTypeInequality() throws VersionParsingException {
+    void testTypeInequality() throws VersionParsingException {
         final DebVersion deb = DebVersion.parse("1.2.3");
         final SemanticVersion other = SemanticVersion.parse("1.2.3");
         assertThat(deb).isNotEqualTo(other);
@@ -182,7 +181,7 @@ public class DebVersionTest {
             "a1b2d-d9, a1b2d-d13",    // Embedded numeric comparison
             "a1b2d-d10~, a1b2d-d10"   // Tilde is smaller than End-of-String
     })
-    public void testCompare(final String smaller, final String larger) throws VersionParsingException {
+    void testCompare(final String smaller, final String larger) throws VersionParsingException {
         final DebVersion version1 = DebVersion.parse(smaller);
         final DebVersion version2 = DebVersion.parse(larger);
 
@@ -192,7 +191,7 @@ public class DebVersionTest {
 
     @Test
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void testBadCompare() throws VersionParsingException {
+    void testBadCompare() throws VersionParsingException {
         final DebVersion deb = DebVersion.parse("1.2.3");
         final SemanticVersion other = SemanticVersion.parse("1.2.4");
         assertThatIllegalArgumentException().isThrownBy(() -> deb.compareTo(other));

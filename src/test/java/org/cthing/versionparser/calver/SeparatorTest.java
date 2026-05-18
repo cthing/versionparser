@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class SeparatorTest {
+class SeparatorTest {
 
     static Stream<Arguments> separatorProvider() {
         return Stream.of(
@@ -31,19 +31,15 @@ public class SeparatorTest {
     }
 
     @Test
-    public void testProperties() {
+    void testProperties() {
         assertThat(Separator.DASH.getDelimiter()).isEqualTo("-");
         assertThat(Separator.DASH.getRegex()).isEqualTo("\\-");
     }
 
     @ParameterizedTest
     @MethodSource("separatorProvider")
-    public void testFrom(final String delimiter, @Nullable final Separator separator) {
+    void testFrom(final String delimiter, @Nullable final Separator separator) {
         final Optional<Separator> separatorOpt = Separator.from(delimiter);
-        if (separator == null) {
-            assertThat(separatorOpt).isEmpty();
-        } else {
-            assertThat(separatorOpt).contains(separator);
-        }
+        assertThat(separatorOpt).isEqualTo(Optional.ofNullable(separator));
     }
 }

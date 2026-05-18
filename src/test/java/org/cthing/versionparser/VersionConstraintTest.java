@@ -22,10 +22,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class VersionConstraintTest {
+class VersionConstraintTest {
 
     @Test
-    public void testAny() throws VersionParsingException {
+    void testAny() throws VersionParsingException {
         assertThat(ANY.isEmpty()).isFalse();
         assertThat(ANY.isNotEmpty()).isTrue();
         assertThat(ANY.isAny()).isTrue();
@@ -41,7 +41,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testEmpty() {
+    void testEmpty() {
         final VersionConstraint constraint = mock(VersionConstraint.class);
         when(constraint.isEmpty()).thenReturn(true);
 
@@ -60,7 +60,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testConstructionSingleVersion() {
+    void testConstructionSingleVersion() {
         final Version version = version("1.2.3");
 
         VersionConstraint constraint = new VersionConstraint(version);
@@ -81,7 +81,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testConstructionSingleRange() {
+    void testConstructionSingleRange() {
         final Version version1 = version("1.2.3");
         final Version version2 = version("3.0");
         VersionConstraint constraint = new VersionConstraint(version1, version2, true, false);
@@ -111,7 +111,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testConstructionMultipleRanges() {
+    void testConstructionMultipleRanges() {
         final VersionRange range1 = new VersionRange(version("1.5"), version("2.0"), true, false);
         final VersionRange range2 = new VersionRange(version("3.0"), version("5.0"), false, false);
         final VersionRange range3 = new VersionRange(version("3.0"), version("3.0"), true, true);
@@ -142,14 +142,14 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testConstructionBad() {
+    void testConstructionBad() {
         final Version version1 = version("3.0");
         final Version version2 = version("1.2.3");
         assertThatIllegalArgumentException().isThrownBy(() -> new VersionConstraint(version1, version2, true, false));
     }
 
     @Test
-    public void testAllows() throws VersionParsingException {
+    void testAllows() throws VersionParsingException {
         assertThat(ANY.allows(version("1.2.3"))).isTrue();
         assertThat(EMPTY.allows(version("1.2.3"))).isFalse();
 
@@ -197,7 +197,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testAllowsAll() throws VersionParsingException {
+    void testAllowsAll() throws VersionParsingException {
         assertThat(constraint("[1.5,2.0]").allowsAll(EMPTY)).isTrue();
         assertThat(new VersionConstraint(version("1.2.3")).allowsAll(EMPTY)).isTrue();
         assertThat(ANY.allowsAll(EMPTY)).isTrue();
@@ -256,7 +256,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testAllowsAny() throws VersionParsingException {
+    void testAllowsAny() throws VersionParsingException {
         assertThat(constraint("[1.5,2.0]").allowsAny(EMPTY)).isFalse();
         assertThat(new VersionConstraint(version("1.2.3")).allowsAny(EMPTY)).isFalse();
         assertThat(ANY.allowsAny(EMPTY)).isFalse();
@@ -313,7 +313,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testIntersect() throws VersionParsingException {
+    void testIntersect() throws VersionParsingException {
         assertThat(EMPTY.intersect(EMPTY)).isEmpty();
         assertThat(EMPTY.intersect(ANY)).isEmpty();
         assertThat(ANY.intersect(EMPTY)).isEmpty();
@@ -369,7 +369,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testUnion() throws VersionParsingException {
+    void testUnion() throws VersionParsingException {
         assertThat(EMPTY.union(EMPTY)).isEmpty();
         assertThat(EMPTY.union(ANY)).isAny();
         assertThat(ANY.union(EMPTY)).isAny();
@@ -408,7 +408,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testDifference() throws VersionParsingException {
+    void testDifference() throws VersionParsingException {
         assertThat(constraint("[1.5]").difference(EMPTY)).isConstraint("[1.5]");
         assertThat(constraint("[1.5]").difference(constraint("[1.5]"))).isEmpty();
 
@@ -447,8 +447,6 @@ public class VersionConstraintTest {
         assertThat(constraint("[1.5],[2.0,3.0)").difference(constraint("[1.0,10.0)"))).isEmpty();
         assertThat(constraint("[1.5],[2.0,3.0),[4.0,7.0)").difference(constraint("[1.0,2.5),[2.9]")))
                 .isConstraint("[2.5,2.9),(2.9,3.0),[4.0,7.0)");
-        assertThat(constraint("[1.5],[2.0,3.0),[4.0,7.0)").difference(constraint("[1.0,2.5),[2.9]")))
-                .isConstraint("[2.5,2.9),(2.9,3.0),[4.0,7.0)");
         assertThat(constraint("[1.0,3.0),(4.0,6.0)").difference(constraint("[2.0,5.0)")))
                 .isConstraint("[1.0,2.0),[5.0,6.0)");
         assertThat(constraint("[1.0,3.0),(4.0,6.0)").difference(constraint("[2.0,2.0]")))
@@ -463,7 +461,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testComplement() throws VersionParsingException {
+    void testComplement() throws VersionParsingException {
         assertThat(EMPTY.complement()).isEqualTo(ANY);
         assertThat(ANY.complement()).isEqualTo(EMPTY);
         assertThat(constraint("[1.5]").complement()).isConstraint("(,1.5),(1.5,)");
@@ -474,7 +472,7 @@ public class VersionConstraintTest {
     }
 
     @Test
-    public void testEquality() {
+    void testEquality() {
         final VersionConstraint constraint1 = new VersionConstraint(version("1.2.3"));
         final VersionConstraint constraint2 = new VersionConstraint(version("1.2.3"), false);
         final VersionConstraint constraint3 = new VersionConstraint(version("1.2.3"), true);
@@ -484,10 +482,8 @@ public class VersionConstraintTest {
         assertThat(constraint1).doesNotHaveSameHashCodeAs(constraint3);
 
         final VersionConstraint constraint4 = new VersionConstraint(version("1.0.0"), version("2.0.0"), true, false);
-        final VersionConstraint constraint5 = new VersionConstraint(version("1.0.0"), version("2.0.0"),
-                                                                    true, false, false);
-        final VersionConstraint constraint6 = new VersionConstraint(version("1.0.0"), version("2.0.0"),
-                                                                    true, true, true);
+        final VersionConstraint constraint5 = new VersionConstraint(version("1.0.0"), version("2.0.0"), true, false, false);
+        final VersionConstraint constraint6 = new VersionConstraint(version("1.0.0"), version("2.0.0"), true, true, true);
         final VersionConstraint constraint7 = new VersionConstraint(version("1.0.0"), version("2.0.0"), true, true);
         final VersionConstraint constraint8 = new VersionConstraint(version("1.0.0"), version("3.0.0"), true, false);
         assertThat(constraint4).isEqualTo(constraint5);
@@ -502,13 +498,13 @@ public class VersionConstraintTest {
 
 
     @SuppressWarnings("UnusedReturnValue")
-    public static class ConstraintAssert extends AbstractAssert<ConstraintAssert, VersionConstraint> {
+    static class ConstraintAssert extends AbstractAssert<ConstraintAssert, VersionConstraint> {
 
-        public ConstraintAssert(final VersionConstraint actual) {
+        ConstraintAssert(final VersionConstraint actual) {
             super(actual, ConstraintAssert.class);
         }
 
-        public ConstraintAssert isConstraint(final String constraintStr) throws VersionParsingException {
+        ConstraintAssert isConstraint(final String constraintStr) throws VersionParsingException {
             isNotNull();
 
             final VersionConstraint constraint = MvnVersionScheme.parseConstraint(constraintStr);
@@ -518,7 +514,7 @@ public class VersionConstraintTest {
             return this;
         }
 
-        public ConstraintAssert isEmpty() {
+        ConstraintAssert isEmpty() {
             isNotNull();
 
             if (!this.actual.equals(EMPTY)) {
@@ -527,7 +523,7 @@ public class VersionConstraintTest {
             return this;
         }
 
-        public ConstraintAssert isAny() {
+        ConstraintAssert isAny() {
             isNotNull();
 
             if (!this.actual.equals(ANY)) {
@@ -536,22 +532,22 @@ public class VersionConstraintTest {
             return this;
         }
 
-        public static Version version(final String version) {
+        static Version version(final String version) {
             return MvnVersionScheme.parseVersion(version);
         }
 
-        public static VersionConstraint constraint(final String constraintStr) throws VersionParsingException {
+        static VersionConstraint constraint(final String constraintStr) throws VersionParsingException {
             return MvnVersionScheme.parseConstraint(constraintStr);
         }
     }
 
 
-    public static final class TestAssertions {
+    static final class TestAssertions {
 
         private TestAssertions() {
         }
 
-        public static ConstraintAssert assertThat(final VersionConstraint actual) {
+        static ConstraintAssert assertThat(final VersionConstraint actual) {
             return new ConstraintAssert(actual);
         }
     }

@@ -5,7 +5,6 @@
 
 package org.cthing.versionparser;
 
-import org.assertj.core.api.Assertions;
 import org.cthing.versionparser.maven.MvnVersionScheme;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
@@ -14,13 +13,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 
-public class VersionRangeTest {
+class VersionRangeTest {
 
     @Test
-    public void testConstructionOpenRange() {
+    void testConstructionOpenRange() {
         final VersionRange range = new VersionRange(null, null, false, false);
-        Assertions.<@Nullable Version>assertThat(range.getMinVersion()).isNull();
-        Assertions.<@Nullable Version>assertThat(range.getMaxVersion()).isNull();
+        assertThat(range.getMinVersion()).isNull();
+        assertThat(range.getMaxVersion()).isNull();
         assertThat(range.isMinIncluded()).isFalse();
         assertThat(range.isMaxIncluded()).isFalse();
         assertThat(range.isAny()).isTrue();
@@ -29,11 +28,11 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testConstructionSingleVersion() {
+    void testConstructionSingleVersion() {
         final Version version = version("1.2.3");
         final VersionRange range = new VersionRange(version, version, true, true);
-        Assertions.<@Nullable Version>assertThat(range.getMinVersion()).isEqualTo(version);
-        Assertions.<@Nullable Version>assertThat(range.getMaxVersion()).isEqualTo(version);
+        assertThat(range.getMinVersion()).isEqualTo(version);
+        assertThat(range.getMaxVersion()).isEqualTo(version);
         assertThat(range.isMinIncluded()).isTrue();
         assertThat(range.isMaxIncluded()).isTrue();
         assertThat(range.isAny()).isFalse();
@@ -42,12 +41,12 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testConstructionFull() {
+    void testConstructionFull() {
         final Version version1 = version("1.2.3");
         final Version version2 = version("3.0");
         VersionRange range = new VersionRange(version1, version2, true, false);
-        Assertions.<@Nullable Version>assertThat(range.getMinVersion()).isEqualTo(version1);
-        Assertions.<@Nullable Version>assertThat(range.getMaxVersion()).isEqualTo(version2);
+        assertThat(range.getMinVersion()).isEqualTo(version1);
+        assertThat(range.getMaxVersion()).isEqualTo(version2);
         assertThat(range.isMinIncluded()).isTrue();
         assertThat(range.isMaxIncluded()).isFalse();
         assertThat(range.isAny()).isFalse();
@@ -56,8 +55,8 @@ public class VersionRangeTest {
 
         final Version version3 = version("1.2.3");
         range = new VersionRange(version3, version3, false, false);
-        Assertions.<@Nullable Version>assertThat(range.getMinVersion()).isEqualTo(version3);
-        Assertions.<@Nullable Version>assertThat(range.getMaxVersion()).isEqualTo(version3);
+        assertThat(range.getMinVersion()).isEqualTo(version3);
+        assertThat(range.getMaxVersion()).isEqualTo(version3);
         assertThat(range.isMinIncluded()).isFalse();
         assertThat(range.isMaxIncluded()).isFalse();
         assertThat(range.isAny()).isFalse();
@@ -66,14 +65,14 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testConstructionBad() {
+    void testConstructionBad() {
         final Version version1 = version("3.0");
         final Version version2 = version("1.2.3");
         assertThatIllegalArgumentException().isThrownBy(() -> new VersionRange(version1, version2, true, false));
     }
 
     @Test
-    public void testAllows() {
+    void testAllows() {
         assertThat(range("1.5", "2.0", true, true).allows(version("1.6"))).isTrue();
         assertThat(range("1.5", "2.0", true, true).allows(version("1.5"))).isTrue();
         assertThat(range("1.5", "2.0", true, true).allows(version("2.0"))).isTrue();
@@ -109,7 +108,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testAllowsAll() {
+    void testAllowsAll() {
         assertThat(range("1.5", "2.0", true, false).allowsAll(range("1.6", "1.6", true, true))).isTrue();
         assertThat(range("1.5", "2.0", true, false).allowsAll(range("1.6", "1.9", true, false))).isTrue();
         assertThat(range("1.5", "2.0", true, false).allowsAll(range("1.5", "2.0", true, false))).isTrue();
@@ -127,7 +126,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testAllowsAny() {
+    void testAllowsAny() {
         assertThat(range("1.5", "2.0", true, false).allowsAny(range("1.6", "1.6", true, true))).isTrue();
         assertThat(range("1.5", "2.0", true, false).allowsAny(range("1.6", "1.9", true, false))).isTrue();
         assertThat(range("1.5", "2.0", true, false).allowsAny(range("1.5", "2.0", true, false))).isTrue();
@@ -143,7 +142,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testIntersectRanges() {
+    void testIntersectRanges() {
         assertThat(range("1.5", "1.5", true, true).intersect(range("1.5", "1.5", true, true)))
                 .contains(range("1.5", "1.5", true, true));
         assertThat(range("1.5", "2.0", true, true).intersect(range("1.7", "1.7", true, true)))
@@ -172,8 +171,8 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testDifferenceRanges() {
-        assertThat(range("1.2", " 2.0", true, false).difference(range("1.5", "1.5", true, true)))
+    void testDifferenceRanges() {
+        assertThat(range("1.2", "2.0", true, false).difference(range("1.5", "1.5", true, true)))
                 .containsExactly(range("1.2", "1.5", true, false), range("1.5", "2.0", false, false));
         assertThat(range("1.2", "2.0", true, false).difference(range("1.2", "1.2", true, true)))
                 .containsExactly(range("1.2", "2.0", false, false));
@@ -199,7 +198,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testIsAdjacent() {
+    void testIsAdjacent() {
         assertThat(range("0.1", "1.0", false, true).isAdjacent(range("1.0", "2.0", false, false))).isTrue();
         assertThat(range("1.0", "2.0", false, false).isAdjacent(range("0.1", "1.0", false, true))).isTrue();
         assertThat(range("0.1", "1.0", false, false).isAdjacent(range("1.0", "2.0", true, false))).isTrue();
@@ -218,7 +217,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testMerge() {
+    void testMerge() {
         assertThat(range(null, null, false, false).merge(range(null, null, false, false)))
                 .isEqualTo(range(null, null, false, false));
         assertThat(range(null, null, false, false).merge(range("1.5", "1.5", true, true)))
@@ -239,7 +238,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testAllowsLower() {
+    void testAllowsLower() {
         assertThat(range("0.1", "1.0", false, true).allowsLower(range("1.2", "2.0", false, false))).isTrue();
         assertThat(range("0.1", "1.5", false, true).allowsLower(range("1.2", "2.0", false, false))).isTrue();
         assertThat(range("1.5", "3.5", false, true).allowsLower(range("1.2", "2.0", false, false))).isFalse();
@@ -253,7 +252,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testAllowsHigher() {
+    void testAllowsHigher() {
         assertThat(range("1.2", "2.0", false, false).allowsHigher(range("0.1", "1.0", false, true))).isTrue();
         assertThat(range("1.2", "2.0", false, false).allowsHigher(range("0.1", "1.5", false, true))).isTrue();
         assertThat(range("1.2", "2.0", false, false).allowsHigher(range("1.5", "3.5", false, true))).isFalse();
@@ -267,7 +266,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testStrictlyLower() {
+    void testStrictlyLower() {
         assertThat(range("0.1", "1.0", false, true).strictlyLower(range("1.2", "2.0", false, false))).isTrue();
         assertThat(range("0.1", "1.5", false, true).strictlyLower(range("1.2", "2.0", false, false))).isFalse();
         assertThat(range("1.5", "3.5", false, true).strictlyLower(range("1.2", "2.0", false, false))).isFalse();
@@ -281,7 +280,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testStrictlyHigher() {
+    void testStrictlyHigher() {
         assertThat(range("1.2", "2.0", false, false).strictlyHigher(range("0.1", "1.0", false, true))).isTrue();
         assertThat(range("1.2", "2.0", false, false).strictlyHigher(range("0.1", "1.5", false, true))).isFalse();
         assertThat(range("1.2", "2.0", false, false).strictlyHigher(range("1.5", "3.5", false, true))).isFalse();
@@ -296,7 +295,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testOrdering() {
+    void testOrdering() {
         assertThat(range("1.5", "1.5", true, true)).isLessThan(range("2.0", "2.0", true, true));
         assertThat(range("2.0", "2.0", true, true)).isGreaterThan(range("1.5", "1.5", true, true));
         assertThat(range("1.5", "1.5", true, true)).isEqualByComparingTo(range("1.5", "1.5", true, true));
@@ -321,7 +320,7 @@ public class VersionRangeTest {
     }
 
     @Test
-    public void testEquality() {
+    void testEquality() {
         final VersionRange range1 = range("1.5", "1.5", true, true);
         final VersionRange range2 = range("1.5", "1.5", true, true);
         final VersionRange range3 = range("1.5", "2.0", true, false);

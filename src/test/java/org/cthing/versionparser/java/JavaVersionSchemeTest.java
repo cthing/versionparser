@@ -7,8 +7,6 @@ package org.cthing.versionparser.java;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.assertj.core.api.Assertions;
-import org.cthing.versionparser.Version;
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
 import org.cthing.versionparser.VersionRange;
@@ -23,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class JavaVersionSchemeTest {
+class JavaVersionSchemeTest {
 
     static Stream<Arguments> versionProvider() {
         return Stream.of(
@@ -53,11 +51,9 @@ public class JavaVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("versionProvider")
-    public void testParseVerison(final String version, final String originalVersion, final int feature,
-                                 final int interim, final int update, final int patch,
-                                 @Nullable final Integer build, @Nullable final String pre,
-                                 @Nullable final String opt, final List<Integer> components,
-                                 final boolean preRelease)
+    void testParseVersion(final String version, final String originalVersion, final int feature, final int interim,
+                          final int update, final int patch, @Nullable final Integer build, @Nullable final String pre,
+                          @Nullable final String opt, final List<Integer> components, final boolean preRelease)
             throws VersionParsingException {
         final JavaVersion javaVersion = JavaVersionScheme.parseVersion(version);
         assertThat(javaVersion).hasToString(originalVersion);
@@ -101,22 +97,22 @@ public class JavaVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("rangeProvider")
-    public void testParseRange(final String range, final String rangeRep, @Nullable final String minRep,
-                               @Nullable final String maxRep, final boolean minIncluded,
-                               final boolean maxIncluded) throws VersionParsingException {
+    void testParseRange(final String range, final String rangeRep, @Nullable final String minRep,
+                        @Nullable final String maxRep, final boolean minIncluded, final boolean maxIncluded)
+            throws VersionParsingException {
         final VersionConstraint constraint = JavaVersionScheme.parseRange(range);
         assertThat(constraint).hasToString(rangeRep);
         assertThat(constraint.isWeak()).isFalse();
         final VersionRange versionRange = constraint.getRanges().get(0);
         if (minRep == null) {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).isNull();
+            assertThat(versionRange.getMinVersion()).isNull();
         } else {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(minRep);
+            assertThat(versionRange.getMinVersion()).hasToString(minRep);
         }
         if (maxRep == null) {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).isNull();
+            assertThat(versionRange.getMaxVersion()).isNull();
         } else {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
+            assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
         }
         assertThat(versionRange.isMinIncluded()).isEqualTo(minIncluded);
         assertThat(versionRange.isMaxIncluded()).isEqualTo(maxIncluded);
@@ -143,7 +139,7 @@ public class JavaVersionSchemeTest {
             "(17,11]",
             "(17,11)"
     })
-    public void testParseRangeBad(final String range) {
+    void testParseRangeBad(final String range) {
         assertThatExceptionOfType(VersionParsingException.class)
                 .isThrownBy(() -> JavaVersionScheme.parseRange(range));
     }
@@ -163,8 +159,7 @@ public class JavaVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("allowsProvider")
-    public void testAllows(final String range, final String version, final boolean result)
-            throws VersionParsingException {
+    void testAllows(final String range, final String version, final boolean result) throws VersionParsingException {
         assertThat(JavaVersionScheme.parseRange(range).allows(JavaVersionScheme.parseVersion(version))).isEqualTo(result);
     }
 
@@ -203,12 +198,12 @@ public class JavaVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("releasesProvider")
-    public void testReleases(final VersionConstraint javaRelease, final String minRep, final String maxRep) {
+    void testReleases(final VersionConstraint javaRelease, final String minRep, final String maxRep) {
         assertThat(javaRelease).hasToString("[" + minRep + "," + maxRep + ")");
         assertThat(javaRelease.isWeak()).isFalse();
         final VersionRange versionRange = javaRelease.getRanges().get(0);
-        Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(minRep);
-        Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
+        assertThat(versionRange.getMinVersion()).hasToString(minRep);
+        assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
         assertThat(versionRange.isMinIncluded()).isTrue();
         assertThat(versionRange.isMaxIncluded()).isFalse();
     }
@@ -246,12 +241,12 @@ public class JavaVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("releasesPlusProvider")
-    public void testReleasesPlus(final VersionConstraint javaRelease, final String minRep) {
+    void testReleasesPlus(final VersionConstraint javaRelease, final String minRep) {
         assertThat(javaRelease).hasToString("[" + minRep + ",)");
         assertThat(javaRelease.isWeak()).isFalse();
         final VersionRange versionRange = javaRelease.getRanges().get(0);
-        Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(minRep);
-        Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).isNull();
+        assertThat(versionRange.getMinVersion()).hasToString(minRep);
+        assertThat(versionRange.getMaxVersion()).isNull();
         assertThat(versionRange.isMinIncluded()).isTrue();
         assertThat(versionRange.isMaxIncluded()).isFalse();
     }
@@ -269,7 +264,7 @@ public class JavaVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("javaProvider")
-    public void testIsVersion(final VersionConstraint expectedVersion, final String version, final boolean result)
+    void testIsVersion(final VersionConstraint expectedVersion, final String version, final boolean result)
             throws VersionParsingException {
         assertThat(JavaVersionScheme.isVersion(expectedVersion, version)).isEqualTo(result);
     }

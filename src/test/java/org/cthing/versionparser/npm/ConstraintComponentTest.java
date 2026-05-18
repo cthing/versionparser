@@ -18,10 +18,10 @@ import static org.cthing.versionparser.npm.ConstraintComponent.Operator.LT;
 import static org.cthing.versionparser.npm.ConstraintComponent.Operator.LTE;
 
 
-public class ConstraintComponentTest {
+class ConstraintComponentTest {
 
     @Test
-    public void testOperators() {
+    void testOperators() {
         assertThat(EQ.asString()).isEqualTo("=");
         assertThat(LT.asString()).isEqualTo("<");
         assertThat(LTE.asString()).isEqualTo("<=");
@@ -30,7 +30,7 @@ public class ConstraintComponentTest {
     }
 
     @Test
-    public void testOperatorLookup() {
+    void testOperatorLookup() {
         assertThat(ConstraintComponent.Operator.value("=")).isEqualTo(EQ);
         assertThat(ConstraintComponent.Operator.value("")).isEqualTo(EQ);
         assertThat(ConstraintComponent.Operator.value("<")).isEqualTo(LT);
@@ -41,7 +41,7 @@ public class ConstraintComponentTest {
     }
 
     @Test
-    public void testConstruction() throws VersionParsingException {
+    void testConstruction() throws VersionParsingException {
         final SemanticVersion version = SemanticVersion.parse("1.2.3");
 
         ConstraintComponent component = new ConstraintComponent(version, LT);
@@ -57,7 +57,7 @@ public class ConstraintComponentTest {
 
     @Test
     @SuppressWarnings("EqualsWithItself")
-    public void testEquality() throws VersionParsingException {
+    void testEquality() throws VersionParsingException {
         final ConstraintComponent comp1 = new ConstraintComponent("1.2.3", "=");
         final ConstraintComponent comp2 = new ConstraintComponent("1.2.3", "=");
         final ConstraintComponent comp3 = new ConstraintComponent("1.2.3", "<=");

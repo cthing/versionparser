@@ -13,33 +13,33 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class DebVersionSchemeTest {
+class DebVersionSchemeTest {
 
     @Test
-    public void testParseVersion() throws VersionParsingException {
+    void testParseVersion() throws VersionParsingException {
         assertThat(DebVersionScheme.parseVersion("1.2.3-1ubuntu1")).isInstanceOf(DebVersion.class)
                                                                    .hasToString("1.2.3-1ubuntu1");
     }
 
     @Test
-    public void testBlank() throws VersionParsingException {
+    void testBlank() throws VersionParsingException {
         assertThat(DebVersionScheme.parseConstraint(" ").isAny()).isTrue();
     }
 
     @Test
-    public void testConflict() throws VersionParsingException {
+    void testConflict() throws VersionParsingException {
         assertThat(DebVersionScheme.parseConstraint("<1.0 >2.0").isEmpty()).isTrue();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"~=1", "1.2.3-", "==1.0", "^2.0 a"})
-    public void testInvalid(final String invalidRange) {
+    void testInvalid(final String invalidRange) {
         assertThatThrownBy(() -> DebVersionScheme.parseConstraint(invalidRange))
                 .isInstanceOf(VersionParsingException.class);
     }
 
     @Test
-    public void testExactVersion() throws VersionParsingException {
+    void testExactVersion() throws VersionParsingException {
         final VersionConstraint constraint = DebVersionScheme.parseConstraint("3");
 
         assertThat(constraint.isSingleVersion()).isTrue();
@@ -56,7 +56,7 @@ public class DebVersionSchemeTest {
     }
 
     @Test
-    public void testEqualTo() throws VersionParsingException {
+    void testEqualTo() throws VersionParsingException {
         final VersionConstraint constraint = DebVersionScheme.parseConstraint("=3");
 
         assertThat(constraint.isSingleVersion()).isTrue();
@@ -73,7 +73,7 @@ public class DebVersionSchemeTest {
     }
 
     @Test
-    public void testGreaterThanOrEqual() throws VersionParsingException {
+    void testGreaterThanOrEqual() throws VersionParsingException {
         final VersionConstraint constraint = DebVersionScheme.parseConstraint(">=3");
 
         assertThat(constraint.isSingleVersion()).isFalse();
@@ -90,7 +90,7 @@ public class DebVersionSchemeTest {
     }
 
     @Test
-    public void testGreaterThan() throws VersionParsingException {
+    void testGreaterThan() throws VersionParsingException {
         final VersionConstraint constraint = DebVersionScheme.parseConstraint(">3");
 
         assertThat(constraint.isSingleVersion()).isFalse();
@@ -107,7 +107,7 @@ public class DebVersionSchemeTest {
     }
 
     @Test
-    public void testLessThanOrEqual() throws VersionParsingException {
+    void testLessThanOrEqual() throws VersionParsingException {
         final VersionConstraint constraint = DebVersionScheme.parseConstraint("<=3");
 
         assertThat(constraint.isSingleVersion()).isFalse();
@@ -124,7 +124,7 @@ public class DebVersionSchemeTest {
     }
 
     @Test
-    public void testLessThan() throws VersionParsingException {
+    void testLessThan() throws VersionParsingException {
         final VersionConstraint constraint = DebVersionScheme.parseConstraint("<3");
 
         assertThat(constraint.isSingleVersion()).isFalse();
@@ -141,7 +141,7 @@ public class DebVersionSchemeTest {
     }
 
     @Test
-    public void testSimpleRange() throws VersionParsingException {
+    void testSimpleRange() throws VersionParsingException {
         final VersionConstraint constraint = DebVersionScheme.parseConstraint(">3 <=5");
 
         assertThat(constraint.isSingleVersion()).isFalse();
@@ -160,7 +160,7 @@ public class DebVersionSchemeTest {
     }
 
     @Test
-    public void testComplexRange() throws VersionParsingException {
+    void testComplexRange() throws VersionParsingException {
         final VersionConstraint constraint = DebVersionScheme.parseConstraint(">=1.0-1 <2.0-1");
 
         assertThat(constraint.isSingleVersion()).isFalse();

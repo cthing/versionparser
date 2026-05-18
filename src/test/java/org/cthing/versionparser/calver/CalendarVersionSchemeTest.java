@@ -33,7 +33,7 @@ import static org.cthing.versionparser.calver.ComponentFormat.ZERO_Y;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class CalendarVersionSchemeTest {
+class CalendarVersionSchemeTest {
 
     static Stream<Arguments> versionProvider() throws VersionParsingException {
         return Stream.of(
@@ -92,7 +92,7 @@ public class CalendarVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("versionProvider")
-    public void testParseValid(final String format, final String versionStr, final boolean prerelease,
+    void testParseValid(final String format, final String versionStr, final boolean prerelease,
                                final List<Component> expectedComponents) throws VersionParsingException {
         final CalendarVersion version = CalendarVersionScheme.parse(format, versionStr);
         assertThat(version.isPreRelease()).isEqualTo(prerelease);
@@ -100,7 +100,7 @@ public class CalendarVersionSchemeTest {
     }
 
     @Test
-    public void testParseInvalid() {
+    void testParseInvalid() {
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> CalendarVersionScheme.parse("YY-ZZ", "21-17"))
                 .withMessage("Unrecognized format specifier 'ZZ'");

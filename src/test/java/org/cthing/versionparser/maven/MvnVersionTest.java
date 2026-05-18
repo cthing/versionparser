@@ -40,7 +40,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class MvnVersionTest {
+class MvnVersionTest {
 
     enum Order {
         LT,
@@ -71,7 +71,7 @@ public class MvnVersionTest {
 
     @ParameterizedTest
     @MethodSource("parsingProvider")
-    public void testParsing(final String versionStr, final String rep, final List<String> components) {
+    void testParsing(final String versionStr, final String rep, final List<String> components) {
         final MvnVersion version = MvnVersion.parse(versionStr);
         assertThat(version).hasToString(rep).isInstanceOf(Version.class);
         assertThat(version.getOriginalVersion()).isEqualTo(rep);
@@ -79,7 +79,7 @@ public class MvnVersionTest {
     }
 
     @Test
-    public void testMax() {
+    void testMax() {
         final Version v21 = MvnVersion.parse("2.1");
         final Version v22 = MvnVersion.parse("2.2");
         final Version v23 = MvnVersion.parse("2.3");
@@ -332,7 +332,7 @@ public class MvnVersionTest {
 
     @ParameterizedTest
     @MethodSource("orderingProvider")
-    public void testOrdering(final String version1, final Order order, final String version2) {
+    void testOrdering(final String version1, final Order order, final String version2) {
         final Version v1 = MvnVersion.parse(version1);
         final Version v2 = MvnVersion.parse(version2);
 
@@ -364,7 +364,7 @@ public class MvnVersionTest {
 
     @Test
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void testBadCompare() {
+    void testBadCompare() {
         final Version v1 = MvnVersion.parse("1.2.3");
         final Version v2 = new Version() {
             @Override
@@ -433,10 +433,12 @@ public class MvnVersionTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    public void testVersionEvolution(final List<String> sequence) {
-        for (int i = 0; i < sequence.size() - 1; i++) {
-            for (int j = i + 1; j < sequence.size(); j++) {
-                assertThat(MvnVersion.parse(sequence.get(i))).isLessThan(MvnVersion.parse(sequence.get(j)));
+    void testVersionEvolution(final List<String> sequence) {
+        final List<MvnVersion> parsedVersions = sequence.stream().map(MvnVersion::parse).toList();
+
+        for (int i = 0; i < parsedVersions.size() - 1; i++) {
+            for (int j = i + 1; j < parsedVersions.size(); j++) {
+                assertThat(parsedVersions.get(i)).isLessThan(parsedVersions.get(j));
             }
         }
     }
@@ -470,13 +472,13 @@ public class MvnVersionTest {
 
     @ParameterizedTest
     @MethodSource("prereleaseProvider")
-    public void testIsPreRelease(final String versionStr, final boolean prerelease) {
+    void testIsPreRelease(final String versionStr, final boolean prerelease) {
         final Version version = MvnVersion.parse(versionStr);
         assertThat(version.isPreRelease()).isEqualTo(prerelease);
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertThat(MvnVersion.parse("1.0.1+abc")).hasToString("1.0.1+abc");
         assertThat(MvnVersion.parse("   1.0.1+abc  ")).hasToString("1.0.1+abc");
         assertThat(MvnVersion.parse("0")).hasToString("0");
@@ -485,7 +487,7 @@ public class MvnVersionTest {
     }
 
     @Test
-    public void testEquality() {
+    void testEquality() {
         final Version version1 = MvnVersion.parse("1.2.3");
         final Version version2 = MvnVersion.parse("1.2.3");
         final Version version3 = MvnVersion.parse("2.3.4");

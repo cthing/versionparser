@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class ComponentFormatTest {
+class ComponentFormatTest {
 
     static Stream<Arguments> formatProvider() {
         return Stream.of(
@@ -42,7 +42,7 @@ public class ComponentFormatTest {
     }
 
     @Test
-    public void testProperties() {
+    void testProperties() {
         assertThat(ComponentFormat.YY.getCategory()).isEqualTo(ComponentCategory.YEAR);
         assertThat(ComponentFormat.YY.getFormat()).isEqualTo("YY");
         assertThat(ComponentFormat.YY.getRegex()).isEqualTo("([\\d]{1,3})");
@@ -50,12 +50,8 @@ public class ComponentFormatTest {
 
     @ParameterizedTest
     @MethodSource("formatProvider")
-    public void testFrom(final String formatStr, @Nullable final ComponentFormat format) {
+    void testFrom(final String formatStr, @Nullable final ComponentFormat format) {
         final Optional<ComponentFormat> formatOpt = ComponentFormat.from(formatStr);
-        if (format == null) {
-            assertThat(formatOpt).isEmpty();
-        } else {
-            assertThat(formatOpt).contains(format);
-        }
+        assertThat(formatOpt).isEqualTo(Optional.ofNullable(format));
     }
 }

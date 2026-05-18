@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.assertj.core.api.Assertions;
 import org.cthing.versionparser.Version;
 import org.cthing.versionparser.VersionConstraint;
 import org.cthing.versionparser.VersionParsingException;
@@ -26,10 +25,10 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class GemVersionSchemeTest {
+class GemVersionSchemeTest {
 
     @Test
-    public void testParseVersion() throws VersionParsingException {
+    void testParseVersion() throws VersionParsingException {
         assertThat(GemVersionScheme.parseVersion("1.2.3")).isInstanceOf(GemVersion.class).hasToString("1.2.3");
         assertThat(GemVersionScheme.parseVersion("")).isInstanceOf(GemVersion.class).hasToString("");
     }
@@ -47,61 +46,60 @@ public class GemVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("constraintProvider")
-    public void testParseConstraint(final String constraint, final String constraintRep, @Nullable final String minRep,
-                                    @Nullable final String maxRep, final boolean minIncluded,
-                                    final boolean maxIncluded)
+    void testParseConstraint(final String constraint, final String constraintRep, @Nullable final String minRep,
+                             @Nullable final String maxRep, final boolean minIncluded, final boolean maxIncluded)
             throws VersionParsingException {
         final VersionConstraint versionConstraint = GemVersionScheme.parseConstraint(constraint);
         assertThat(versionConstraint).hasToString(constraintRep);
         assertThat(versionConstraint.isWeak()).isFalse();
         final VersionRange versionRange = versionConstraint.getRanges().get(0);
         if (minRep == null) {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).isNull();
+            assertThat(versionRange.getMinVersion()).isNull();
         } else {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString(minRep);
+            assertThat(versionRange.getMinVersion()).hasToString(minRep);
         }
         if (maxRep == null) {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).isNull();
+            assertThat(versionRange.getMaxVersion()).isNull();
         } else {
-            Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
+            assertThat(versionRange.getMaxVersion()).hasToString(maxRep);
         }
         assertThat(versionRange.isMinIncluded()).isEqualTo(minIncluded);
         assertThat(versionRange.isMaxIncluded()).isEqualTo(maxIncluded);
     }
 
     @Test
-    public void testParseEmpty() throws VersionParsingException {
+    void testParseEmpty() throws VersionParsingException {
         final VersionConstraint versionConstraint = GemVersionScheme.parseConstraint();
         assertThat(versionConstraint).hasToString("[0,)");
         assertThat(versionConstraint.isWeak()).isFalse();
         final VersionRange versionRange = versionConstraint.getRanges().get(0);
-        Assertions.<@Nullable Version>assertThat(versionRange.getMinVersion()).hasToString("0");
-        Assertions.<@Nullable Version>assertThat(versionRange.getMaxVersion()).isNull();
+        assertThat(versionRange.getMinVersion()).hasToString("0");
+        assertThat(versionRange.getMaxVersion()).isNull();
         assertThat(versionRange.isMinIncluded()).isTrue();
         assertThat(versionRange.isMaxIncluded()).isFalse();
     }
 
     @Test
-    public void testParseNotEqual() throws VersionParsingException {
+    void testParseNotEqual() throws VersionParsingException {
         final VersionConstraint versionConstraint = GemVersionScheme.parseConstraint("!=1");
         assertThat(versionConstraint).hasToString("(,1),(1,)");
         assertThat(versionConstraint.isWeak()).isFalse();
         final List<VersionRange> ranges = versionConstraint.getRanges();
         assertThat(ranges).hasSize(2);
         final VersionRange versionRange1 = ranges.get(0);
-        Assertions.<@Nullable Version>assertThat(versionRange1.getMinVersion()).isNull();
-        Assertions.<@Nullable Version>assertThat(versionRange1.getMaxVersion()).hasToString("1");
+        assertThat(versionRange1.getMinVersion()).isNull();
+        assertThat(versionRange1.getMaxVersion()).hasToString("1");
         assertThat(versionRange1.isMinIncluded()).isFalse();
         assertThat(versionRange1.isMaxIncluded()).isFalse();
         final VersionRange versionRange2 = ranges.get(1);
-        Assertions.<@Nullable Version>assertThat(versionRange2.getMinVersion()).hasToString("1");
-        Assertions.<@Nullable Version>assertThat(versionRange2.getMaxVersion()).isNull();
+        assertThat(versionRange2.getMinVersion()).hasToString("1");
+        assertThat(versionRange2.getMaxVersion()).isNull();
         assertThat(versionRange2.isMinIncluded()).isFalse();
         assertThat(versionRange2.isMaxIncluded()).isFalse();
     }
 
     @Test
-    public void testParseBad() {
+    void testParseBad() {
         assertThatExceptionOfType(VersionParsingException.class)
                 .isThrownBy(() -> GemVersionScheme.parseConstraint("! 1"));
         assertThatExceptionOfType(VersionParsingException.class)
@@ -245,8 +243,7 @@ public class GemVersionSchemeTest {
 
     @ParameterizedTest
     @MethodSource("allowsProvider")
-    public void testAllows(final ArgumentsAccessor accessor)
-            throws VersionParsingException {
+    void testAllows(final ArgumentsAccessor accessor) throws VersionParsingException {
         final boolean allows = accessor.getBoolean(1);
         final VersionConstraint versionConstraint =
                 GemVersionScheme.parseConstraint(IntStream.range(2, accessor.size())

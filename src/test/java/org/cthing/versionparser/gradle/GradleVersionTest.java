@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
-public class GradleVersionTest {
+class GradleVersionTest {
 
     enum Order {
         LT,
@@ -92,9 +92,8 @@ public class GradleVersionTest {
 
     @ParameterizedTest
     @MethodSource("parsingProvider")
-    public void testParsing(final String versionStr, final String rep, final boolean qualified,
-                            final String baseVersionStr, final List<String> parts,
-                            final List<Long> numericalParts) {
+    void testParsing(final String versionStr, final String rep, final boolean qualified, final String baseVersionStr,
+                     final List<String> parts, final List<Long> numericalParts) {
         final GradleVersion version = GradleVersion.parse(versionStr);
         assertThat(version).hasToString(rep).isInstanceOf(Version.class);
         assertThat(version.getOriginalVersion()).isEqualTo(rep);
@@ -103,6 +102,7 @@ public class GradleVersionTest {
         assertThat(version.getComponents()).isEqualTo(parts);
         assertThat(version.getNumericParts()).isEqualTo(numericalParts);
     }
+
     static Stream<Arguments> orderingProvider() {
         return Stream.of(
                 // Consider snapshot, ga or sp special
@@ -229,7 +229,7 @@ public class GradleVersionTest {
 
     @ParameterizedTest
     @MethodSource("orderingProvider")
-    public void testOrdering(final String version1, final Order order, final String version2) {
+    void testOrdering(final String version1, final Order order, final String version2) {
         final Version v1 = GradleVersion.parse(version1);
         final Version v2 = GradleVersion.parse(version2);
 
@@ -268,7 +268,7 @@ public class GradleVersionTest {
 
     @Test
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void testBadCompare() {
+    void testBadCompare() {
         final Version v1 = GradleVersion.parse("1.2.3");
         final Version v2 = new Version() {
             @Override
@@ -302,33 +302,33 @@ public class GradleVersionTest {
 
     static Stream<Arguments> prereleaseProvider() {
         return Stream.of(
-                Arguments.of("", false),
-                Arguments.of("  ", false),
-                Arguments.of("1", false),
-                Arguments.of("1.2", false),
-                Arguments.of("1.2.3", false),
-                Arguments.of("3.5.1-dev", true),
-                Arguments.of("3.5.1-rc", true),
-                Arguments.of("3.5.1-snapshot", true),
-                Arguments.of("3.5.1-final", false),
-                Arguments.of("3.5.1-FINAL", false),
-                Arguments.of("3.5.1-ga", false),
-                Arguments.of("3.5.1-release", false),
-                Arguments.of("3.5.1-sp", false),
-                Arguments.of("3.5.1-foobar", false),
-                Arguments.of("3.5.1-1689977053", false)
+                arguments("", false),
+                arguments("  ", false),
+                arguments("1", false),
+                arguments("1.2", false),
+                arguments("1.2.3", false),
+                arguments("3.5.1-dev", true),
+                arguments("3.5.1-rc", true),
+                arguments("3.5.1-snapshot", true),
+                arguments("3.5.1-final", false),
+                arguments("3.5.1-FINAL", false),
+                arguments("3.5.1-ga", false),
+                arguments("3.5.1-release", false),
+                arguments("3.5.1-sp", false),
+                arguments("3.5.1-foobar", false),
+                arguments("3.5.1-1689977053", false)
         );
     }
 
     @ParameterizedTest
     @MethodSource("prereleaseProvider")
-    public void testIsPreRelease(final String versionStr, final boolean prerelease) {
+    void testIsPreRelease(final String versionStr, final boolean prerelease) {
         final Version version = GradleVersion.parse(versionStr);
         assertThat(version.isPreRelease()).isEqualTo(prerelease);
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertThat(GradleVersion.parse("1.0.1+abc")).hasToString("1.0.1+abc");
         assertThat(GradleVersion.parse("   1.0.1+abc  ")).hasToString("   1.0.1+abc  ");
         assertThat(GradleVersion.parse("0")).hasToString("0");
@@ -337,7 +337,7 @@ public class GradleVersionTest {
     }
 
     @Test
-    public void testEquality() {
+    void testEquality() {
         final Version version1 = GradleVersion.parse("1.2.3");
         final Version version2 = GradleVersion.parse("1.2.3");
         final Version version3 = GradleVersion.parse("2.3.4");
