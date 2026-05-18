@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+- Support for the Python Packaging Authority version scheme
+
+### Changed
+
+- Unit tests updated to reflect latest JUnit best practices (e.g. test classes and methods
+  are now package scope)
+
 ## [5.1.0] - 2026-02-01
 
 ### Added
