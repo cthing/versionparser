@@ -182,7 +182,7 @@ public final class PypaSpecifier {
          */
         @AccessForTesting
         static String canonicalizeVersion(final PypaVersion version, final boolean stripTrailingZeros) {
-            return stripTrailingZeros ? makeTrimmed(version).toCanonicalString() : version.toCanonicalString();
+            return stripTrailingZeros ? version.toTrimmedVersion().toCanonicalString() : version.toCanonicalString();
         }
 
         /**
@@ -235,66 +235,6 @@ public final class PypaSpecifier {
             result.addAll(split.subList(currentNumericLen, split.size()));
 
             return List.copyOf(result);
-        }
-
-        /**
-         * Creates a public version based on the specified version by removing the local portion.
-         *
-         * @param version Version on which to base the public version
-         * @return Newly created public version. May return the passed in version if it is already public.
-         */
-        @AccessForTesting
-        static PypaVersion makePublic(final PypaVersion version) {
-            return version.replace(PypaVersion.Modifier::withoutLocal);
-        }
-
-        /**
-         * Creates a version that is the earliest prerelease version based on the specified version by
-         * setting the dev portion to 0 and removing the local portion.
-         *
-         * @param version Version on which to base the earliest prerelease version
-         * @return Newly created version. May return the passed in version if it is already the earliest
-         *      public version.
-         */
-        @AccessForTesting
-        static PypaVersion makeEarliestPrerelease(final PypaVersion version) {
-            return version.replace(modifier -> modifier.withDev(0).withoutLocal());
-        }
-
-        /**
-         * Creates a post release base version based on the specified version by removing the post, dev and
-         * local portions.
-         *
-         * @param version Version on which to base the post base version
-         * @return Newly created post base version. May return the passed in version if it is already post base.
-         */
-        @AccessForTesting
-        static PypaVersion makePostBase(final PypaVersion version) {
-            return version.replace(modifier -> modifier.withoutPost().withoutDev().withoutLocal());
-        }
-
-        /**
-         * Creates a trimmed version based on the specified version by removing trailing zeroes.
-         *
-         * @param version Version on which to base the trimmed version
-         * @return Newly created trimmed version. May return the passed in version if it is already trimmed.
-         *      If the version only consists of zeroes, one zero is left.
-         */
-        @AccessForTesting
-        static PypaVersion makeTrimmed(final PypaVersion version) {
-            final List<Integer> release = version.getRelease();
-
-            int i = release.size() - 1;
-            while (i > 0 && release.get(i) == 0) {
-                i--;
-            }
-
-            if (i == release.size() - 1) {
-                return version;
-            }
-
-            final List<Integer> trimmedRelease = release.subList(0, i + 1);
-            return version.replace(modifier -> modifier.withRelease(trimmedRelease));
         }
     }
 
@@ -429,7 +369,7 @@ public final class PypaSpecifier {
             final List<String> versionPartComps = splitVersion(canonicalVersionPart);
 
             // Split the prospect into components
-            final String canonicalProspect = canonicalizeVersion(makePublic(prospect), false);
+            final String canonicalProspect = canonicalizeVersion(prospect.toPublicVersion(), false);
             final List<String> prospectComps = splitVersion(canonicalProspect);
 
             // Ensure the prospect version is of the appropriate length for comparison with the version identifier.
@@ -451,7 +391,7 @@ public final class PypaSpecifier {
             // If the version identifier does not contain a local portion, any local portion on the prospect
             // must be removed before comparison.
             if (this.version.getLocal().isEmpty()) {
-                return makePublic(prospect).compareTo(this.version) == 0;
+                return prospect.toPublicVersion().compareTo(this.version) == 0;
             }
 
             return prospect.compareTo(this.version) == 0;
@@ -552,7 +492,7 @@ public final class PypaSpecifier {
 
         @Override
         public boolean allows(final PypaVersion prospect) {
-            return makePublic(prospect).compareTo(this.version) <= 0;
+            return prospect.toPublicVersion().compareTo(this.version) <= 0;
         }
     }
 
@@ -571,7 +511,7 @@ public final class PypaSpecifier {
         private LessThanSpec(final String versionId) throws VersionParsingException {
             super(OPERATOR, versionId);
 
-            this.earliestVersion = makeEarliestPrerelease(this.version);
+            this.earliestVersion = this.version.toEarliestPrereleaseVersion();
         }
 
         @Override
@@ -604,7 +544,7 @@ public final class PypaSpecifier {
 
         @Override
         public boolean allows(final PypaVersion prospect) {
-            return makePublic(prospect).compareTo(this.version) >= 0;
+            return prospect.toPublicVersion().compareTo(this.version) >= 0;
         }
     }
 
@@ -629,11 +569,11 @@ public final class PypaSpecifier {
             }
 
             if (!this.version.isPostRelease() && prospect.isPostRelease()
-                    && makePostBase(prospect).compareTo(this.version) == 0) {
+                    && prospect.toPostBaseVersion().compareTo(this.version) == 0) {
                 return false;
             }
 
-            return prospect.getLocal().isEmpty() || makePublic(prospect).compareTo(this.version) != 0;
+            return prospect.getLocal().isEmpty() || prospect.toPublicVersion().compareTo(this.version) != 0;
         }
     }
 

@@ -4,12 +4,10 @@
  */
 package org.cthing.versionparser.pypa;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,8 +85,6 @@ public final class PypaVersion extends AbstractVersion {
             (?:\\+(?<local>[a-z0-9](?:[-_.a-z0-9]*[a-z0-9])?))?$\
             """, Pattern.CASE_INSENSITIVE
     );
-    private static final Pattern LOCAL_PATTERN = Pattern.compile("[a-z0-9]+(?:[._-][a-z0-9]+)*",
-                                                                 Pattern.CASE_INSENSITIVE);
     private static final Pattern DOT_DELIMITER_PATTERN = Pattern.compile("\\.");
     private static final Pattern DASH_UNDERSCORE_PATTERN = Pattern.compile("[\\-_]");
     private static final Predicate<String> IS_DIGITS = Pattern.compile("[0-9]+").asMatchPredicate();
@@ -107,255 +103,8 @@ public final class PypaVersion extends AbstractVersion {
     @Nullable
     private final String local;
 
-
-    /**
-     * Provides the capability to copy an existing version object with modifications to its values. This
-     * is used by the {@link #replace(Consumer)} method, which is used by the {@link PypaSpecifier} class.
-     */
-    final class Modifier {
-        private int modEpoch;
-        private List<Integer> modRelease;
-        @Nullable
-        private PrePhase modPrePhase;
-        @Nullable
-        private Integer modPre;
-        @Nullable
-        private Integer modPost;
-        @Nullable
-        private Integer modDev;
-        @Nullable
-        private String modLocal;
-
-        private Modifier() {
-            this.modEpoch = PypaVersion.this.epoch;
-            this.modRelease = List.copyOf(PypaVersion.this.release);
-            this.modPrePhase = PypaVersion.this.prePhase;
-            this.modPre = PypaVersion.this.pre;
-            this.modPost = PypaVersion.this.post;
-            this.modDev = PypaVersion.this.dev;
-            this.modLocal = PypaVersion.this.local;
-        }
-
-        /**
-         * Sets the epoch.
-         *
-         * @param modifiedEpoch new value for the epoch
-         * @return This modifier
-         */
-        Modifier withEpoch(final int modifiedEpoch) {
-            if (modifiedEpoch < 0) {
-                throw new IllegalArgumentException("Epoch cannot be negative");
-            }
-
-            this.modEpoch = modifiedEpoch;
-            return this;
-        }
-
-        /**
-         * Removes the epoch (i.e. sets it to 0).
-         *
-         * @return This modifier
-         */
-        Modifier withoutEpoch() {
-            this.modEpoch = 0;
-            return this;
-        }
-
-        /**
-         * Sets the release values.
-         *
-         * @param modifiedRelease New release values
-         * @return This modifier
-         */
-        Modifier withRelease(final Collection<Integer> modifiedRelease) {
-            if (modifiedRelease.isEmpty()) {
-                throw new IllegalArgumentException("Release cannot be empty");
-            }
-            if (modifiedRelease.stream().anyMatch(v -> v < 0)) {
-                throw new IllegalArgumentException("Release values cannot be negative");
-            }
-
-            this.modRelease = List.copyOf(modifiedRelease);
-            return this;
-        }
-
-        /**
-         * Removes the release numbers (i.e. sets a list with one 0 entry).
-         *
-         * @return This modifier
-         */
-        Modifier withoutRelease() {
-            this.modRelease = List.of(0);
-            return this;
-        }
-
-        /**
-         * Sets the pre phase value.
-         *
-         * @param modifiedPrePhase Pre phase value
-         * @return This modifier
-         */
-        Modifier withPrePhase(final PrePhase modifiedPrePhase) {
-            this.modPrePhase = modifiedPrePhase;
-            return this;
-        }
-
-        /**
-         * Removes the pre phase value.
-         *
-         * @return This modifier
-         */
-        Modifier withoutPrePhase() {
-            this.modPrePhase = null;
-            return this;
-        }
-
-        /**
-         * Sets the pre number.
-         *
-         * @param modifiedPre Pre number
-         * @return This modifier
-         */
-        Modifier withPre(final int modifiedPre) {
-            if (modifiedPre < 0) {
-                throw new IllegalArgumentException("Pre cannot be negative");
-            }
-
-            this.modPre = modifiedPre;
-            return this;
-        }
-
-        /**
-         * Removes the pre number.
-         *
-         * @return This modifier
-         */
-        Modifier withoutPre() {
-            this.modPre = null;
-            return this;
-        }
-
-        /**
-         * Sets the post number.
-         *
-         * @param modifiedPost Post number
-         * @return This modifier
-         */
-        Modifier withPost(final int modifiedPost) {
-            if (modifiedPost < 0) {
-                throw new IllegalArgumentException("Post cannot be negative");
-            }
-
-            this.modPost = modifiedPost;
-            return this;
-        }
-
-        /**
-         * Removes the post number.
-         *
-         * @return This modifier
-         */
-        Modifier withoutPost() {
-            this.modPost = null;
-            return this;
-        }
-
-        /**
-         * Sets the dev number.
-         *
-         * @param modifiedDev Dev number
-         * @return This modifier
-         */
-        Modifier withDev(final int modifiedDev) {
-            if (modifiedDev < 0) {
-                throw new IllegalArgumentException("Dev cannot be negative");
-            }
-
-            this.modDev = modifiedDev;
-            return this;
-        }
-
-        /**
-         * Removes the dev number.
-         *
-         * @return This modifier
-         */
-        Modifier withoutDev() {
-            this.modDev = null;
-            return this;
-        }
-
-        /**
-         * Sets the local value.
-         *
-         * @param modifiedLocal Local value
-         * @return This modifier
-         */
-        Modifier withLocal(final String modifiedLocal) {
-            if (!LOCAL_PATTERN.matcher(modifiedLocal).matches()) {
-                throw new IllegalArgumentException("Invalid local name: " + modifiedLocal);
-            }
-
-            this.modLocal = modifiedLocal;
-            return this;
-        }
-
-        /**
-         * Removes the local value.
-         *
-         * @return This modifier
-         */
-        Modifier withoutLocal() {
-            this.modLocal = null;
-            return this;
-        }
-
-        /**
-         * Creates a new version object with the modified values.
-         *
-         * @return Newly create version object
-         */
-        PypaVersion modify() {
-            return new PypaVersion(toString(), this.modEpoch, this.modRelease, this.modPrePhase, this.modPre,
-                                   this.modPost, this.modDev, this.modLocal);
-        }
-
-        @Override
-        public String toString() {
-            final StringBuilder buffer = new StringBuilder();
-
-            if (this.modEpoch > 0) {
-                buffer.append(this.modEpoch).append('!');
-            }
-
-            final int size = this.modRelease.size();
-            for (int i = 0; i < size; i++) {
-                if (i > 0) {
-                    buffer.append('.');
-                }
-                buffer.append(this.modRelease.get(i));
-            }
-
-            if (this.modPrePhase != null) {
-                buffer.append(this.modPrePhase);
-            }
-            if (this.modPre != null) {
-                buffer.append(this.modPre);
-            }
-            if (this.modPost != null) {
-                buffer.append(".post").append(this.modPost);
-            }
-            if (this.modDev != null) {
-                buffer.append(".dev").append(this.modDev);
-            }
-            if (this.modLocal != null) {
-                buffer.append('+').append(this.modLocal);
-            }
-
-            return buffer.toString();
-        }
-    }
-
+    private final List<Integer> trimmedRelease;
+    private final boolean isTrimmed;
 
     /**
      * Constructs a PyPA version from the specified components.
@@ -382,6 +131,28 @@ public final class PypaVersion extends AbstractVersion {
         this.post = post;
         this.dev = dev;
         this.local = local;
+
+        this.trimmedRelease = trimRelease(this.release);
+        this.isTrimmed = this.release.equals(this.trimmedRelease);
+    }
+
+    /**
+     * Constructs a PyPA version from the specified components.
+     *
+     * @param epoch Version scheme epoch
+     * @param release Release numbers (e.g. major, minor, micro)
+     * @param prePhase Pre-release phase identifier
+     * @param pre Pre-release number
+     * @param post Post-release number
+     * @param dev Development release number
+     * @param local Local label
+     */
+    private PypaVersion(final int epoch, final List<Integer> release,
+                        @Nullable final PrePhase prePhase, @Nullable final Integer pre,
+                        @Nullable final Integer post, @Nullable final Integer dev,
+                        @Nullable final String local) {
+        this(makeCanonicalString(epoch, release, prePhase, pre, post, dev, local),
+             epoch, release, prePhase, pre, post, dev, local);
     }
 
     /**
@@ -392,18 +163,18 @@ public final class PypaVersion extends AbstractVersion {
      * @return Version object
      */
     static PypaVersion parse(final String version) throws VersionParsingException {
-        final String trimmedVersion = version.strip();
+        final String strippedVersion = version.strip();
 
-        if (SIMPLE_VERSION_PATTERN.matcher(trimmedVersion).matches()) {
-            final List<Integer> release = DOT_DELIMITER_PATTERN.splitAsStream(trimmedVersion)
+        if (SIMPLE_VERSION_PATTERN.matcher(strippedVersion).matches()) {
+            final List<Integer> release = DOT_DELIMITER_PATTERN.splitAsStream(strippedVersion)
                                                                .map(Integer::valueOf)
                                                                .toList();
             return new PypaVersion(version, 0, release, null, null, null, null, null);
         }
 
-        final Matcher matcher = COMPLEX_VERSION_PATTERN.matcher(trimmedVersion);
+        final Matcher matcher = COMPLEX_VERSION_PATTERN.matcher(strippedVersion);
         if (!matcher.matches()) {
-            throw new VersionParsingException("Invalid PyPA version: " + trimmedVersion);
+            throw new VersionParsingException("Invalid PyPA version: " + strippedVersion);
         }
 
         final int epoch = matcher.group("epoch") != null ? Integer.parseInt(matcher.group("epoch")) : 0;
@@ -502,6 +273,68 @@ public final class PypaVersion extends AbstractVersion {
         return Optional.ofNullable(this.local);
     }
 
+    /**
+     * Creates this version without the local part.
+     *
+     * @return This version without the local part. May return this version if it does not contain a local part.
+     */
+    PypaVersion toPublicVersion() {
+        if (this.local == null) {
+            return this;
+        }
+
+        return new PypaVersion(this.epoch, this.release, this.prePhase, this.pre, this.post, this.dev, null);
+    }
+
+    /**
+     * If this is a post release version, this method creates its non-post release version. In other words, this
+     * version without post, dev, and local parts. For example:
+     * <pre>
+     *     1.0.post1 -> 1.0
+     *     1.0a1.post0 -> 1.0a1
+     *     1.0.post0.dev1 -> 1.0
+     * </pre>
+     *
+     * @return Base version for a post release version. May return this version if it does not contain post, dev
+     *      and local parts.
+     */
+    PypaVersion toPostBaseVersion() {
+        if (this.post == null && this.dev == null && this.local == null) {
+            return this;
+        }
+
+        return new PypaVersion(this.epoch, this.release, this.prePhase, this.pre, null, null, null);
+    }
+
+    /**
+     * Create the earliest pre-release version based on this version by setting the dev portion to 0 and removing
+     * the local portion.
+     *
+     * @return Earliest pre-release version.
+     */
+    PypaVersion toEarliestPrereleaseVersion() {
+        if (this.dev != null && this.dev == 0 && this.local == null) {
+            return this;
+        }
+
+        return new PypaVersion(this.epoch, this.release, this.prePhase, this.pre, this.post, 0, null);
+    }
+
+    /**
+     * Creates a trimmed version of this version. The trimmed version has trailing zeroes removed from the
+     * version prefix.
+     *
+     * @return Trimmed version. If the version only consists of zeroes, one zero is preserved.
+     */
+    PypaVersion toTrimmedVersion() {
+        if (this.isTrimmed) {
+            return this;
+        }
+
+        return new PypaVersion(this.epoch, this.trimmedRelease, this.prePhase, this.pre, this.post,
+                               this.dev, this.local);
+    }
+
     @Override
     public boolean isPreRelease() {
         return this.dev != null || this.prePhase != null || this.pre != null;
@@ -525,21 +358,6 @@ public final class PypaVersion extends AbstractVersion {
      */
     public boolean isDevRelease() {
         return this.dev != null;
-    }
-
-    /**
-     * Creates a new version object based on this version but with the specified values modified.
-     *
-     * @param modifierProc Passed an instance of the modifier to allow modification of version values
-     * @return Newly created version if values have been changed or the existing version object if
-     *      no changes were made.
-     */
-    public PypaVersion replace(final Consumer<Modifier> modifierProc) {
-        final Modifier modifier = new Modifier();
-        modifierProc.accept(modifier);
-
-        final PypaVersion newVersion = modifier.modify();
-        return this.equals(newVersion) ? this : newVersion;
     }
 
     @Override
@@ -832,39 +650,79 @@ public final class PypaVersion extends AbstractVersion {
     }
 
     /**
+     * Trims the specified release components by removing trailing zeroes.
+     *
+     * @param releaseComps Release components to trim
+     * @return Newly created trimmed component list. May return the passed in component list if it is already trimmed.
+     *      If the list only consists of zeroes, one zero is preserved.
+     */
+    private static List<Integer> trimRelease(final List<Integer> releaseComps) {
+        int i = releaseComps.size() - 1;
+        while (i > 0 && releaseComps.get(i) == 0) {
+            i--;
+        }
+
+        if (i == releaseComps.size() - 1) {
+            return releaseComps;
+        }
+
+        return releaseComps.subList(0, i + 1);
+    }
+
+    /**
      * Creates a canonical representation of the version. All segments and delimiters have been normalized.
      *
      * @return Canonical representation of the version.
      */
     public String toCanonicalString() {
+        return makeCanonicalString(this.epoch, this.release, this.prePhase, this.pre, this.post, this.dev, this.local);
+    }
+
+    /**
+     * Creates a canonical representation of the version.
+     *
+     * @param epoch Version scheme epoch
+     * @param release Release numbers (e.g. major, minor, micro)
+     * @param prePhase Pre-release phase identifier
+     * @param pre Pre-release number
+     * @param post Post-release number
+     * @param dev Development release number
+     * @param local Local label
+     * @return Canonical representation of the version.
+     */
+    @SuppressWarnings("ParameterHidesMemberVariable")
+    public static String makeCanonicalString(final int epoch, final List<Integer> release,
+                                             @Nullable final PrePhase prePhase, @Nullable final Integer pre,
+                                             @Nullable final Integer post, @Nullable final Integer dev,
+                                             @Nullable final String local) {
         final StringBuilder buffer = new StringBuilder();
 
-        if (this.epoch > 0) {
-            buffer.append(this.epoch).append('!');
+        if (epoch > 0) {
+            buffer.append(epoch).append('!');
         }
 
-        final int size = this.release.size();
+        final int size = release.size();
         for (int i = 0; i < size; i++) {
             if (i > 0) {
                 buffer.append('.');
             }
-            buffer.append(this.release.get(i));
+            buffer.append(release.get(i));
         }
 
-        if (this.prePhase != null) {
-            buffer.append(this.prePhase);
+        if (prePhase != null) {
+            buffer.append(prePhase);
         }
-        if (this.pre != null) {
-            buffer.append(this.pre);
+        if (pre != null) {
+            buffer.append(pre);
         }
-        if (this.post != null) {
-            buffer.append(".post").append(this.post);
+        if (post != null) {
+            buffer.append(".post").append(post);
         }
-        if (this.dev != null) {
-            buffer.append(".dev").append(this.dev);
+        if (dev != null) {
+            buffer.append(".dev").append(dev);
         }
-        if (this.local != null) {
-            buffer.append('+').append(this.local);
+        if (local != null) {
+            buffer.append('+').append(local);
         }
 
         return buffer.toString();
