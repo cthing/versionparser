@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.cthing.versionparser.VersionParsingException;
+import org.cthing.versionparser.VersionRange;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -177,5 +179,37 @@ class PypaSpecifierSetTest {
         final PypaSpecifierSet specifier = PypaSpecifierSet.parse(spec);
         assertThat(specifier.allows(version)).isEqualTo(allow);
         assertThat(specifier.allows(PypaVersion.parse(version))).isEqualTo(allow);
+    }
+
+    @Test
+    void testToRanges() throws VersionParsingException {
+        final PypaSpecifierSet specifierSet = PypaSpecifierSet.parse(">=1.2.0, <2.0.0, !=1.5.0");
+
+        final List<VersionRange> ranges = specifierSet.toRanges();
+        assertThat(ranges).hasSize(4);
+
+        // Assert: Range 1 -> >=1.2.0
+        final VersionRange greaterThanOrEqual = ranges.get(0);
+        assertThat(greaterThanOrEqual.isMinIncluded()).isTrue();
+        assertThat(greaterThanOrEqual.getMinVersion()).hasToString("1.2.0");
+        assertThat(greaterThanOrEqual.getMaxVersion()).isNull();
+
+        // Assert: Range 2 -> <2.0.0
+        final VersionRange lessThan = ranges.get(1);
+        assertThat(lessThan.getMinVersion()).isNull();
+        assertThat(lessThan.isMaxIncluded()).isFalse();
+        assertThat(lessThan.getMaxVersion()).hasToString("2.0.0.dev0");
+
+        // Assert: Range 3 -> !=1.5.0 (Lower Split: <1.5.0)
+        final VersionRange notEqualLower = ranges.get(2);
+        assertThat(notEqualLower.getMinVersion()).isNull();
+        assertThat(notEqualLower.isMaxIncluded()).isFalse();
+        assertThat(notEqualLower.getMaxVersion()).hasToString("1.5.0");
+
+        // Assert: Range 4 -> !=1.5.0 (Upper Split: >1.5.0)
+        final VersionRange notEqualUpper = ranges.get(3);
+        assertThat(notEqualUpper.isMinIncluded()).isFalse();
+        assertThat(notEqualUpper.getMinVersion()).hasToString("1.5");
+        assertThat(notEqualUpper.getMaxVersion()).isNull();
     }
 }

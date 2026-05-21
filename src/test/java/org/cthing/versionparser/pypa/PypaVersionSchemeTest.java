@@ -21,4 +21,9 @@ class PypaVersionSchemeTest {
     void testParseSpecifier() throws VersionParsingException {
         assertThat(PypaVersionScheme.parseSpecifier(">1.0,<2.0")).hasToString(">1.0,<2.0");
     }
+
+    @Test
+    void testParseConstraint() throws VersionParsingException {
+        assertThat(PypaVersionScheme.parseConstraint(">1.0,<2.0")).hasToString("(,2.0.dev0),(1,)");
+    }
 }

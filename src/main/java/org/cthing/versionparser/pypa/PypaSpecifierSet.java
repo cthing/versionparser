@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.cthing.annotations.AccessForTesting;
 import org.cthing.versionparser.VersionParsingException;
+import org.cthing.versionparser.VersionRange;
 
 
 /**
@@ -88,6 +89,23 @@ public final class PypaSpecifierSet {
             }
         }
         return true;
+    }
+
+    /**
+     * Creates version ranges to represent the specifier set.
+     *
+     * @return Version ranges to represent the specifier set.
+     * @throws UnsupportedOperationException if this method is called on a {@code ===V} specifier. The
+     *      arbitrary equality specifier cannot be represented as a version range. Use the
+     *      {@link #allows(String)} method.
+     */
+    @SuppressWarnings("Convert2streamapi")
+    public List<VersionRange> toRanges() {
+        final List<VersionRange> ranges = new ArrayList<>();
+        for (PypaSpecifier spec : this.specifiers) {
+            ranges.addAll(spec.toRanges());
+        }
+        return Collections.unmodifiableList(ranges);
     }
 
     @Override

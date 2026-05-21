@@ -5,15 +5,16 @@
 package org.cthing.versionparser.pypa;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.cthing.annotations.AccessForTesting;
 import org.cthing.versionparser.VersionParsingException;
+import org.cthing.versionparser.VersionRange;
 
 
 /**
@@ -68,6 +69,16 @@ public final class PypaSpecifier {
          * @return Canonical representation of the specifier
          */
         String toCanonicalString();
+
+        /**
+         * Creates version range(s) to represent the specifier.
+         *
+         * @return Version range(s) to represent the specifier.
+         * @throws UnsupportedOperationException if this method is called on {@link ArbitraryEqualSpec}. The
+         *      arbitrary equality specifier cannot be represented as a version range. Use the
+         *      {@link ArbitraryEqualSpec#allows(String)} method.
+         */
+        List<VersionRange> toRanges();
     }
 
 
@@ -236,6 +247,26 @@ public final class PypaSpecifier {
 
             return List.copyOf(result);
         }
+
+        /**
+         * Increments the last release component of the specified version.
+         *
+         * @param version Version whose last release component is to be incremented
+         * @return New incremented release components
+         */
+        @AccessForTesting
+        static List<Integer> incrementRelease(final PypaVersion version) {
+            final List<Integer> release = version.getRelease();
+            if (release.isEmpty()) {
+                return release;
+            }
+
+            final List<Integer> nextRelease = new ArrayList<>(release);
+            final int lastIndex = nextRelease.size() - 1;
+            nextRelease.set(lastIndex, nextRelease.get(lastIndex) + 1);
+
+            return Collections.unmodifiableList(nextRelease);
+        }
     }
 
 
@@ -266,6 +297,11 @@ public final class PypaSpecifier {
         public String toCanonicalString() {
             return toString();
         }
+
+        @Override
+        public List<VersionRange> toRanges() {
+            throw new UnsupportedOperationException("Cannot represent the '===V' specifier as a version range");
+        }
     }
 
 
@@ -278,6 +314,7 @@ public final class PypaSpecifier {
 
         static final String OPERATOR = "~=";
 
+        private final PypaVersion version;
         private final String canonicalVersion;
         private final GreaterThanEqualSpec geOperator;
         private final EqualSpec eqOperator;
@@ -285,7 +322,8 @@ public final class PypaSpecifier {
         private CompatibleSpec(final String versionId) throws VersionParsingException {
             super(OPERATOR, versionId);
 
-            this.canonicalVersion = canonicalizeVersion(PypaVersion.parse(versionId), false);
+            this.version = PypaVersion.parse(versionId);
+            this.canonicalVersion = canonicalizeVersion(this.version, false);
             this.geOperator = new GreaterThanEqualSpec(this.versionId);
             this.eqOperator = makeEqualSpecifier();
         }
@@ -298,11 +336,17 @@ public final class PypaSpecifier {
          * @return Newly constructed equal specifier
          * @throws VersionParsingException if there was a problem constructing the specifier
          */
+        @SuppressWarnings("Convert2streamapi")
         private EqualSpec makeEqualSpecifier() throws VersionParsingException {
             final List<String> versionComps = splitVersion(this.versionId);
-            final List<String> releaseComps = versionComps.stream()
-                                                          .takeWhile(IS_DIGITS)
-                                                          .collect(Collectors.toCollection(ArrayList::new));
+
+            final List<String> releaseComps = new ArrayList<>(versionComps.size());
+            for (String comp : versionComps) {
+                if (!IS_DIGITS.test(comp)) {
+                    break;
+                }
+                releaseComps.add(comp);
+            }
             assert !releaseComps.isEmpty();
             releaseComps.remove(releaseComps.size() - 1);
 
@@ -324,6 +368,30 @@ public final class PypaSpecifier {
         public String toCanonicalString() {
             return this.operator + this.canonicalVersion;
         }
+
+        @Override
+        public List<VersionRange> toRanges() {
+            final List<Integer> release = this.version.getRelease();
+            final int size = release.size();
+
+            final List<Integer> nextRelease;
+            if (size <= 1) {
+                nextRelease = List.of();
+            } else {
+                nextRelease = new ArrayList<>(release.subList(0, size - 1));
+                final int lastIndex = nextRelease.size() - 1;
+                nextRelease.set(lastIndex, nextRelease.get(lastIndex) + 1);
+            }
+
+            final PypaVersion maxVersion = this.version.replace(mod -> mod.withRelease(nextRelease)
+                                                                          .withoutPrePhase()
+                                                                          .withoutPre()
+                                                                          .withoutPost()
+                                                                          .withDev(0)
+                                                                          .withoutLocal());
+
+            return List.of(new VersionRange(this.version, maxVersion, true, false));
+        }
     }
 
 
@@ -332,8 +400,11 @@ public final class PypaSpecifier {
      */
     private abstract static class AbstractEqualitySpec extends AbstractSpec {
 
-        private final boolean hasWildcard;
-        private final PypaVersion version;
+        protected final boolean hasWildcard;
+        protected final PypaVersion version;
+        protected final PypaVersion baseDevVersion;
+        protected final PypaVersion nextVersion;
+
         private final String canonicalVersion;
 
         private AbstractEqualitySpec(final String operator, final String versionId) throws VersionParsingException {
@@ -349,6 +420,13 @@ public final class PypaSpecifier {
                 this.version = PypaVersion.parse(this.versionId);
                 this.canonicalVersion = canonicalizeVersion(this.version, true);
             }
+
+            this.baseDevVersion = this.version.replace(mod -> mod.withoutPrePhase()
+                                                                 .withoutPre()
+                                                                 .withoutPost()
+                                                                 .withDev(0)
+                                                                 .withoutLocal());
+            this.nextVersion = this.baseDevVersion.replace(mod -> mod.withRelease(incrementRelease(this.version)));
         }
 
         @Override
@@ -421,6 +499,20 @@ public final class PypaSpecifier {
         public boolean allows(final String prospect) throws VersionParsingException {
             return allows(PypaVersion.parse(prospect));
         }
+
+        @Override
+        public List<VersionRange> toRanges() {
+            if (this.hasWildcard) {
+                return List.of(new VersionRange(this.baseDevVersion, this.nextVersion, true, false));
+            }
+
+            if (this.version.getLocal().isEmpty()) {
+                final PypaVersion maxVersion = this.version.toBoundaryVersion(PypaVersion.BoundaryType.AfterLocals);
+                return List.of(new VersionRange(this.version, maxVersion, true, true));
+            }
+
+            return List.of(new VersionRange(this.version));
+        }
     }
 
 
@@ -445,6 +537,23 @@ public final class PypaSpecifier {
         @Override
         public boolean allows(final String prospect) throws VersionParsingException {
             return !super.allows(PypaVersion.parse(prospect));
+        }
+
+        @Override
+        public List<VersionRange> toRanges() {
+            if (this.hasWildcard) {
+                return List.of(new VersionRange(null, this.baseDevVersion, false, false),
+                               new VersionRange(this.nextVersion, null, true, false));
+            }
+
+            if (this.version.getLocal().isEmpty()) {
+                final PypaVersion maxVersion = this.version.toBoundaryVersion(PypaVersion.BoundaryType.AfterLocals);
+                return List.of(new VersionRange(null, this.version, false, false),
+                               new VersionRange(maxVersion, null, false, false));
+            }
+
+            return List.of(new VersionRange(null, this.version, false, false),
+                           new VersionRange(this.version, null, false, false));
         }
     }
 
@@ -494,6 +603,12 @@ public final class PypaSpecifier {
         public boolean allows(final PypaVersion prospect) {
             return prospect.toPublicVersion().compareTo(this.version) <= 0;
         }
+
+        @Override
+        public List<VersionRange> toRanges() {
+            final PypaVersion maxVersion = this.version.toBoundaryVersion(PypaVersion.BoundaryType.AfterLocals);
+            return List.of(new VersionRange(null, maxVersion, false, true));
+        }
     }
 
 
@@ -506,12 +621,21 @@ public final class PypaSpecifier {
 
         static final String OPERATOR = "<";
 
+        static final PypaVersion MIN_VERSION;
+        static {
+            try {
+                MIN_VERSION = PypaVersion.parse("0.dev0");
+            } catch (final VersionParsingException ex) {
+                throw new IllegalStateException("Unable to parse version 0.dev0", ex);
+            }
+        }
+
         private final PypaVersion earliestVersion;
 
         private LessThanSpec(final String versionId) throws VersionParsingException {
             super(OPERATOR, versionId);
 
-            this.earliestVersion = this.version.toEarliestPrereleaseVersion();
+            this.earliestVersion = this.version.replace(mod -> mod.withDev(0).withoutLocal());
         }
 
         @Override
@@ -525,6 +649,24 @@ public final class PypaSpecifier {
             }
 
             return true;
+        }
+
+        @Override
+        public List<VersionRange> toRanges() {
+            // <V excludes pre-releases of V when V is not a pre-release. V.dev0 is the earliest pre-release of V.
+            final PypaVersion maxVersion;
+
+            if (this.version.isPreRelease()) {
+                maxVersion = this.version;
+            } else {
+                maxVersion = this.version.replace(mod -> mod.withDev(0).withoutLocal());
+            }
+
+            if (maxVersion.compareTo(MIN_VERSION) <= 0) {
+                return List.of();
+            }
+
+            return List.of(new VersionRange(null, maxVersion, false, false));
         }
     }
 
@@ -545,6 +687,11 @@ public final class PypaSpecifier {
         @Override
         public boolean allows(final PypaVersion prospect) {
             return prospect.toPublicVersion().compareTo(this.version) >= 0;
+        }
+
+        @Override
+        public List<VersionRange> toRanges() {
+            return List.of(new VersionRange(this.version, null, true, false));
         }
     }
 
@@ -568,12 +715,40 @@ public final class PypaSpecifier {
                 return false;
             }
 
-            if (!this.version.isPostRelease() && prospect.isPostRelease()
-                    && prospect.toPostBaseVersion().compareTo(this.version) == 0) {
-                return false;
+            if (!this.version.isPostRelease() && prospect.isPostRelease()) {
+                final PypaVersion postBaseVesion = prospect.replace(mod -> mod.withoutPost()
+                                                                              .withoutDev()
+                                                                              .withoutLocal());
+                if (postBaseVesion.compareTo(this.version) == 0) {
+                    return false;
+                }
             }
 
             return prospect.getLocal().isEmpty() || prospect.toPublicVersion().compareTo(this.version) != 0;
+        }
+
+        @Override
+        public List<VersionRange> toRanges() {
+            if (this.version.getDev().isPresent()) {
+                // >V.devN: dev versions have no post-releases, so the
+                final int nextDev = this.version.getDev().get() + 1;
+                final PypaVersion minVersion = this.version.replace(mod -> mod.withDev(nextDev)
+                                                                              .withoutLocal());
+                return List.of(new VersionRange(minVersion, null, true, false));
+            }
+
+            if (this.version.getPost().isPresent()) {
+                // >V.postN: next real version is V.post(N+1).dev0.
+                final int nextPost = this.version.getPost().get() + 1;
+                final PypaVersion minVersion = this.version.replace(mod -> mod.withPost(nextPost)
+                                                                              .withDev(0)
+                                                                              .withoutLocal());
+                return List.of(new VersionRange(minVersion, null, true, false));
+            }
+
+            // >V (final or pre-release V): exclude V itself, V+local, and every V.postN per PEP 440.
+            final PypaVersion minVersion = this.version.toBoundaryVersion(PypaVersion.BoundaryType.AfterPosts);
+            return List.of(new VersionRange(minVersion, null, false, false));
         }
     }
 
@@ -712,6 +887,19 @@ public final class PypaSpecifier {
      */
     boolean allows(final String version) throws VersionParsingException {
         return this.spec.allows(version);
+    }
+
+    /**
+     * Creates version range(s) to represent the specifier.
+     *
+     * @return Version range(s) to represent the specifier.
+     * @throws UnsupportedOperationException if this method is called on a {@code ===V} specifier. The
+     *      arbitrary equality specifier cannot be represented as a version range. Use the
+     *      {@link #allows(String)} method.
+     */
+    @AccessForTesting
+    List<VersionRange> toRanges() {
+        return this.spec.toRanges();
     }
 
     @Override

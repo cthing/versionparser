@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.cthing.versionparser.VersionParsingException;
+import org.cthing.versionparser.VersionRange;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.cthing.versionparser.pypa.PypaVersion.BoundaryType;
 
 
 class PypaSpecifierTest {
@@ -667,5 +669,286 @@ class PypaSpecifierTest {
     @MethodSource("joinVersionProvider")
     void testJoinVersion(final List<String> components, final String expected) {
         assertThat(PypaSpecifier.AbstractSpec.joinVersion(components)).isEqualTo(expected);
+    }
+
+    @Nested
+    @DisplayName("toRanges")
+    class ToRangesTest {
+
+        @Test
+        @DisplayName("=== operator should throw UnsupportedOperationException")
+        void testArbitraryEqualityThrowsException() throws VersionParsingException {
+            final PypaSpecifier specifier = PypaSpecifier.parse("===1.2.0");
+
+            assertThatThrownBy(specifier::toRanges)
+                    .isInstanceOf(UnsupportedOperationException.class)
+                    .hasMessageContaining("Cannot represent the '===V' specifier as a version range");
+        }
+
+        @Nested
+        @DisplayName("Wildcard Operators (.*)")
+        class WildcardTests {
+
+            @Test
+            @DisplayName("==1.2.* should map to [1.2.dev0, 1.3.dev0)")
+            void testWildcardEquals() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("==1.2.*").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+
+                // Lower Bound: [1.2.dev0
+                assertThat(range.isMinIncluded()).isTrue();
+                assertThat(range.getMinVersion()).isNotNull().hasToString("1.2.dev0");
+                assertThat(((PypaVersion)range.getMinVersion()).getBoundaryType()).isEqualTo(BoundaryType.None);
+
+                // Upper Bound: 1.3.dev0)
+                assertThat(range.isMaxIncluded()).isFalse();
+                assertThat(range.getMaxVersion()).isNotNull().hasToString("1.3.dev0");
+                assertThat(((PypaVersion)range.getMinVersion()).getBoundaryType()).isEqualTo(BoundaryType.None);
+            }
+
+            @Test
+            @DisplayName("!=1.2.* should map to (-INF, 1.2.dev0) and [1.3.dev0, +INF)")
+            void testWildcardNotEquals() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("!=1.2.*").toRanges();
+                assertThat(ranges).hasSize(2);
+
+                // Range 1: (-INF, 1.2.dev0)
+                final VersionRange r1 = ranges.get(0);
+                assertThat(r1.isMinIncluded()).isFalse();
+                assertThat(r1.getMinVersion()).isNull();
+                assertThat(r1.isMaxIncluded()).isFalse();
+                assertThat(r1.getMaxVersion()).hasToString("1.2.dev0");
+
+                // Range 2: [1.3.dev0, +INF)
+                final VersionRange r2 = ranges.get(1);
+                assertThat(r2.isMinIncluded()).isTrue();
+                assertThat(r2.getMinVersion()).hasToString("1.3.dev0");
+                assertThat(r2.isMaxIncluded()).isFalse();
+                assertThat(r2.getMaxVersion()).isNull();
+            }
+        }
+
+        @Nested
+        @DisplayName("Greater Than or Equal (>=) and Less Than or Equal (<=)")
+        class InequalityWithEqualsTests {
+
+            @Test
+            @DisplayName(">=1.2.3 should map to [1.2.3, +INF)")
+            void testGreaterThanOrEqual() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse(">=1.2.3").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isTrue();
+                assertThat(range.getMinVersion()).hasToString("1.2.3");
+                assertThat(range.isMaxIncluded()).isFalse();
+                assertThat(range.getMaxVersion()).isNull();
+            }
+
+            @Test
+            @DisplayName("<=1.2.3 should map to (-INF, AfterLocals(1.2.3)]")
+            void testLessThanOrEqual() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("<=1.2.3").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isFalse();
+                assertThat(range.getMinVersion()).isNull();
+                assertThat(range.isMaxIncluded()).isTrue();
+                assertThat(range.getMaxVersion()).isNotNull().hasToString("1.2.3");
+                assertThat(((PypaVersion)range.getMaxVersion()).getBoundaryType()).isEqualTo(BoundaryType.AfterLocals);
+            }
+        }
+
+        @Nested
+        @DisplayName("Greater Than (>)")
+        class GreaterThanTests {
+
+            @Test
+            @DisplayName(">1.2.3 (Final release) should map to (AfterPosts(1.2.3), +INF)")
+            void testGreaterThanFinal() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse(">1.2.3").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isFalse();
+                assertThat(range.getMinVersion()).isNotNull().hasToString("1.2.3");
+                assertThat(((PypaVersion)range.getMinVersion()).getBoundaryType()).isEqualTo(BoundaryType.AfterPosts);
+                assertThat(range.isMaxIncluded()).isFalse();
+                assertThat(range.getMaxVersion()).isNull();
+            }
+
+            @Test
+            @DisplayName(">1.2.3.dev1 (Dev release) should map to [1.2.3.dev2, +INF)")
+            void testGreaterThanDev() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse(">1.2.3.dev1").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isTrue();
+                assertThat(range.getMinVersion()).isNotNull().hasToString("1.2.3.dev2");
+                assertThat(((PypaVersion)range.getMinVersion()).getBoundaryType()).isEqualTo(BoundaryType.None);
+                assertThat(range.isMaxIncluded()).isFalse();
+                assertThat(range.getMaxVersion()).isNull();
+            }
+
+            @Test
+            @DisplayName(">1.2.3.post1 (Post release) should map to [1.2.3.post2.dev0, +INF)")
+            void testGreaterThanPost() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse(">1.2.3.post1").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isTrue();
+                assertThat(range.getMinVersion()).isNotNull().hasToString("1.2.3.post2.dev0");
+                assertThat(((PypaVersion)range.getMinVersion()).getBoundaryType()).isEqualTo(BoundaryType.None);
+                assertThat(range.isMaxIncluded()).isFalse();
+                assertThat(range.getMaxVersion()).isNull();
+            }
+        }
+
+        @Nested
+        @DisplayName("Less Than (<)")
+        class LessThanTests {
+
+            @Test
+            @DisplayName("<1.2.3 (Final release) should map to (-INF, 1.2.3.dev0)")
+            void testLessThanFinal() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("<1.2.3").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isFalse();
+                assertThat(range.getMinVersion()).isNull();
+                assertThat(range.isMaxIncluded()).isFalse();
+                assertThat(range.getMaxVersion()).hasToString("1.2.3.dev0");
+            }
+
+            @Test
+            @DisplayName("<1.2.3a1 (Pre-release) should map to (-INF, 1.2.3a1)")
+            void testLessThanPrerelease() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("<1.2.3a1").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isFalse();
+                assertThat(range.getMinVersion()).isNull();
+                assertThat(range.isMaxIncluded()).isFalse();
+                assertThat(range.getMaxVersion()).hasToString("1.2.3a1");
+            }
+
+            @Test
+            @DisplayName("<0.0.dev0 should produce an empty range list if it hits absolute minimum")
+            void testLessThanAbsoluteMinimum() throws VersionParsingException {
+                // Assuming 0.0.dev0 or your system's _MIN_VERSION evaluates bound <= _MIN_VERSION
+                final List<VersionRange> ranges = PypaSpecifier.parse("<0.0.dev0").toRanges();
+                assertThat(ranges).isEmpty();
+            }
+        }
+
+        @Nested
+        @DisplayName("Exact Match (==) and Exclusion (!=)")
+        class EqualityTests {
+
+            @Test
+            @DisplayName("==1.2.3 (No Local) should map to [1.2.3, AfterLocals(1.2.3)]")
+            void testEqualsNoLocal() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("==1.2.3").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isTrue();
+                assertThat(range.getMinVersion()).hasToString("1.2.3");
+                assertThat(range.isMaxIncluded()).isTrue();
+                assertThat(range.getMaxVersion()).isNotNull().hasToString("1.2.3");
+                assertThat(((PypaVersion)range.getMaxVersion()).getBoundaryType()).isEqualTo(BoundaryType.AfterLocals);
+            }
+
+            @Test
+            @DisplayName("==1.2.3+local (With Local) should map to [1.2.3+local, 1.2.3+local]")
+            void testEqualsWithLocal() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("==1.2.3+local").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isTrue();
+                assertThat(range.getMinVersion()).hasToString("1.2.3+local");
+                assertThat(range.isMaxIncluded()).isTrue();
+                assertThat(range.getMaxVersion()).isNotNull().hasToString("1.2.3+local");
+                assertThat(((PypaVersion)range.getMaxVersion()).getBoundaryType()).isEqualTo(BoundaryType.None);
+            }
+
+            @Test
+            @DisplayName("!=1.2.3 (No Local) should map to (-INF, 1.2.3) and (AfterLocals(1.2.3), +INF)")
+            void testNotEqualsNoLocal() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("!=1.2.3").toRanges();
+                assertThat(ranges).hasSize(2);
+
+                final VersionRange r1 = ranges.get(0);
+                assertThat(r1.isMaxIncluded()).isFalse();
+                assertThat(r1.getMinVersion()).isNull();
+                assertThat(r1.isMaxIncluded()).isFalse();
+                assertThat(r1.getMaxVersion()).hasToString("1.2.3");
+
+                final VersionRange r2 = ranges.get(1);
+                assertThat(r2.isMinIncluded()).isFalse();
+                assertThat(r2.getMinVersion()).isNotNull();
+                assertThat(((PypaVersion)r2.getMinVersion()).getBoundaryType()).isEqualTo(BoundaryType.AfterLocals);
+                assertThat(r2.isMaxIncluded()).isFalse();
+                assertThat(r2.getMaxVersion()).isNull();
+            }
+
+            @Test
+            @DisplayName("!=1.2.3+local (With Local) should map to (-INF, 1.2.3+local) and (1.2.3+local, +INF)")
+            void testNotEqualsWithLocal() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("!=1.2.3+local").toRanges();
+                assertThat(ranges).hasSize(2);
+
+                final VersionRange r1 = ranges.get(0);
+                assertThat(r1.isMinIncluded()).isFalse();
+                assertThat(r1.getMinVersion()).isNull();
+                assertThat(r1.isMaxIncluded()).isFalse();
+                assertThat(r1.getMaxVersion()).hasToString("1.2.3+local");
+
+                final VersionRange r2 = ranges.get(1);
+                assertThat(r2.isMinIncluded()).isFalse();
+                assertThat(r2.getMinVersion()).hasToString("1.2.3+local");
+                assertThat(r2.isMaxIncluded()).isFalse();
+                assertThat(r2.getMaxVersion()).isNull();
+            }
+        }
+
+        @Nested
+        @DisplayName("Compatible Match (~=)")
+        class CompatibleTests {
+
+            @Test
+            @DisplayName("~=1.2.3 should map to [1.2.3, 1.3.dev0)")
+            void testCompatibleThreeSegments() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("~=1.2.3").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isTrue();
+                assertThat(range.getMinVersion()).hasToString("1.2.3");
+                assertThat(range.isMaxIncluded()).isFalse();
+                assertThat(range.getMaxVersion()).hasToString("1.3.dev0");
+            }
+
+            @Test
+            @DisplayName("~=2.2 should map to [2.2, 3.dev0)")
+            void testCompatibleTwoSegments() throws VersionParsingException {
+                final List<VersionRange> ranges = PypaSpecifier.parse("~=2.2").toRanges();
+                assertThat(ranges).hasSize(1);
+
+                final VersionRange range = ranges.get(0);
+                assertThat(range.isMinIncluded()).isTrue();
+                assertThat(range.getMinVersion()).hasToString("2.2");
+                assertThat(range.isMaxIncluded()).isFalse();
+                assertThat(range.getMaxVersion()).hasToString("3.dev0");
+            }
+        }
     }
 }
