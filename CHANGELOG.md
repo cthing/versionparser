@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support for the Python Packaging Authority version scheme
+- Support for the Python Packaging Authority [version scheme](https://packaging.python.org/en/latest/specifications/version-specifiers/#version-specifiers)
 
 ### Changed
 

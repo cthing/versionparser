@@ -37,6 +37,7 @@ listOf("CalVerExample",
        "JavaVersionExample",
        "MavenExample",
        "NpmExample",
+       "PypaExample",
        "RubyGemsExample").forEach { example ->
     tasks.register("run$example", JavaExec::class) {
         group = "Example"
