@@ -22,7 +22,7 @@ public final class PypaVersionScheme {
     }
 
     /**
-     * Parses the specified version string into a PyPA version object.
+     * Parses the specified PyPA version string into a version object.
      *
      * @param version Version string to parse
      * @return PyPA version
@@ -33,7 +33,7 @@ public final class PypaVersionScheme {
     }
 
     /**
-     * Parses the specified version specifier into a PyPA specifier set object.
+     * Parses the specified PyPA version specifier into a specifier set object.
      *
      * @param specifier Specifier to parse. Multiple specifiers are separated by commas.
      * @return PyPA specifier set
@@ -44,7 +44,9 @@ public final class PypaVersionScheme {
     }
 
     /**
-     * Parses the specified PyPA version specifier into a version constraint.
+     * Parses the specified PyPA version specifier into a version constraint. Note that the {@code ===V} specifier
+     * cannot be represented by a version constraint. Use {@link #parseSpecifier(String)}, which can accommodate
+     * all version specifiers.
      *
      * @param specifier Specifier to parse. Multiple specifiers are separated by commas.
      * @return Version constraint
