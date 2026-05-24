@@ -4,21 +4,23 @@
 [![Maven Central Version](https://img.shields.io/maven-central/v/org.cthing/versionparser)](https://central.sonatype.com/artifact/org.cthing/versionparser)
 [![javadoc](https://javadoc.io/badge2/org.cthing/versionparser/javadoc.svg)](https://javadoc.io/doc/org.cthing/versionparser)
 
-A Java library for parsing and working with versions and version constraints. Versions and  constraints can be
-expressed in a number of common formats. The parsed versions can be queried for their components and are ordered.
-Operations on parsed constraints include testing whether a given version satisfies the constraint and set operations
-such as intersection and union.
+A Java library for parsing and working with versions and version constraints. Features include:
+
+* Support for many common version and constraint schemes
+* Version ordering
+* Access to version components
+* Version constraint operations (e.g. membership, intersection)
 
 The following version and version constraint schemes are supported:
 
-* [Maven](https://maven.apache.org/)
+* [Calendar Versioning](https://calver.org/)
+* [Debian Package Versioning](https://www.debian.org/doc/debian-policy/ch-controlfields.html#version)
 * [Gradle](https://gradle.org/)
 * [Java](https://www.java.com/releases/)
+* [Maven](https://maven.apache.org/)
 * [NPM](https://www.npmjs.com/)
 * [RubyGems](https://rubygems.org/)
 * [Semantic Versioning](https://semver.org/)
-* [Calendar Versioning](https://calver.org/)
-* [Debian Package Versioning](https://www.debian.org/doc/debian-policy/ch-controlfields.html#version)
 
 ## Usage
 See the [examples folder](examples) for complete working code demonstrating the usage of this library. The
@@ -323,7 +325,7 @@ assertThat(component1.getCategory()).isEqualTo(ComponentCategory.YEAR);
 assertThat(version2.compareTo(version3)).isEqualTo(-1);
 ```
 
-### Debian Packageg Versioning
+### Debian Package Versioning
 Support is provided for parsing Debian package versions and version constraints.
 
 ```java
