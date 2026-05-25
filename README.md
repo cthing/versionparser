@@ -4,24 +4,24 @@
 [![Maven Central Version](https://img.shields.io/maven-central/v/org.cthing/versionparser)](https://central.sonatype.com/artifact/org.cthing/versionparser)
 [![javadoc](https://javadoc.io/badge2/org.cthing/versionparser/javadoc.svg)](https://javadoc.io/doc/org.cthing/versionparser)
 
-A Java library for parsing and working with versions and version constraints. Features include:
+A Java library for parsing and working with versioning schemes. Features include:
 
-* Support for many common version and constraint schemes
+* Support for many common versioning schemes
 * Version ordering
 * Access to version components
 * Version constraint operations (e.g. membership, intersection)
 
-The following version and version constraint schemes are supported:
+The following versioning schemes are supported:
 
-* [Calendar Versioning](https://calver.org/)
-* [Debian Package Versioning](https://www.debian.org/doc/debian-policy/ch-controlfields.html#version)
-* [Gradle](https://gradle.org/)
-* [Java](https://www.java.com/releases/)
-* [Maven](https://maven.apache.org/)
-* [NPM](https://www.npmjs.com/)
-* [PyPA](https://packaging.python.org/en/latest/specifications/version-specifiers/#version-specifiers)
-* [RubyGems](https://rubygems.org/)
-* [Semantic Versioning](https://semver.org/)
+* [Calendar](#calendar-versioning)
+* [Debian Package](#debian-package-versioning)
+* [Gradle Dependency](#gradle-versioning)
+* [Java Language](#java-versioning)
+* [Maven Dependency](#maven-versioning)
+* [NPM Package](#npm-versioning)
+* [Python Packaging Authority](#python-packaging-authority-versioning)
+* [RubyGems](#rubygems-versioning)
+* [Semantic](#semantic-versioning)
 
 ## Usage
 See the [examples folder](examples) for complete working code demonstrating the usage of this library. The
@@ -41,20 +41,23 @@ implementation("org.cthing:versionparser:5.2.0")
 
 ### Versioning Overview
 
-| Scheme   | Version Factory                                   | Version Constraint Factory                                                                |
-|----------|---------------------------------------------------|-------------------------------------------------------------------------------------------|
-| Calendar | `CalendarVersionScheme.parse(String)`<sup>1</sup> | N/A                                                                                       |
-| Debian   | `DebVersionScheme.parseVersion(String)`           | `DebVersionScheme.parseConstraint(String)`                                                |
-| Gradle   | `GradleVersionScheme.parseVersion(String)`        | `GradleVersionScheme.parseConstraint(String)`                                             |                           
-| Java     | `JavaVersionScheme.parseVersion(String)`          | `JavaVersionScheme.parseRange(String)`                                                    |                           
-| Maven    | `MvnVersionScheme.parseVersion(String)`           | `MvnVersionScheme.parseConstraint(String)`                                                |                           
-| Npm      | `NpmVersionScheme.parseVersion(String)`           | `NpmVersionScheme.parseConstraint(String)`                                                |                           
-| PyPA     | `PypaVersionScheme.parseVersion(String)`          | `PypaVersionScheme.parseSpecifier(String)`<br>`PypaVersionScheme.parseConstraint(String)` |                           
-| RubyGems | `GemVersionScheme.parseVersion(String)`           | `GemVersionScheme.parseConstraint(String)`                                                |                           
-| Semantic | `SemanticVersion.parseVersion(String)`            | N/A                                                                                       |                           
+| Scheme   | Version Factory                                   | Version Constraint Factory                                                                            |
+|----------|---------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| Calendar | `CalendarVersionScheme.parse(String)`<sup>1</sup> | N/A                                                                                                   |
+| Debian   | `DebVersionScheme.parseVersion(String)`           | `DebVersionScheme.parseConstraint(String)`                                                            |
+| Gradle   | `GradleVersionScheme.parseVersion(String)`        | `GradleVersionScheme.parseConstraint(String)`                                                         |                           
+| Java     | `JavaVersionScheme.parseVersion(String)`          | `JavaVersionScheme.parseRange(String)`                                                                |                           
+| Maven    | `MvnVersionScheme.parseVersion(String)`           | `MvnVersionScheme.parseConstraint(String)`                                                            |                           
+| Npm      | `NpmVersionScheme.parseVersion(String)`           | `NpmVersionScheme.parseConstraint(String)`                                                            |                           
+| PyPA     | `PypaVersionScheme.parseVersion(String)`          | `PypaVersionScheme.parseConstraint(String)`<br>`PypaVersionScheme.parseSpecifier(String)`<sup>2</sup> |                           
+| RubyGems | `GemVersionScheme.parseVersion(String)`           | `GemVersionScheme.parseConstraint(String)`                                                            |                           
+| Semantic | `SemanticVersion.parseVersion(String)`            | N/A                                                                                                   |                           
 
 <sup>1</sup> A `CalendarVersionScheme` instance must be created to define the version format. Call the `parse` method
 on that instance to create a version instance.
+
+<sup>2</sup> The `PypaVersionScheme.parseSpecifier(String)` method is only required if the
+[arbitrary equality specifier](https://peps.python.org/pep-0440/#arbitrary-equality) (`===V`) must be supported. 
 
 All version factories create an instance of a scheme-specific version class (e.g. `MvnVersion`) that implements the
 `Version` interface. All version constraint factories create an instance of the `VersionConstraint` class. A
@@ -63,7 +66,9 @@ and `VersionRange` classes can be directly constructed. Do not mix version schem
 instances to create NPM version constraints).
 
 ### Maven Versioning
-Support is provided for parsing Maven versions and dependency version constraints.
+Support is provided for parsing [Maven](https://maven.apache.org/) style
+[dependency versions](https://maven.apache.org/pom.html#Version_Order_Specification) and
+[dependency version constraints](https://maven.apache.org/pom.html#Dependency_Version_Requirement_Specification).
 
 ```java
 // Parse versions
@@ -92,7 +97,8 @@ assertThat(constraint1.union(constraint2)).isEqualTo(MvnVersionScheme.parseConst
 ```
 
 ### Gradle Versioning
-Support is provided for parsing Gradle versions and dependency version constraints.
+Support is provided for parsing [Gradle](https://gradle.org/) style 
+[dependency versions and ranges](https://docs.gradle.org/current/userguide/dependency_versions.html).
 
 ```java
 // Parse versions
@@ -121,13 +127,14 @@ assertThat(constraint1.union(constraint2)).isEqualTo(GradleVersionScheme.parseCo
 ```
 
 ### Java Versioning
-Support is provided for parsing versions of the Java programming language and creating constraints based
-on those versions. During its long history, Java has used different versioning schemes (e.g. 1.4.2_151, 17.0.12+34).
+Support is provided for parsing [versions of the Java programming language](https://www.java.com/releases/) and
+creating constraints based on those versions. During its long history, Java has used different versioning schemes
+(e.g. 1.4.2_151, 17.0.12+34). This library can accommodate all of them.
 
 ```java
 // Parse versions
 final JavaVersion version1 = JavaVersionScheme.parseVersion("17.0.11+9");
-final Version version2 = GradleVersionScheme.parseVersion("1.4.2_151");
+final Version version2 = JavaVersionScheme.parseVersion("1.4.2_151");
 
 // Obtain information from the parsed version
 assertThat(version1.getOriginalVersion()).isEqualTo("17.0.11+9");
@@ -159,7 +166,8 @@ assertThat(JavaVersionScheme.isVersion(JavaVersionScheme.JAVA_17_PLUS, "21")).is
 ```
 
 ### NPM Versioning
-Support is provided for parsing semantic versions and NPM dependency version constraints.
+Support is provided for parsing [semantic versions](https://semver.org/) and [NPM](https://www.npmjs.com/)
+style [dependency version ranges](https://github.com/npm/node-semver#versions).
 
 ```java
 // Parse versions
@@ -189,8 +197,9 @@ assertThat(constraint1.intersect(constraint2)).isEqualTo(NpmVersionScheme.parseC
 assertThat(constraint1.union(constraint2)).isEqualTo(NpmVersionScheme.parseConstraint(">=1.0.0 <3.0.0"));
 ```
 
-### Python Packaging Authority (PyPA) Versioning
-Support is provided for parsing PyPA compliant versions and version specifiers.
+### Python Packaging Authority Versioning
+Support is provided for parsing [Python Packaging Authority](https://www.pypa.io/en/latest/) (PyPA) compliant 
+[versions and version specifiers](https://packaging.python.org/en/latest/specifications/version-specifiers/#version-specifiers).
 
 ```java
 // Parse versions
@@ -229,7 +238,8 @@ assertThat(constraint2.allows(version2)).isTrue();
 ```
 
 ### RubyGems Versioning
-Support is provided for parsing RubyGems versions and version requirements.
+Support is provided for parsing [RubyGems](https://rubygems.org/) style
+[versions and dependency version requirements](https://guides.rubygems.org/specification-reference/).
 
 ```java
 // Parse versions
@@ -258,7 +268,7 @@ assertThat(constraint1.union(constraint2)).isEqualTo(GemVersionScheme.parseConst
 ```
 
 ### Semantic Versioning
-Support is provided for parsing semantic versions.
+Support is provided for parsing [semantic versions](https://semver.org/).
 
 ```java
 // Parse versions
@@ -341,7 +351,7 @@ assertThat(version2.getPreReleaseIdentifiers()).isEmpty();
 ```
 
 ### Calendar Versioning
-Support is provided for parsing calendar versions.
+Support is provided for parsing [calendar versions](https://calver.org/).
 
 ```java
 // Parse a single version
@@ -367,7 +377,8 @@ assertThat(version2.compareTo(version3)).isEqualTo(-1);
 ```
 
 ### Debian Package Versioning
-Support is provided for parsing Debian package versions and version constraints.
+Support is provided for parsing [Debian](https://www.debian.org/doc/debian-policy) package
+[versions and version constraints](https://www.debian.org/doc/debian-policy/ch-controlfields.html#version).
 
 ```java
 // Parse versions
@@ -396,9 +407,12 @@ assertThat(constraint2.allows(version2)).isFalse();
 
 ## Additional Information
 In preparation for creating this library, a [survey of many popular versioning schemes](docs/VersioningSurvey.md) was conducted.
-Among other things, this lead to the recognition that all version constraint specifications could be expressed using a single notation.
+Among other things, this lead to the recognition that most version constraint specifications could be expressed using a single notation.
 This in turn allows version constraints to be handled in a version scheme independent manner. To work with a constraint, the only
-requirement of a version is that it be ordered.
+requirement of a version is that it be ordered. Note that one exception to this is the Python Packaging Authority (PyPA)
+[arbitrary equality version specifier](https://peps.python.org/pep-0440/#arbitrary-equality) (`===V`), whose use is heavily discouraged
+by the PyPA. Parsing this specifier requires the use of the `PypaVersionScheme.parseSpecifier(String)` method and the
+`PypaSpecifierSet` class. 
 
 ## Building
 The library is compiled for Java 17. If a Java 17 toolchain is not available, one will be downloaded.
