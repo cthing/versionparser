@@ -23,7 +23,22 @@ import org.cthing.versionparser.VersionRange;
  */
 public final class PypaSpecifierSet {
 
+    /** Specifier set allowing any version. */
+    public static final PypaSpecifierSet ANY;
+
+    /** Specifier set not allowing any version. */
+    public static final PypaSpecifierSet EMPTY;
+
     private static final Pattern COMMA_PATTERN = Pattern.compile(",");
+
+    static {
+        try {
+            ANY = PypaSpecifierSet.parse(">=0.dev0");
+            EMPTY = PypaSpecifierSet.parse("<0.dev0");
+        } catch (final VersionParsingException ex) {
+            throw new IllegalStateException("Cannot create ANY or EMPTY constants", ex);
+        }
+    }
 
     private final List<PypaSpecifier> specifiers;
 

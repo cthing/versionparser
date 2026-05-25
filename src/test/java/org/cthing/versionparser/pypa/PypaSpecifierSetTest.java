@@ -179,6 +179,8 @@ class PypaSpecifierSetTest {
         final PypaSpecifierSet specifier = PypaSpecifierSet.parse(spec);
         assertThat(specifier.allows(version)).isEqualTo(allow);
         assertThat(specifier.allows(PypaVersion.parse(version))).isEqualTo(allow);
+        assertThat(PypaSpecifierSet.ANY.allows(version)).isTrue();
+        assertThat(PypaSpecifierSet.EMPTY.allows(version)).isFalse();
     }
 
     @Test
@@ -215,5 +217,23 @@ class PypaSpecifierSetTest {
         assertThat(notEqualUpper.getMinVersion()).hasToString("1.5");
         assertThat(notEqualUpper.isMaxIncluded()).isFalse();
         assertThat(notEqualUpper.getMaxVersion()).isNull();
+    }
+
+    @Test
+    void testAnyToRanges() {
+        final List<VersionRange> ranges = PypaSpecifierSet.ANY.toRanges();
+        assertThat(ranges).hasSize(1);
+
+        final VersionRange greaterThanOrEqual = ranges.get(0);
+        assertThat(greaterThanOrEqual.isMinIncluded()).isTrue();
+        assertThat(greaterThanOrEqual.getMinVersion()).hasToString("0.dev0");
+        assertThat(greaterThanOrEqual.isMaxIncluded()).isFalse();
+        assertThat(greaterThanOrEqual.getMaxVersion()).isNull();
+    }
+
+    @Test
+    void testEmptyToRanges() {
+        final List<VersionRange> ranges = PypaSpecifierSet.EMPTY.toRanges();
+        assertThat(ranges).isEmpty();
     }
 }
